@@ -1,0 +1,74 @@
+
+/**
+ * @copyright Design Point, s.r.o. (c) 2018
+ * @license   MIT License
+ */
+
+.no-font, .no-font *:not(.fa) { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+.no-background { background: none !important; }
+.no-border { border: none !important; border-radius: 0px !important; }
+.no-padding { padding: 0px !important; }
+.no-margin { margin: 0px !important; }
+.no-margin-top { margin-top: 0px !important; }
+.no-height { height: auto !important; }
+
+.text-upper { text-transform: uppercase; }
+.text-lower { text-transform: lowercase; }
+.text-title { text-transform: capitalize; }
+.text-italic { font-style: italic; }
+.text-200 { font-weight: 200; }
+.text-300 { font-weight: 300; }
+.text-400 { font-weight: 400; }
+.text-600 { font-weight: 600; }
+.text-700 { font-weight: 700; }
+.text-900 { font-weight: 900; }
+
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+
+.text-center img { margin: 0px auto; }
+
+/* .alerts { margin-top: 15px; } */
+.alert { border: none; border-radius: 0px !important; }
+.alert svg { margin-bottom: -6px; }
+
+a[href^="#error:"] { background: #dd4b39; color: #fff; }
+.main-header .sidebar-toggle::before { content: ""; }
+
+.control-sidebar-bg, .control-sidebar { right: -310px; width: 310px; }
+.control-sidebar > .sidebar-toggle { color: #fff; margin-top: 10px; }
+.control-sidebar > .sidebar-content { padding: 10px 15px; }
+.control-sidebar > .sidebar-content hr { border-color: #888; }
+
+
+/**
+ * Forms
+ */
+.label { cursor: default; }
+.label .fas, .label .far { margin-right: 4px; }
+
+label.control-label { display: block; }
+label { font-weight: normal; }
+label.required, .form-group.required > label { font-weight: bold; }
+label.required::after, .form-group.required > label:not(.btn)::after {
+	color: #dd4b39;
+	content: "*";
+	padding-left: 4px;
+}
+
+.input-group .input-group-addon img { width: 32px; height: 32px; display: inline-block; }
+.input-group .input-group-addon:not(.bg-none) { background-color: #d2d6de; color: #555299; }
+.input-group .input-group-addon.fw { width: 42.5px; text-align: center; }
+
+
+/**
+ * Grids
+ */
+table.table img.user-image {
+	width: 24px;
+	height: 24px;
+	margin-right: 4px;
+	border-radius: 50%;
+}
+
+table.table .fas.pull-right { margin-top: 5px; }

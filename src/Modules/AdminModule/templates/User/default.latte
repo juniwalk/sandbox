@@ -1,0 +1,11 @@
+<ol class="breadcrumb" n:block="breadcrumbs">
+	<li><a n:href=":Homepage:default"><i class="fas fa-home fa-fw"></i></a></li>
+	<li class="active">{_nette.menu.admin|noescape}</li>
+	<li class="active">{_nette.page.admin-user-default|noescape}</li>
+</ol>
+
+<section class="content" n:block="content">
+
+	{control userGrid}
+
+</section>

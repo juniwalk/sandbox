@@ -1,0 +1,74 @@
+<div class="box box-widget widget-user-2 box-primary" n:snippet="form">
+<form n:name="form">
+
+	<div class="widget-user-header bg-aqua" n:if="$profile">
+		<div class="widget-user-image">
+			<img class="img-responsive img-circle" n:src="avatar, $profile, medium" alt="{$profile}">
+		</div>
+		<h3 class="widget-user-username">{$profile->getName()}</h3>
+		<h5 class="widget-user-desc">{$profile->getEmail()}</h5>
+	</div>
+
+	<div class="box-body no-padding" n:if="$form->hasErrors()" n:inner-foreach="$form->getErrors() as $error">
+		<div class="alert alert-danger no-margin no-border" n:if="$error">{$error|translate}</div>
+	</div>
+
+	<div class="box-body">
+
+		<div class="form-group required">
+			<label n:name="name" class="control-label">{_nette.user.name}</label>
+			<div class="input-group">
+				<label n:name="name" class="input-group-addon"><i class="fas fa-id-card fa-fw"></i></label>
+				<input n:name="name" type="text" class="form-control">
+			</div>
+		</div>
+
+		<div class="form-group required">
+			<label n:name="email" class="control-label">{_nette.user.email}</label>
+			<div class="input-group">
+				<label n:name="email" class="input-group-addon"><i class="fas fa-envelope fa-fw"></i></label>
+				<input n:name="email" type="email" class="form-control">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label n:name="image">{_nette.user.image}</label>
+			<div class="input-group">
+				<label n:name="image" class="input-group-addon"><i class="fas fa-image fa-fw"></i></label>
+				<input n:name="image" type="file" class="form-control no-height" style="padding: 4.5px 6px;">
+				<span class="input-group-btn" n:if="$profile">
+					<a class="btn btn-danger" n:href="removeImage!" title="{_nette.user.image-remove}">
+						<i class="fas fa-times fa-fw"></i>
+						<span class="sr-only">{_nette.user.image-remove}</span>
+					</a>
+				</span>
+			</div>
+			<small class="help-block"><em>{_nette.user.image-help}</em></small>
+		</div>
+
+		<div class="form-group">
+			<label n:name="role" class="control-label">{_nette.user.role}</label>
+			<div class="input-group">
+				<label n:name="role" class="input-group-addon"><i class="fas fa-id-badge fa-fw"></i></label>
+				<select n:name="role" class="form-control select2"></select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" n:name="active">
+					<strong>{_nette.user.active-help}</strong>
+				</label>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="box-footer bg-gray">
+		<button n:name="submit" type="submit" class="btn btn-primary">{_nette.button.save|noescape}</button>
+		<button n:name="apply" type="submit" class="btn btn-default">{_nette.button.apply|noescape}</button>
+	</div>
+
+</form>
+</div>

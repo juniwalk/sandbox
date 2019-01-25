@@ -1,0 +1,10 @@
+config/config-params.neon
+config/config-ipconf.php
+config/.ssh/
+vendor/
+www/images/
+www/static/
+www/vendor/
+composer.lock
+yarn.lock
+coverage.xml

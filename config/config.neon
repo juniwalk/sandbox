@@ -1,0 +1,91 @@
+#
+# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# https://nette.org/security-warning
+#
+includes:
+	- config-params.neon
+	- config-assets.neon
+	- config-orm.neon
+
+
+tracy:
+	strictMode: %site.debug%
+	showBar: true
+	maxDepth: 5
+	maxLength: 300
+
+application:
+	errorPresenter: Error
+	scanDirs: no
+	mapping:
+		*: App\Modules\*Module\*Presenter
+
+php:
+	date.timezone: Europe/Prague
+
+di:
+	debugger: %site.debug%
+
+session:
+	autoStart: smart
+	expiration: 14 days
+	savePath: %tempDir%/sessions
+
+mail:
+	smtp: true
+	host: %smtp.host%
+	username: %smtp.username%
+	password: %smtp.password%
+	secure: %smtp.secure%
+
+extensions:
+	console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
+	translation: Kdyby\Translation\DI\TranslationExtension
+	mailing: Ublaboo\Mailing\DI\MailingExtension
+	form: JuniWalk\Form\DI\FormExtension
+
+services:
+	router: App\Routing\RouterFactory::createRouter
+	authenticator: App\Security\Authenticator
+	authorizator: App\Security\Authorizator
+	- App\Security\AccessManager
+
+	# DataGrids
+	- App\DataGrids\Factory\UserGridFactory
+
+	# Forms
+	- App\Forms\Factory\AuthPasswordForgotFormFactory
+	- App\Forms\Factory\AuthSignInFormFactory
+	- App\Forms\Factory\AuthSignUpFormFactory
+	- App\Forms\Factory\ProfileFormFactory
+	- App\Forms\Factory\UserFormFactory
+
+	htmlHelper:
+		class: App\Tools\HtmlHelper
+		tags: [run]
+		setup: [setTranslator]
+
+
+# Nette \ DI \ Decorator
+decorator:
+	App\DataGrids\AbstractGrid:
+		setup: [setTranslator]
+
+# Ublaboo \ Mailing
+mailing:
+	do: both
+	mails: %emails%
+
+console:
+    name: %site.name%
+    version: %site.version%
+    catchExceptions: false
+    autoExit: true
+    url: %site.url%
+    lazy: true
+
+# Kdyby \ Translation
+translation:
+	default: %lang.default%
+	whitelist: %lang.allowed%
+	dirs: [%appDir%/../locale]

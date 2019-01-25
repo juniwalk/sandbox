@@ -1,0 +1,35 @@
+<ol class="breadcrumb" n:block="breadcrumbs">
+	<li class="active"><i class="fas fa-home fa-fw"></i></li>
+</ol>
+
+<section class="content" n:block="content">
+<div class="cover-container row" style="margin-top: 80px;">
+
+	<div class="cover col-md-4 col-md-offset-4">
+
+		<h1 class="cover-heading">
+			{_nette.site.icon|noescape}
+			{_nette.site.name|noescape}
+		</h1>
+
+		<p class="lead">{_nette.site.description|noescape}</p>
+
+		<a href="#" class="btn btn-default" data-toggle="control-sidebar">
+			{strip_tags(('nette.page.auth-help'|translate), "<i>")|noescape}
+		</a>
+
+	</div>
+
+</div>
+</section>
+
+<div class="sidebar-content" n:block="helpBlock">
+
+	<h2 class="control-sidebar-heading no-margin-top">
+		{_nette.site.icon|noescape}
+		{_nette.site.name|noescape}
+	</h2>
+	<p>{_nette.site.description|noescape}</p>
+	<hr>
+
+</div>

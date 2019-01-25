@@ -1,0 +1,152 @@
+
+#
+# @copyright Design Point, s.r.o. (c) 2018
+# @license   MIT License
+#
+
+site:
+    name: 'Sand<strong>box</strong>'
+    icon: '<i class="fas fa-box"></i>'
+    description: 'Jednoduchá, předem zabalená a předkonfigurovaná aplikace s použitím Nette, kterou můžete použít jako výchozí bod pro vaše nové aplikace.'
+    currency: 'Kč'
+    lang: cs
+    dir: ltr
+
+author:
+    name: 'Design Point'
+    street: 'Mydlářská 189/3'
+    city: Liberec
+    zip: 46010
+    phone: '+420 720 512 307'
+
+menu:
+    mainmenu: '<i class="fas fa-fw fa-bars"></i> Hlavní menu'
+    admin: '<i class="fas fa-fw fa-cog"></i> Administrace'
+    toggle: 'Menu'
+
+
+#
+# Error pages
+#
+error:
+    homepage: '<i class="fas fa-home fa-fw"></i> Domovská stránka'
+
+    error4xx: 'Oops...'
+    error4xx-description: 'Váš prohlížeč odeslal požadavek, který tento server nedokázal zpracovat.'
+
+    error403: '<i class="fas fa-exclamation-circle fa-fw"></i> Přístup odepřen'
+    error403-description: 'You do not have permission to view this page. Please try contact the web site administrator if you believe you should be able to view this page.'
+
+    error404: '<i class="fas fa-exclamation-triangle fa-fw"></i> Stránka nenalezena'
+    error404-description: 'Stránka, kterou jste požadovali, nebyla nalezena. Je možné, že adresa je nesprávná nebo stránka již neexistuje.'
+
+    error405: '<i class="fas fa-exclamation-triangle fa-fw"></i> Nepovolená metoda'
+    error405-description: 'Metoda požadavku není povolena pro tuto URL.'
+
+    error410: '<i class="fas fa-exclamation-triangle fa-fw"></i> Stránka nenalezena'
+    error410-description: 'Požadovaná stránka byla odebrána z webu. Omlouváme se za nepříjemnosti.'
+
+
+#
+# Page titles
+#
+page:
+    auth-help: '<i class="fas fa-fw fa-question-circle"></i> <span class="sr-only">Nápověda</span>'
+    auth-signout: '<i class="fas fa-fw fa-power-off"></i> <span class="sr-only">Odhlásit</span>'
+    auth-signin: '<i class="fas fa-sign-in-alt fa-fw"></i> Přihlásit'
+    auth-signup: '<i class="fas fa-user-plus fa-fw"></i> Registrovat'
+    auth-profile: '<i class="fas fa-id-card fa-fw"></i> Profil'
+    auth-passwordreset: '<i class="fas fa-user-lock fa-fw"></i> Resetovat heslo'
+    auth-passwordforgot: '<i class="fas fa-key fa-fw"></i> Zapomenuté heslo'
+
+    # Mainmenu
+    homepage-default: '<i class="fas fa-home fa-fw"></i> Přehled'
+
+    # Admin menu
+    admin-user-default: '<i class="fas fa-user fa-fw"></i> Uživatelé'
+    admin-user-create: '<i class="fas fa-plus-square fa-fw"></i> Vytvořit uživatele'
+    admin-user-edit: '<i class="fas fa-edit fa-fw"></i> Upravit uživatele'
+
+
+#
+# Flash messages
+#
+message:
+    something-went-wrong: 'Nastala chyba a nemohli jsme pokračovat.'
+    confirm-deletion: 'Opravdu chcete odebrat "%s"?'
+
+    auth-email-unknown: 'Zadaný email nebyl nalezen v našem systému.'
+    auth-email-used: 'Zadaný email je již využíván u jiného účtu.'
+    auth-email-sent: 'Byl Vám odeslán email s potřebnými informacemi.'
+    auth-invalid: 'Nepodařilo se Vás přihlásit. Zkontrolujte kombinaci emailu a hesla.'
+    auth-signout: 'Byl jste odhlášen pro neaktivitu.'
+    auth-banned: 'Byl vám zamezen přístup.'
+
+
+#
+# User section
+#
+user:
+    name: 'Jméno a příjmení'
+    name-required: 'Zadejte prosím své celé jméno.'
+    email: 'Email'
+    email-not-found: 'Zadaný email nebyl nalezen.'
+    email-required: 'Zadejte váš email.'
+    email-invalid: 'V zadaném emailu je chyba.'
+    password: 'Heslo'
+    password-change: 'Nové heslo'
+    password-required: 'Zadejte prosím vaše heslo.'
+    password-length: 'Heslo musí být minimálně %d znaků.'
+    password-forgot: 'Nevzpomínám si na své heslo!'
+    role: 'Role'
+    image: 'Profilový obrázek'
+    image-invalid: 'Zkontrolujte typ nahraného obrázku.'
+    image-too-large: 'Nahraný obrázek je příliš velký.'
+    image-help: 'Maximální povolená velikost je 2MB, obrázek bude oříznut.'
+    image-remove: 'Odstranit existující obrázek'
+    agreement: 'Souhlasím s pravidly užívání.'
+    captcha: 'Captcha'
+    captcha-required: 'Vyplňte prosím captchu.'
+    active: 'Aktivní'
+    active-help: 'Povolit možnosti přihlášení do aplikace.'
+    remember: 'Zapamatuj si mě.'
+
+    roles:
+        guest: 'Žádná'
+        user: 'Uživatel'
+        manager: 'Správce'
+        admin: 'Admin'
+
+
+#
+# General translations
+#
+button:
+    add: '<i class="fas fa-plus fa-fw"></i> Přidat'
+    apply: '<i class="fas fa-check fa-fw"></i> Použít'
+    cancel: '<i class="fas fa-ban fa-fw"></i> Zrušit'
+    close: '<i class="fas fa-times fa-fw"></i> Zavřit'
+    filter: '<i class="fas fa-filter fa-fw"></i> Filtrovat'
+    insert: '<i class="fas fa-share fa-fw"></i> Vložit'
+    passwordForgot: '<i class="fas fa-key fa-fw"></i> Zaslat heslo'
+    passwordReset: '<i class="fas fa-user-lock fa-fw"></i> Resetovat heslo'
+    save: '<i class="fas fa-save fa-fw"></i> Uložit'
+    signIn: '<i class="fas fa-sign-in-alt fa-fw"></i> Přihlásit'
+    signUp: '<i class="fas fa-user-plus fa-fw"></i> Vytvořit účet'
+    submit: '<i class="fas fa-paper-plane fa-fw"></i> Odeslat'
+
+
+#
+# General translations
+#
+general:
+    all: 'vše'
+    actions: 'Akce'
+    active: 'Aktivní'
+    copy: 'Kopírovat'
+    create: 'Vytvořit'
+    edit: 'Upravit'
+    remove: 'Odebrat'
+    storno: 'Zrušit'
+    yes: 'ano'
+    no: 'ne'

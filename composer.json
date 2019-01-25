@@ -1,0 +1,54 @@
+{
+	"name": "design-point/sandbox",
+	"description": "The sandbox is a pre-packaged Nette Framework project, basic configured structure for your application.",
+	"type": "project",
+	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+
+	"authors": [
+		{
+			"name": "David Grudl",
+			"homepage": "https://davidgrudl.com"
+		},
+		{
+			"name": "Nette Community",
+			"homepage": "https://nette.org/contributors"
+		}
+	],
+
+	"autoload": {
+		"psr-4": {
+			"App\\": "src/"
+		}
+	},
+
+	"require": {
+		"php": ">=7.1",
+		"nette/application": "^2.0",
+		"nette/bootstrap": "^2.0",
+		"nette/caching": "^2.0",
+		"nette/di": "^2.0",
+		"nette/http": "^2.0",
+		"nette/security": "^2.0",
+		"latte/latte": "^2.0",
+		"tracy/tracy": "^2.0",
+		"ublaboo/mailing": "^1.0",
+		"ublaboo/datagrid": "^5.0",
+		"contributte/console": "^0.5",
+		"contributte/recaptcha": "^3.0",
+		"majkl578/nette-identity-doctrine": "^2.3",
+		"nettrine/migrations": "^0.4",
+		"nettrine/orm": "^0.2",
+		"carrooi/images-manager": "^4.0",
+		"kdyby/translation": "^2.0",
+		"ramsey/uuid": "^3.0",
+		"juniwalk/form": "^3.0",
+        "juniwalk/tessa": "dev-master"
+	},
+
+	"require-dev": {
+		"nette/tester": "^2.0"
+	},
+
+	"minimum-stability": "dev",
+	"prefer-stable": true
+}

@@ -1,0 +1,29 @@
+{layout ../@layout.latte}
+<body class="login-page" n:block="body">
+
+	<div class="login-box" n:snippet="content">
+
+		<header class="login-logo" n:block="appName">
+			{_nette.site.icon|noescape} {_nette.site.name|noescape}
+		</header>
+
+		<div class="alerts no-print no-margin" n:snippet="flashMessages">
+			<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} no-margin">
+				<i class="fas {$flashIcon[$flash->type]} fa-fw"></i>
+				{$flash->message|translate|noescape}
+			</div>
+		</div>
+
+        {include content}
+
+		<footer class="lockscreen-footer text-center text-muted no-print">
+			<strong>{_nette.author.name} &copy; {date('Y')}</strong>
+		</footer>
+
+	</div>
+
+	<!-- javascript -->
+	{control tessa:js default |indent|trim}
+	{ifset javascript}{include javascript}{/ifset}
+
+</body>
