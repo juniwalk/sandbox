@@ -6,7 +6,7 @@
 
 site:
     name: 'Sand<strong>box</strong>'
-    icon: '<i class="fas fa-box"></i>'
+    icon: '<i class="fas fa-fw fa-box"></i>'
     description: 'Jednoduchá, předem zabalená a předkonfigurovaná aplikace s použitím Nette, kterou můžete použít jako výchozí bod pro vaše nové aplikace.'
     currency: 'Kč'
     lang: cs
