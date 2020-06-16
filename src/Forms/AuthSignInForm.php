@@ -1,13 +1,14 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
 namespace App\Forms;
 
 use JuniWalk\Form\AbstractForm;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Security\AuthenticationException;
 use Nette\Security\User;
@@ -59,23 +60,27 @@ final class AuthSignInForm extends AbstractForm
 
 
     /**
-     * @param Form  $form
-     * @param ArrayHash  $data
+     * @param  Form  $form
+     * @param  ArrayHash  $data
+	 * @return void
      */
-    protected function handleSuccess(Form $form, ArrayHash $data)
+    protected function handleSuccess(Form $form, ArrayHash $data): void
     {
     	$user = $this->getUser();
-        $user->setExpiration('2 weeks');
+        //$user->setExpiration('2 weeks');
 
-        if (!$data->remember) {
-            $user->setExpiration('1 hour', $user::BROWSER_CLOSED);
-        }
+        //if (!$data->remember) {
+        //    $user->setExpiration('1 hour', $user::BROWSER_CLOSED);
+        //}
 
         try {
             $user->login($data->email, $data->password);
 
+        } catch (BadRequestException $e) {
+            $form->addError('nette.message.auth-invalid');
+
         } catch (AuthenticationException $e) {
-            return $form->addError($e->getMessage());
+            $form->addError($e->getMessage());
         }
     }
 }

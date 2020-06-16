@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2018
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
@@ -14,16 +14,16 @@ use Nette\Utils\Strings;
 final class HtmlHelper
 {
 	/**
-	 * @var ITranslator|NULL
+	 * @var ITranslator|null
 	 */
 	private static $translator;
 
 
 	/**
-	 * @param  ITranslator|NULL  $translator
+	 * @param  ITranslator|null  $translator
 	 * @return void
 	 */
-	public static function setTranslator(ITranslator $translator = NULL): void
+	public static function setTranslator(ITranslator $translator = null): void
 	{
 		static::$translator = $translator;
 	}
@@ -37,7 +37,7 @@ final class HtmlHelper
 	public static function createPrice(float $value, string $unit = '%s Kč'): Html
 	{
 		$value = number_format($value, 2, ',', ' ');
-		$unit = static::translate($unit);
+		//$unit = static::translate($unit);
 		$value = sprintf($unit, $value);
 
 		return Html::el('span class="badge"', $value);
@@ -50,17 +50,17 @@ final class HtmlHelper
 	 * @param  bool  $hasContent
 	 * @return Html
 	 */
-	public static function createStatus($status, bool $hasIcons = TRUE, bool $hasContent = TRUE): Html
+	public static function createStatus($status, bool $hasIcons = true, bool $hasContent = true): Html
 	{
 		$content = $status ? 'nette.general.yes' : 'nette.general.no';
 		$type = $status ? 'success' : 'danger';
-		$icon = NULL;
+		$icon = null;
 
-		if ($hasIcons == TRUE) {
+		if ($hasIcons == true) {
 			$icon = $status ? 'fa-check' : 'fa-times';
 		}
 
-		if ($hasContent == FALSE) {
+		if ($hasContent == false) {
 			$content = '';
 		}
 
@@ -75,12 +75,12 @@ final class HtmlHelper
 	 * @param  nool  $translate
 	 * @return Html
 	 */
-	public static function createLabel(string $content, string $type = 'default', string $icon = NULL, bool $translate = TRUE): Html
+	public static function createLabel(string $content, string $type = 'default', string $icon = null, bool $translate = true): Html
 	{
 		$label = Html::el('span class="label"')->addClass('label-'.$type);
-		$content = $translate == TRUE
-			? static::$translator->translate($content)
-			: $content;
+		//$content = $translate == true
+		//	? static::$translator->translate($content)
+		//	: $content;
 
 		if (!empty($icon)) {
 			$icon = Html::el('i class="fas"')->addClass($icon);
@@ -93,11 +93,11 @@ final class HtmlHelper
 
 	/**
 	 * @param  float  $size
-	 * @param  string|NULL  $icon
-	 * @param  string[g  $tresholds
+	 * @param  string|null  $icon
+	 * @param  string[]  $tresholds
 	 * @return Html
 	 */
-	public static function createSize(float $size, string $icon = NULL, iterable $tresholds = []): Html
+	public static function createSize(float $size, string $icon = null, iterable $tresholds = []): Html
 	{
 		$content = static::formatSize($size);
 		$tresholds += [0 => 'default'];
@@ -110,7 +110,7 @@ final class HtmlHelper
 			break;
 		}
 
-		return static::createLabel($content, $type, $icon, FALSE);
+		return static::createLabel($content, $type, $icon, false);
 	}
 
 
@@ -119,7 +119,7 @@ final class HtmlHelper
 	 * @param  bool  $isSecured
 	 * @return Html
 	 */
-	public static function createUrl(string $url, bool $isSecured = FALSE): Html
+	public static function createUrl(string $url, bool $isSecured = false): Html
 	{
 		$icon = Html::el('i class="fa fa-fw"');
 		$icon->addClass($isSecured ? 'fa-lock' : 'fa-unlock-alt');
@@ -136,7 +136,7 @@ final class HtmlHelper
 	 */
 	public static function createOption(string $content): Html
 	{
-		$content = static::translate($content);
+		//$content = static::translate($content);
 		$option = Html::el('option', strip_tags($content));
 
 		if ($option->getText() !== $content) {
@@ -156,7 +156,8 @@ final class HtmlHelper
 	public static function createPopover(string $value, string $content, string $type = 'default'): Html
 	{
 		return Html::el('button type="button" class="btn btn-'.$type.'"')
-			->setHtml(static::translate($value))
+			//->setHtml(static::translate($value))
+			->setHtml($value)
 			->data('content', static::translate($content))
 			->data('container', 'body')
 			->data('placement', 'auto')

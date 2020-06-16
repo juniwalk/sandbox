@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
@@ -15,13 +15,14 @@ trait Activable
 	 * @ORM\Column(type="boolean", options={"default": 1})
 	 * @var bool
 	 */
-	private $isActive = TRUE;
+	private $isActive = true;
 
 
 	/**
-	 * @param bool  $active
+	 * @param  bool  $active
+	 * @return void
 	 */
-	public function setActive(bool $active)
+	public function setActive(bool $active): void
 	{
 		$this->isActive = $active;
 	}

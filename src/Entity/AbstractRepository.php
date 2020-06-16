@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Doctrine\ORM\Proxy\Proxy;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\NoResultException;
 use Nette\Application\BadRequestException;
 
@@ -61,7 +60,7 @@ abstract class AbstractRepository
 
 	/**
 	 * @param  int  $id
-	 * @return object|NULL
+	 * @return object|null
 	 */
 	public function findById(int $id)
 	{
@@ -69,17 +68,17 @@ abstract class AbstractRepository
 			return $this->getById($id);
 
 		} catch (BadRequestException $e) {
-			return NULL;
+			return null;
 		}
 	}
 
 
     /**
      * @param  string  $alias
-     * @param  string|NULL  $indexBy
+     * @param  string|null  $indexBy
      * @return QueryBuilder
      */
-    public function createQueryBuilder(string $alias, string $indexBy = NULL): QueryBuilder
+    public function createQueryBuilder(string $alias, string $indexBy = null): QueryBuilder
     {
         return $this->entityManager->createQueryBuilder()->select($alias)
             ->from($this->entityName, $alias, $indexBy);
@@ -87,24 +86,24 @@ abstract class AbstractRepository
 
 
     /**
-     * @param  string|NULL  $dql
+     * @param  string|null  $dql
      * @return Query
      */
-    public function createQuery(string $dql = NULL): Query
+    public function createQuery(string $dql = null): Query
     {
         return $this->entityManager->createQuery($dql);
     }
 
 
 	/**
-	 * @param  int|NULL  $id
-	 * @param  string|NULL  $entityName
-	 * @return Proxy|Entity|NULL
+	 * @param  int|null  $id
+	 * @param  string|null  $entityName
+	 * @return Proxy|Entity|null
 	 */
-	public function getReference(?int $id, string $entityName = NULL)
+	public function getReference(?int $id, string $entityName = null)
 	{
 		if (!$id || empty($id)) {
-			return NULL;
+			return null;
 		}
 
 		return $this->entityManager->getReference($entityName ?: $this->entityName, $id);

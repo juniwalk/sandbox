@@ -42,7 +42,7 @@
 				<ul class="nav navbar-nav">
 					<li class="user user-menu">
 						<a n:href=":Auth:profile">
-							<img n:src="avatar, $profile, small" class="user-image" alt="{$profile}">
+							<img src="{$basePath}/images/avatar/default.png" class="user-image" alt="{$profile}">
 							{$profile->getName()}
 						</a>
 					</li>
@@ -58,7 +58,7 @@
 
 		<div class="user-panel" n:if="isset($profile)">
 			<div class="pull-left image">
-				<img n:src="avatar, $profile, medium" class="img-circle" alt="{$profile}">
+				<img src="{$basePath}/images/avatar/default.png" class="img-circle" alt="{$profile}">
 			</div>
 			<div class="pull-left info">
 				<p>{$profile->getName()}</p>

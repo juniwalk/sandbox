@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
 namespace App\Modules;
 
 use App\Entity\User;
-use App\Entity\Enums\Role;
+use App\Entity\UserRepository;
 use App\Forms\Factory\AuthPasswordForgotFormFactory;
 use App\Forms\Factory\AuthSignInFormFactory;
 use App\Forms\Factory\AuthSignUpFormFactory;
@@ -32,6 +32,9 @@ final class AuthPresenter extends AbstractPresenter
 	/** @var ProfileFormFactory */
 	private $profileFormFactory;
 
+	/** @var UserRepository */
+	private $userRepository;
+
 	/** @var AccessManager */
 	private $accessManager;
 
@@ -41,6 +44,7 @@ final class AuthPresenter extends AbstractPresenter
 
 	/**
 	 * @param AccessManager  $accessManager
+	 * @param UserRepository  $userRepository
 	 * @param ProfileFormFactory  $profileFormFactory
 	 * @param AuthSignInFormFactory  $authSignInFormFactory
 	 * @param AuthSignUpFormFactory  $authSignUpFormFactory
@@ -48,6 +52,7 @@ final class AuthPresenter extends AbstractPresenter
 	 */
 	public function __construct(
 		AccessManager $accessManager,
+		UserRepository $userRepository,
 		ProfileFormFactory $profileFormFactory,
 		AuthSignInFormFactory $authSignInFormFactory,
 		AuthSignUpFormFactory $authSignUpFormFactory,
@@ -57,6 +62,7 @@ final class AuthPresenter extends AbstractPresenter
 		$this->authSignInFormFactory = $authSignInFormFactory;
 		$this->authSignUpFormFactory = $authSignUpFormFactory;
 		$this->profileFormFactory = $profileFormFactory;
+		$this->userRepository = $userRepository;
 		$this->accessManager = $accessManager;
 	}
 
@@ -79,17 +85,18 @@ final class AuthPresenter extends AbstractPresenter
 
 
 	/**
-	 * @param  string|NULL  $hash
+	 * @param  string|null  $hash
 	 * @return void
 	 */
-	public function actionProfile(string $hash = NULL): void
+	public function actionProfile(string $hash = null): void
 	{
 		if (!$hash && !$this->getUser()->isLoggedIn()) {
 			$this->redirect('signIn');
 		}
 
 		if ($hash && Uuid::isValid($hash)) {
-			$this->user = $this->accessManager->validateToken($this, $hash, false);
+			$data = $this->accessManager->validateToken($hash, false);
+			$this->user = $this->userRepository->getById((int) $data['key']);
 		}
 	}
 

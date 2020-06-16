@@ -1,37 +1,20 @@
-{**
- * @param string          $title              Title of the datagrid, showed above table
- * @param Column[]        $columns            Available columns
- * @param Action[]        $actions            Available actions
- * @param Export[]        $exports            Available exports
- * @param Filter[]        $filters            Available filters
- * @param ToolBarButton[] $toolbar_buttons    Available toolbar_buttons
- * @param Form            $filter             Walkaround for latte snippets
- * @param Row[]           $rows               List of rows (each contain a item from data source)
- * @param DataGrid        $control            Parent (DataGrid)
- * @param string          $original_template  Original template file path
- * @param string          $icon_prefix        Icon prefix (fa fa-)
- * @param array           $columns_visibility What columns are visible
- * @param InlineEdit|null $inlineEdit  Inline editing data
- * @param InlineEdit|null $inlineAdd   Inline add data
- *}
-
 <div class="box box-primary datagrid datagrid-{$controlName} datagrid-{$control->getName()}" data-refresh-state="{link refreshState!}" n:snippet="grid">
 {snippetArea gridSnippets}
 {form filter, class => 'ajax'}
 
 	<div class="box-header with-border clearfix" n:ifcontent n:snippet="exports">
 		<h3 class="box-title" n:if="isset($title)">{_$title|noescape}</h3>
-		<div class="box-tools datagrid-toolbar pull-right" n:ifcontent>
+		<div class="box-tools datagrid-toolbar btn-toolbar pull-right" n:ifcontent>
 
 			<div class="btn-group" n:if="isset($toolbar_buttons) && sizeof($toolbar_buttons) > 0">
 				{foreach $toolbar_buttons as $toolbar_button}{$toolbar_button->renderButton()}{/foreach}
 			</div>
 
-			<span class="datagrid-exports" n:if="$exports" n:block="exports">
+			<span class="btn-group datagrid-exports" n:if="$exports" n:block="exports">
 				{foreach $exports as $export}{$export->render()}{/foreach}
 			</span>
 
-			<button class="btn btn-box-tool" type="button" data-toggle="collapse" data-target="#datagrid-{$controlName}-row-filters" n:if="$filters && $control->hasCollapsibleOuterFilters()">
+			<button class="btn btn-info btn-sm" type="button" data-toggle="collapse" data-target="#datagrid-{$controlName}-row-filters" n:if="$filters && $control->hasCollapsibleOuterFilters()">
 				<i class="fa fa-filter fa-fw"></i> {='ublaboo_datagrid.show_filter'|translate}
 			</button>
 
@@ -50,22 +33,22 @@
 						<li n:foreach="$columns_visibility as $v_key => $visibility">
 						{if $visibility['visible']}
 							<a n:href="hideColumn!, column => $v_key" class="ajax">
-								<i n:block="icon-checked" class="{$icon_prefix}check-square-o"></i>
+								<i n:block="icon-checked" class="{$iconPrefix}check-square-o"></i>
 								{include #column-header, column => $visibility['column']}
 							</a>
 						{else}
 							<a n:href="showColumn!, column => $v_key" class="ajax">
-								<i n:block="icon-unchecked" class="{$icon_prefix}square-o"></i>
+								<i n:block="icon-unchecked" class="{$iconPrefix}square-o"></i>
 								{include #column-header, column => $visibility['column']}
 							</a>
 						{/if}
 						</li>
 						<li role="separator" class="divider"></li>
 						<li>
-							<a n:href="showAllColumns!" class="ajax"><i n:block="icon-eye" class="{$icon_prefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
+							<a n:href="showAllColumns!" class="ajax"><i n:block="icon-eye" class="{$iconPrefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
 						</li>
 						<li n:if="$control->hasSomeColumnDefaultHide()">
-							<a n:href="showDefaultColumns!" class="ajax"><i n:block="icon-repeat" class="{$icon_prefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
+							<a n:href="showDefaultColumns!" class="ajax"><i n:block="icon-repeat" class="{$iconPrefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
 						</li>
 					</ul>
 				</div>
@@ -137,12 +120,12 @@
 
 								{if $column->isSortedBy()}
 									{if $column->isSortAsc()}
-										<i n:block="icon-sort-up" class="{$icon_prefix}caret-up"></i>
+										<i n:block="icon-sort-up" class="{$iconPrefix}caret-up"></i>
 									{else}
-										<i n:block="icon-sort-down" class="{$icon_prefix}caret-down"></i>
+										<i n:block="icon-sort-down" class="{$iconPrefix}caret-down"></i>
 									{/if}
 								{else}
-									<i n:block="icon-sort" class="{$icon_prefix}sort"></i>
+									<i n:block="icon-sort" class="{$iconPrefix}sort"></i>
 								{/if}
 							</a>
 						{else}
@@ -153,25 +136,25 @@
 					<div class="datagrid-column-header-additions">
 						<div class="btn-group column-settings-menu" n:if="$control->canHideColumns()">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i n:block="icon-caret-down" class="{$icon_prefix}caret-down"></i>
+								<i n:block="icon-caret-down" class="{$iconPrefix}caret-down"></i>
 							</a>
 							<ul class="dropdown-menu dropdown-menu--grid">
 								<li>
 									<a n:href="hideColumn!, column => $key" class="ajax">
-										<i n:block="icon-eye-slash" class="{$icon_prefix}eye-slash"></i> {='ublaboo_datagrid.hide_column'|translate}</a>
+										<i n:block="icon-eye-slash" class="{$iconPrefix}eye-slash"></i> {='ublaboo_datagrid.hide_column'|translate}</a>
 								</li>
 							</ul>
 						</div>
 
 						{if $control->hasColumnReset()}
 							<a data-datagrid-reset-filter-by-column="{$key}" n:href="resetColumnFilter!, key => $key" n:class="isset($filters[$key]) && $filters[$key]->isValueSet() ? '' : 'hidden', 'ajax'" title="{='ublaboo_datagrid.reset_filter'|translate}">
-								<i n:block="icon-remove" class="text-danger {$icon_prefix}times"></i>
+								<i n:block="icon-remove" class="text-danger {$iconPrefix}times"></i>
 							</a>
 						{/if}
 					</div>
 				{$th->endTag()|noescape}
 			{/foreach}
-			<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-right">
+			<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-right">
 				{_'ublaboo_datagrid.action'}
 			</th>
 		</tr>
@@ -227,7 +210,7 @@
 									{include column-value, column => $column, row => $row, key => $key}
 								{$td->endTag()|noescape}
 							{/foreach}
-							<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-right">
+							<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-right">
 								{foreach $actions as $key => $action}
 									{if $row->hasAction($key)}
 										{if $action->hasTemplate()}
@@ -238,26 +221,26 @@
 									{/if}
 								{/foreach}
 								<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
-									<i n:block = "icon-arrows-v" class="{$icon_prefix}arrows-v"></i>
+									<i n:block = "icon-arrows-v" class="{$iconPrefix}arrows-v"></i>
 								</span>
 								{if $inlineEdit && $row->hasInlineEdit()}
 									{$inlineEdit->renderButton($row)|noescape}
 								{/if}
-								{if $items_detail && $items_detail->shouldBeRendered($row)}
-									{$items_detail->renderButton($row)|noescape}
+								{if $itemsDetail && $itemsDetail->shouldBeRendered($row)}
+									{$itemsDetail->renderButton($row)|noescape}
 								{/if}
 							</td>
 						</tr>
 					{/if}
 				{/if}
 
-				{if $items_detail}
+				{if $itemsDetail}
 					<tr class="row-item-detail item-detail-{$row->getId()}" n:snippet="item-{$row->getId()}-detail">
 						{if isset($toggle_detail) && $toggle_detail == $row->getId()}
-							{var $item_detail_params = ['item' => $item, '_form' => $filter] + $items_detail->getTemplateVariables()}
+							{var $item_detail_params = ['item' => $item, '_form' => $filter] + $itemsDetail->getTemplateVariables()}
 
-							{if isset($filter['items_detail_form'])}
-								{var $item_detail_params['items_detail_form'] = $filter['items_detail_form']}
+							{if isset($filter['itemsDetail_form'])}
+								{var $item_detail_params['itemsDetail_form'] = $filter['itemsDetail_form']}
 							{/if}
 
 							{ifset #detail}
@@ -266,13 +249,13 @@
 										{include #detail, (expand) $item_detail_params}
 									</div>
 								</td>
-							{elseif $items_detail}
+							{elseif $itemsDetail}
 								<td colspan="{$control->getColumnsCount()}">
 									<div class="item-detail-content">
-										{if $items_detail->getType() == 'template'}
-											{include $items_detail->getTemplate(), (expand) $item_detail_params}
+										{if $itemsDetail->getType() == 'template'}
+											{include $itemsDetail->getTemplate(), (expand) $item_detail_params}
 										{else}
-											{$items_detail->render($item)|noescape}
+											{$itemsDetail->render($item)|noescape}
 										{/if}
 									</div>
 								</td>
@@ -312,14 +295,14 @@
 				{$td->endTag()|noescape}
 			{/foreach}
 
-			<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
+			<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action">
 			</td>
 		</tr>
 	</tfoot>
 	</table>
 	</div>
 
-	<div class="box-footer" n:snippet="pagination">
+	<div class="box-footer" n:snippet="pagination" n:ifcontent>
 	<div class="col-pagination text-center" n:if="$control->isPaginated() || $filter_active">
 
 		{control paginator}
@@ -346,8 +329,8 @@
 
 			<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'ublaboo_datagrid.reset_filter'}</a>
 			{if $control->isPaginated()}
-				{input $filter['per_page'], data-autosubmit-per-page => TRUE, class => 'form-control input-sm', style => 'display: inline; width: auto; min-width: 60px;'}
-				<button n:name="$filter['per_page_submit']" class="btn btn-default btn-sm datagrid-per-page-submit">{_'ublaboo_datagrid.submit'}</button>
+				{input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'form-control input-sm', style => 'display: inline; width: auto; min-width: 60px;'}
+				<button n:name="$filter['perPage_submit']" class="btn btn-default btn-sm datagrid-per-page-submit">{_'ublaboo_datagrid.submit'}</button>
 			{/if}
 
 		</div>
@@ -359,7 +342,7 @@
 {/snippetArea}
 
 	<div class="overlay text-danger" n:if="$isDisabled">
-		<i class="fas fa-ban"></i>
+		<i class="fa fa-ban"></i>
 	</div>
 
 </div>

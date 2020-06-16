@@ -11,7 +11,6 @@ use App\Entity\User;
 use App\Entity\UserRepository;
 use App\Entity\Enums\Role;
 use App\Tools\HtmlHelper;
-use Carrooi\ImagesManager\ImagesManager;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Doctrine\ORM\ORMException;
 use Nette\Utils\Html;
@@ -22,25 +21,19 @@ final class UserGrid extends AbstractGrid
 	/** @var UserRepository */
 	private $userRepository;
 
-	/** @var ImagesManager */
-	private $imagesManager;
-
 	/** @var EntityManager */
 	private $entityManager;
 
 
 	/**
 	 * @param EntityManager  $entityManager
- 	 * @param ImagesManager  $imagesManager
 	 * @param UserRepository  $userRepository
 	 */
 	public function __construct(
 		EntityManager $entityManager,
-        ImagesManager $imagesManager,
 		UserRepository $userRepository
 	) {
 		$this->userRepository = $userRepository;
-		$this->imagesManager = $imagesManager;
 		$this->entityManager = $entityManager;
 
 		$this->setTitle('nette.page.admin-user-default');
@@ -120,21 +113,21 @@ final class UserGrid extends AbstractGrid
 		$grid->addFilterText('email', 'nette.user.email')->setCondition(function ($qb, $value) {
 			$qb->andWhere('LOWER(e.email) LIKE LOWER(:email)')->setParameter('email', '%'.$value.'%');
 		});
-		$grid->addFilterSelect('role', 'nette.user.role', [NULL => 'nette.general.all'] + (new Role)->getItems())
-			->setTranslateOptions(TRUE);
+		$grid->addFilterSelect('role', 'nette.user.role', [null => 'nette.general.all'] + (new Role)->getItems())
+			->setTranslateOptions(true);
 		$grid->addFilterSelect('isActive', 'nette.user.active', $this->createActiveOptions())
-			->setTranslateOptions(TRUE);
+			->setTranslateOptions(true);
 
 
         $grid->addToolbarButton('User:create', 'nette.general.create')
             ->setClass('btn btn-success btn-sm')->setIcon('plus');
 
-		$grid->addAction('User:edit', NULL)->setIcon('pencil-alt')
+		$grid->addAction('User:edit', 'edit')->setIcon('pencil-alt')
 			->setClass('btn btn-primary btn-xs')
 			->setTitle('nette.general.edit');
 
-		$grid->addAction('remove!', NULL)->setIcon('trash-alt')
-			->setConfirm('nette.message.confirm-deletion', 'name')
+		$grid->addAction('remove!', 'remove')->setIcon('trash-alt')
+			//->setConfirm('nette.message.confirm-deletion', 'name')
 			->setClass('btn btn-danger btn-xs ajax')
 			->setTitle('nette.general.remove');
 
@@ -150,13 +143,8 @@ final class UserGrid extends AbstractGrid
 	{
 		$presenter = $this->getPresenter();
 
-		$image = $this->imagesManager->findImage('avatar', $user);
-		$this->imagesManager->tryStoreThumbnail($image, 64, 64, 0);
-		$avatar = Html::el('img class="user-image" alt="'.$user.'"')
-			->setSrc($this->imagesManager->getUrl($image, 64, 64));
-
 		$link = $presenter->lazyLink(':Admin:User:edit', $user->getId());
-		$name = Html::el('a')->setHref($link)->addHtml($avatar)
+		$name = Html::el('a')->setHref($link)
 			->addText($user->getName());
 
 		if (!$user->isActive()) {

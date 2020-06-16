@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
@@ -13,8 +13,6 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
-use Nette\Security\AuthenticationException;
 use Nette\Utils\ArrayHash;
 use JuniWalk\Form\AbstractForm;
 use Ublaboo\Mailing\MailFactory;
@@ -65,10 +63,11 @@ final class AuthSignUpForm extends AbstractForm
 
 
     /**
-     * @param Form  $form
-     * @param ArrayHash  $data
+     * @param  Form  $form
+     * @param  ArrayHash  $data
+	 * @return void
      */
-    protected function handleSuccess(Form $form, ArrayHash $data)
+    protected function handleSuccess(Form $form, ArrayHash $data): void
     {
     	$user = new User($data->email, $data->name);
 		$user->setPassword($data->password);
@@ -85,10 +84,10 @@ final class AuthSignUpForm extends AbstractForm
 			$message->send();
 
 		} catch(UniqueConstraintViolationException $e) {
-			return $form['email']->addError('nette.message.auth-email-used');
+			$form['email']->addError('nette.message.auth-email-used');
 
 		} catch (ORMException $e) {
-			return $form->addError('nette.message.something-went-wrong');
+			$form->addError('nette.message.something-went-wrong');
 		}
     }
 }

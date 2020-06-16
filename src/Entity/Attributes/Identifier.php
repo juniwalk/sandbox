@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
@@ -21,7 +21,7 @@ trait Identifier
 
 
 	/**
-	 * @return int|NULL
+	 * @return int|null
 	 */
 	final public function getId(): ?int
 	{
@@ -31,6 +31,6 @@ trait Identifier
 
 	public function __clone()
 	{
-		$this->id = NULL;
+		$this->id = null;
 	}
 }

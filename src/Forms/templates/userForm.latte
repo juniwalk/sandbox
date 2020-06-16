@@ -3,7 +3,7 @@
 
 	<div class="widget-user-header bg-aqua" n:if="$profile">
 		<div class="widget-user-image">
-			<img class="img-responsive img-circle" n:src="avatar, $profile, medium" alt="{$profile}">
+			<img src="{$basePath}/images/avatar/default.png" class="img-responsive img-circle" alt="{$profile}">
 		</div>
 		<h3 class="widget-user-username">{$profile->getName()}</h3>
 		<h5 class="widget-user-desc">{$profile->getEmail()}</h5>

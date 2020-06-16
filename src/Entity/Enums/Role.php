@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
@@ -29,10 +29,10 @@ final class Role extends AbstractEnum
 	 * @var string[]
 	 */
 	private $map = [
-		self::GUEST => NULL,
+		self::GUEST => null,
 		self::USER => self::GUEST,
 		self::MANAGER => self::USER,
-		self::ADMIN => NULL,
+		self::ADMIN => null,
 	];
 
 

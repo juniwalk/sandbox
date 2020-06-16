@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
@@ -64,10 +64,11 @@ final class AuthPasswordForgotForm extends AbstractForm
 
 
     /**
-     * @param Form  $form
-     * @param ArrayHash   $data
+     * @param  Form  $form
+     * @param  ArrayHash  $data
+	 * @return void
      */
-    protected function handleSuccess(Form $form, ArrayHash $data)
+    protected function handleSuccess(Form $form, ArrayHash $data): void
     {
     	try {
 			$user = $this->userRepository->getByEmail($data->email);
@@ -83,7 +84,7 @@ final class AuthPasswordForgotForm extends AbstractForm
 			$message->send();
 
 		} catch (BadRequestException $e) {
-			return $form['email']->addError('nette.message.auth-email-unknown');
+			$form['email']->addError('nette.message.auth-email-unknown');
 		}
     }
 }

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
@@ -44,10 +44,10 @@ final class Authenticator implements IAuthenticator
 	{
 		list($username, $password) = $credentials;
 
-		$user = $this->userRepository->findByEmail($username);
-		$user->setSignIn(NULL);
+		$user = $this->userRepository->getByEmail($username);
+		$user->setSignIn(null);
 
-		if (!$user || !$user->isPasswordValid($password)) {
+		if (!$user->isPasswordValid($password)) {
 			throw new AuthenticationException('nette.message.auth-invalid', $this::INVALID_CREDENTIAL);
 		}
 

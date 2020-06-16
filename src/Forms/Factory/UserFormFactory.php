@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
@@ -13,7 +13,7 @@ use App\Forms\UserForm;
 interface UserFormFactory
 {
     /**
-     * @param  User|NULL  $user
+     * @param  User|null  $user
      * @return UserForm
      */
     public function create(?User $user): UserForm;

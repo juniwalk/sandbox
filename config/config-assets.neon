@@ -3,9 +3,8 @@
 # https://nette.org/security-warning
 #
 extensions:
-    images: Carrooi\ImagesManager\DI\ImagesManagerExtension
-    recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
-    tessa: JuniWalk\Tessa\DI\TessaExtension
+	recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
+	tessa: JuniWalk\Tessa\DI\TessaExtension
 
 
 # Contributte \ reCAPTCHA
@@ -13,47 +12,36 @@ recaptcha:
 	secretKey: %captcha.secret%
 	siteKey: %captcha.site%
 
-# Carrooi \ ImagesManager
-images:
-	nameResolver: {class: App\Tools\ImageNameResolver}
-	default: default.png
-
-	storage:
-		basePath: %wwwDir%/images
-		baseUrl: /dev/sandbox/images
-
-	namespaces:
-		avatar:
-			presets:
-				small: 64x64
-				medium: 128x128
-				large: 256x256
-
 # JuniWalk \ Tessa
 tessa:
-    outputDir: %wwwDir%/static
-    checkLastModified: true
-    filters:
-        - JuniWalk\Tessa\Filters\UrlFixerFilter(%wwwDir%)
+	outputDir: %wwwDir%/static
+	checkLastModified: true
+	filters:
+		- JuniWalk\Tessa\Filters\UrlFixerFilter(%wwwDir%)
 
-    default:
-        joinFiles: false
-        assets:
-            - %wwwDir%/vendor/source-sans-pro/source-sans-pro.css
-            - %wwwDir%/vendor/@fortawesome/fontawesome-free/css/all.min.css
-            - %wwwDir%/vendor/jquery/dist/jquery.min.js
-            - %wwwDir%/vendor/bootstrap/dist/css/bootstrap.min.css
-            - %wwwDir%/vendor/bootstrap/dist/js/bootstrap.min.js
-            - %wwwDir%/vendor/admin-lte/dist/css/AdminLTE.min.css
-            - %wwwDir%/vendor/admin-lte/dist/css/skins/skin-red.min.css
-            - %wwwDir%/vendor/admin-lte/dist/js/adminlte.min.js
-            - %wwwDir%/vendor/nette-forms/src/assets/netteForms.min.js
-            - %wwwDir%/vendor/nette.ajax.js/nette.ajax.js
-            - %wwwDir%/vendor/ublaboo-datagrid/assets/dist/datagrid.js
-            - https://www.google.com/recaptcha/api.js
-            - %wwwDir%/assets/style.css
-            - %wwwDir%/assets/main.js
+	default:
+		joinFiles: false
+		assets:
+			- %wwwDir%/vendor/source-sans-pro/source-sans-pro.css
+			- %wwwDir%/vendor/@fortawesome/fontawesome-free/css/all.min.css
+			- %wwwDir%/vendor/jquery/dist/jquery.min.js
+			- %wwwDir%/vendor/bootstrap/dist/css/bootstrap.min.css
+			- %wwwDir%/vendor/bootstrap/dist/js/bootstrap.min.js
+			- %wwwDir%/vendor/admin-lte/dist/css/AdminLTE.min.css
+			- %wwwDir%/vendor/admin-lte/dist/css/skins/skin-red.min.css
+			- %wwwDir%/vendor/admin-lte/dist/js/adminlte.min.js
+			- %wwwDir%/vendor/nette-forms/src/assets/netteForms.min.js
+			- %wwwDir%/vendor/nette.ajax.js/nette.ajax.js
+			- %wwwDir%/vendor/ublaboo-datagrid/assets/dist/datagrid.js
+			- %wwwDir%/assets/style.css
+			- %wwwDir%/assets/main.js
 
-    frontpage:
-        extend: default
-        assets: []
+	frontpage:
+		extend: default
+		assets: []
+
+	recaptcha:
+		joinFiles: false
+		assets:
+			- https://www.google.com/recaptcha/api.js	# ?render=explicit
+			- %wwwDir%/../vendor/contributte/recaptcha/assets/invisibleRecaptcha.min.js

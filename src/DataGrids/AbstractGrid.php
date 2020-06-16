@@ -9,7 +9,6 @@ namespace App\DataGrids;
 
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
-use Nextras\Application\UI\SecuredLinksControlTrait;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
@@ -17,46 +16,34 @@ use Ublaboo\DataGrid\DataGrid;
  */
 abstract class AbstractGrid extends Control
 {
-	//use SecuredLinksControlTrait;
+	/** @var bool */
+	private $isDisabled = false;
 
+	/** @var bool */
+	private $isTableResponsive = true;
 
-	/**
-	 * @var bool
-	 */
-	private $isDisabled = FALSE;
-
-	/**
-	 * @var bool
-	 */
-	private $isTableResponsive = TRUE;
-
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $title;
 
-	/**
-	 * @var ITranslator
-	 */
+	/** @var ITranslator */
 	private $translator;
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onBeforeRender = [];
 
 
 	/**
-	 * @param ITranslator|NULL  $translator
+	 * @param  ITranslator|null  $translator
+	 * @return void
 	 */
-	public function setTranslator(ITranslator $translator = NULL)
+	public function setTranslator(ITranslator $translator = null): void
 	{
 		$this->translator = $translator;
 	}
 
 
 	/**
-	 * @return ITranslator|NULL
+	 * @return ITranslator|null
 	 */
 	public function getTranslator(): ?ITranslator
 	{
@@ -66,15 +53,16 @@ abstract class AbstractGrid extends Control
 
 	/**
 	 * @param  string  $title
+	 * @return void
 	 */
-	public function setTitle(string $title)
+	public function setTitle(string $title): void
 	{
 		$this->title = $title;
 	}
 
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
 	public function getTitle(): ?string
 	{
@@ -83,18 +71,20 @@ abstract class AbstractGrid extends Control
 
 
 	/**
-	 * @param bool  $disabled
+	 * @param  bool  $disabled
+	 * @return void
 	 */
-	public function setDisabled(bool $disabled = TRUE)
+	public function setDisabled(bool $disabled = true): void
 	{
 		$this->isDisabled = $disabled;
 	}
 
 
 	/**
-	 * @param bool  $tableResponsive
+	 * @param  bool  $tableResponsive
+	 * @return void
 	 */
-	public function setTableResponsive(bool $tableResponsive)
+	public function setTableResponsive(bool $tableResponsive): void
 	{
 		$this->isTableResponsive = $tableResponsive;
 	}
@@ -138,21 +128,21 @@ abstract class AbstractGrid extends Control
 
 
 	/**
-	 * @return NULL
+	 * @return void
 	 */
-	final public function redrawGrid()
+	final public function redrawGrid(): void
 	{
-		return $this['grid']->redrawControl();
+		$this['grid']->redrawControl();
 	}
 
 
 	/**
 	 * @param  int  $id
-	 * @return NULL
+	 * @return void
 	 */
-	final public function redrawItem(int $id)
+	final public function redrawItem(int $id): void
 	{
-		return $this['grid']->redrawItem($id);
+		$this['grid']->redrawItem($id);
 	}
 
 
@@ -177,22 +167,22 @@ abstract class AbstractGrid extends Control
 	 * @param  bool  $rememberState
 	 * @return DataGrid
 	 */
-	final protected function createGrid(string $name, bool $rememberState = TRUE): DataGrid
+	final protected function createGrid(string $name, bool $rememberState = true): DataGrid
 	{
-		$grid = new DataGrid(NULL, $name);
+		$grid = new DataGrid(null, $name);
 		$grid->setItemsPerPageList([50, 100, 200]);
 		$grid->setDefaultPerPage(50);
-		$grid->setTemplateFile(__DIR__.'/templates/datagrid-adminlte.latte');
+		$grid->setTemplateFile(__DIR__.'/templates/datagrid.latte');
 		$grid->setDataSource($this->createModel());
 		$grid->setRememberState($rememberState);
-		$grid->setOuterFilterRendering(TRUE);
-		$grid->setMultiSortEnabled(TRUE);
+		$grid->setOuterFilterRendering(true);
+		$grid->setMultiSortEnabled(true);
 
 		if ($this->translator instanceof ITranslator) {
 			$grid->setTranslator($this->translator);
 		}
 
-		DataGrid::$icon_prefix = 'fas fa-';
+		DataGrid::$iconPrefix = 'fas fa-';
 
 		return $grid;
 	}

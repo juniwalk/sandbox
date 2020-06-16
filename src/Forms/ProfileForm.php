@@ -1,14 +1,13 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
 namespace App\Forms;
 
 use App\Entity\User;
-use Carrooi\ImagesManager\ImagesManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Nette\Application\UI\Form;
@@ -20,9 +19,6 @@ final class ProfileForm extends AbstractForm
 	/** @var EntityManager */
 	private $entityManager;
 
-	/** @var ImagesManager */
-	private $imagesManager;
-
 	/** @var User */
 	private $user;
 
@@ -30,14 +26,11 @@ final class ProfileForm extends AbstractForm
 	/**
 	 * @param User  $user
 	 * @param EntityManager  $entityManager
-	 * @param ImagesManager  $imagesManager
 	 */
 	public function __construct(
 		User $user,
-		EntityManager $entityManager,
-		ImagesManager $imagesManager
+		EntityManager $entityManager
 	) {
-		$this->imagesManager = $imagesManager;
 		$this->entityManager = $entityManager;
 		$this->user = $user;
 
@@ -49,13 +42,12 @@ final class ProfileForm extends AbstractForm
 	}
 
 
+	/**
+	 * @return void
+	 */
 	public function handleRemoveImage(): void
 	{
     	$user = $this->getUser();
-
-		if ($user && $image = $this->imagesManager->findImage('avatar', $user)) {
-			$this->imagesManager->remove($image);
-		}
 
 		try {
 			$this->entityManager->persist($user);
@@ -68,7 +60,7 @@ final class ProfileForm extends AbstractForm
 
 
 	/**
-	 * @return User|NULL
+	 * @return User|null
 	 */
 	public function getUser(): ?User
 	{
@@ -77,7 +69,7 @@ final class ProfileForm extends AbstractForm
 
 
 	/**
-	 * @param  User|NULL  $user
+	 * @param  User|null  $user
 	 * @return void
 	 */
 	public function setDefaults(?User $user): void
@@ -117,10 +109,11 @@ final class ProfileForm extends AbstractForm
 
 
     /**
-     * @param Form  $form
-     * @param ArrayHash  $data
+     * @param  Form  $form
+     * @param  ArrayHash  $data
+	 * @return void
      */
-    protected function handleSuccess(Form $form, ArrayHash $data)
+    protected function handleSuccess(Form $form, ArrayHash $data): void
     {
     	$user = $this->getUser();
 		$user->setName($data->name);
@@ -130,16 +123,12 @@ final class ProfileForm extends AbstractForm
 			$user->setPassword($data->password);
 		}
 
-		if ($data->image->isOk()) {
-			$this->imagesManager->upload($data->image->toImage(), 'avatar', $user);
-		}
-
 		try {
 			$this->entityManager->persist($user);
 			$this->entityManager->flush();
 
 		} catch(UniqueConstraintViolationException $e) {
-			return $form->addError('email', 'nette.message.email-taken');
+			$form->addError('email', 'nette.message.email-taken');
 		}
     }
 }

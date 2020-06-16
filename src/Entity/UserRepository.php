@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
@@ -9,7 +9,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\NoResultException;
 use Nette\Application\BadRequestException;
-use Nette\Utils\Strings;
 
 final class UserRepository extends AbstractRepository
 {
@@ -39,7 +38,7 @@ final class UserRepository extends AbstractRepository
 
 	/**
 	 * @param  string  $email
-	 * @return User|NULL
+	 * @return User|null
 	 */
 	public function findByEmail(string $email): ?User
 	{
@@ -47,14 +46,14 @@ final class UserRepository extends AbstractRepository
 			return $this->getByEmail($email);
 
 		} catch (BadRequestException $e) {
-			return NULL;
+			return null;
 		}
 	}
 
 
 	/**
-	 * @param  callable|NULL  $where
-	 * @param  int|NULL  $maxResults
+	 * @param  callable|null  $where
+	 * @param  int|null  $maxResults
 	 * @return User[]
 	 */
 	public function findBy(?callable $where, ?int $maxResults = 5): iterable
@@ -78,11 +77,11 @@ final class UserRepository extends AbstractRepository
 
 	/**
 	 * @param  string  $query
-	 * @param  callable|NULL  $where
-	 * @param  int|NULL  $maxResults
+	 * @param  callable|null $where
+	 * @param  int|null  $maxResults
 	 * @return User[]
 	 */
-	public function findByName(string $query, callable $where = NULL, ?int $maxResults = 5): iterable
+	public function findByName(string $query, callable $where = null, ?int $maxResults = 5): iterable
 	{
 		$builder = $this->createQueryBuilder('e', 'e.id')
 			->where('LOWER(e.name) LIKE LOWER(:query)');

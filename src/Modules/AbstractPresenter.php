@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
 namespace App\Modules;
 
+use JuniWalk\Tessa\BundleManager;
 use JuniWalk\Tessa\TessaControl;
 use Nette\Application\UI\Presenter;
 use Nette\Security\IUserStorage;
@@ -14,17 +15,17 @@ use Nette\Utils\Strings;
 
 abstract class AbstractPresenter extends Presenter
 {
-    /** @var TessaControl */
-    private $tessa;
+    /** @var BundleManager */
+    private $bundleManager;
 
 
 	/**
-	 * @param  TessaControl  $tessa
+	 * @param  BundleManager  $bundleManager
 	 * @return void
 	 */
-	public function injectTessaControl(TessaControl $tessa): void
+	public function injectBundleManager(BundleManager $bundleManager): void
 	{
-        $this->tessa = $tessa;
+        $this->bundleManager = $bundleManager;
 	}
 
 
@@ -100,6 +101,6 @@ abstract class AbstractPresenter extends Presenter
      */
     protected function createComponentTessa(string $name): TessaControl
     {
-        return $this->tessa;
+        return new TessaControl($this->bundleManager);
     }
 }

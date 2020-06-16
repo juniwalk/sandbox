@@ -1,16 +1,17 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
 use Nette\Application\Application as HttpApplication;
 use Contributte\Console\Application as CliApplication;
 
-$di = include __DIR__.'/../src/bootstrap.php';
+require __DIR__.'/../vendor/autoload.php';
 $class = php_sapi_name() == 'cli'
     ? CliApplication::class
     : HttpApplication::class;
 
-$di->getByType($class)->run();
+App\Bootstrap::boot()->createContainer()
+	->getByType($class)->run();

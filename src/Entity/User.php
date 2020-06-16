@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2016
+ * @copyright Design Point, s.r.o. (c) 2020
  * @license   MIT License
  */
 
@@ -11,18 +11,17 @@ use App\Entity\Enums\Role;
 use App\Exceptions\InvalidEnumException;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Nette\Security\Passwords;
+use Nette\Security\IIdentity as Identity;
 use Nette\Utils\Strings;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="`user`")
  */
-class User implements \Nette\Security\IIdentity
+class User implements Identity
 {
 	use Attributes\Identifier;
 	use Attributes\Activable;
-
 
     /**
      * @ORM\Column(type="string", length=64)
@@ -38,7 +37,7 @@ class User implements \Nette\Security\IIdentity
 
     /**
      * @ORM\Column(type="string", length=64, nullable=true)
-     * @var string|NULL
+     * @var string|null
      */
     private $password;
 
@@ -56,7 +55,7 @@ class User implements \Nette\Security\IIdentity
 
     /**
      * @ORM\Column(type="datetimetz", nullable=true)
-     * @var DateTime|NULL
+     * @var DateTime|null
      */
     private $signIn;
 
@@ -121,16 +120,16 @@ class User implements \Nette\Security\IIdentity
 
 
 	/**
-	 * @param  string|NULL  $password
+	 * @param  string|null  $password
 	 * @return void
 	 */
 	public function setPassword(?string $password): void
 	{
         if (!empty($password)) {
-            $password = Passwords::hash($password);
+            $password = password_hash($password, PASSWORD_DEFAULT);
         }
 
-		$this->password = $password ?: NULL;
+		$this->password = $password ?: null;
 	}
 
 
@@ -140,7 +139,7 @@ class User implements \Nette\Security\IIdentity
 	 */
 	public function isPasswordValid(string $password): bool
 	{
-		return Passwords::verify($password, $this->password);
+		return password_verify($password, $this->password);
 	}
 
 
@@ -149,7 +148,7 @@ class User implements \Nette\Security\IIdentity
 	 */
 	public function isPasswordUpToDate(): bool
 	{
-		return !Passwords::needsRehash($this->password);
+		return !password_needs_rehash($this->password, PASSWORD_DEFAULT);
 	}
 
 
@@ -180,7 +179,7 @@ class User implements \Nette\Security\IIdentity
 	/**
 	 * @return string[]
 	 */
-	public function getRoles(): iterable
+	public function getRoles(): array
 	{
 		return [$this->role];
 	}
@@ -196,7 +195,7 @@ class User implements \Nette\Security\IIdentity
 
 
 	/**
-	 * @param  DateTime|NULL  $signIn
+	 * @param  DateTime|null  $signIn
 	 * @return void
 	 */
 	public function setSignIn(?DateTime $signIn): void
@@ -207,12 +206,12 @@ class User implements \Nette\Security\IIdentity
 
 
 	/**
-	 * @return DateTime|NULL
+	 * @return DateTime|null
 	 */
 	public function getSignin(): ?DateTime
 	{
 		if (!$this->signIn) {
-			return NULL;
+			return null;
 		}
 
 		return clone $this->signIn;

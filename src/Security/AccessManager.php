@@ -11,7 +11,6 @@ use App\Entity\User;
 use App\Entity\UserRepository;
 use App\Exceptions\EntityNotManagedException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Presenter;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Ramsey\Uuid\Uuid;
@@ -26,12 +25,12 @@ final class AccessManager
 
 
 	/**
+     * @param UserRepository  $userRepository
 	 * @param IStorage  $storage
-	 * @param UserRepository  $userRepository
 	 */
 	public function __construct(
-		IStorage $storage,
-		UserRepository $userRepository
+		UserRepository $userRepository,
+		IStorage $storage
 	) {
 		$this->cache = new Cache($storage, 'AccessManager.Tokens');
 		$this->userRepository = $userRepository;
@@ -39,48 +38,75 @@ final class AccessManager
 
 
 	/**
+	 * @param  string  $key
+	 * @param  string[]  $data
+	 * @param  string[]  $cache
+	 * @return string
+	 */
+	public function createToken(string $key, iterable $data, iterable $cache = []): string
+	{
+		$token = (string) Uuid::uuid4();
+		$data['key'] = $key;
+
+		$this->cache->save($token, $data, $cache);
+		return $token;
+	}
+
+
+	/**
 	 * @param  User  $user
-	 * @param  string|NULL  $slug
+	 * @param  string|null  $slug
 	 * @param  string[]  $cache
 	 * @return string
 	 * @throws EntityNotManagedException
 	 */
-	public function createToken(User $user, ?string $slug, iterable $cache = []): string
+	public function createSluggedToken(User $user, ?string $slug, iterable $cache = []): string
 	{
-		$token = (string) Uuid::uuid4();
-
-		if (!$user->getId()) {
+		if (!$userId = (string) $user->getId()) {
 			throw EntityNotManagedException::fromEntity($user);
 		}
 
-		$this->cache->save($token, ['slug' => $slug, 'user' => $user->getId()], $cache);
-		return $token;
+		return $this->createToken($userId, ['_slug' => $slug], $cache);
 	}
 
 
 	/**
 	 * @param  string  $token
 	 * @param  bool  $onLoadRemove
-	 * @return User
+	 * @return string[]
 	 * @throws BadRequestException
 	 */
-	public function validateToken(Presenter $presenter, string $token, bool $onLoadRemove = true): User
+	public function validateToken(string $token, bool $onLoadRemove = true): iterable
 	{
-		$slug = $presenter->getName().':'.$presenter->getAction();
-
-		if (!Uuid::isValid($token) || !$value = $this->cache->load($token)) {
+		if (!Uuid::isValid($token) || !$data = $this->cache->load($token)) {
 			throw new BadRequestException('Access token has expired', 403);
-		}
-
-		if ($value['slug'] && $value['slug'] !== $slug) {
-			throw new BadRequestException('Slug missmatch, expected '.$value['slug'].' but '.$slug.' was given', 403);
 		}
 
 		if ($onLoadRemove) {
 			$this->clearToken($token);
 		}
 
-		return $this->userRepository->getReference($value['user']);
+		return $data;
+	}
+
+
+	/**
+	 * @param  string  $slug
+	 * @param  string  $token
+	 * @param  bool  $onLoadRemove
+	 * @return User
+	 * @throws BadRequestException
+	 */
+	public function validateSluggedToken(string $slug, string $token, bool $onLoadRemove = true): User
+	{
+		$data = $this->validateToken($token, $onLoadRemove);
+
+		if ($data['_slug'] && $data['_slug'] !== $slug) {
+			throw new BadRequestException('Slug missmatch, expected '.$data['_slug'].' but '.$slug.' was given', 403);
+		}
+
+		unset($data['_slug']);
+		return $this->userRepository->getReference($data['key']);
 	}
 
 

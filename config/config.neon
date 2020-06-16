@@ -40,7 +40,7 @@ mail:
 
 extensions:
 	console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
-	translation: Kdyby\Translation\DI\TranslationExtension
+	translation: Contributte\Translation\DI\TranslationExtension
 	mailing: Ublaboo\Mailing\DI\MailingExtension
 	form: JuniWalk\Form\DI\FormExtension
 
@@ -49,6 +49,8 @@ services:
 	authenticator: App\Security\Authenticator
 	authorizator: App\Security\Authorizator
 	- App\Security\AccessManager
+
+	security.userStorage: App\Security\UserStorage
 
 	# DataGrids
 	- App\DataGrids\Factory\UserGridFactory
@@ -59,11 +61,6 @@ services:
 	- App\Forms\Factory\AuthSignUpFormFactory
 	- App\Forms\Factory\ProfileFormFactory
 	- App\Forms\Factory\UserFormFactory
-
-	htmlHelper:
-		class: App\Tools\HtmlHelper
-		tags: [run]
-		setup: [setTranslator]
 
 
 # Nette \ DI \ Decorator
@@ -76,6 +73,7 @@ mailing:
 	do: both
 	mails: %emails%
 
+# Contributte \ Console
 console:
     name: %site.name%
     version: %site.version%
@@ -84,8 +82,9 @@ console:
     url: %site.url%
     lazy: true
 
-# Kdyby \ Translation
+# Contributte \ Translation
 translation:
-	default: %lang.default%
-	whitelist: %lang.allowed%
+	locales:
+		whitelist: %lang.allowed%
+		default: %lang.default%
 	dirs: [%appDir%/../locale]
