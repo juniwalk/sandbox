@@ -9,6 +9,7 @@ namespace App\Entity;
 
 use App\Entity\Enums\Role;
 use App\Exceptions\InvalidEnumException;
+use Contributte\ImageStorage\Image;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Security\IIdentity as Identity;
@@ -24,8 +25,8 @@ class User implements Identity
 	use Attributes\Activable;
 
     /**
-     * @ORM\Column(type="string", length=64)
-     * @var string
+     * @ORM\Column(type="string", length=64, nullable=true)
+     * @var string|null
      */
     private $name;
 
@@ -59,12 +60,18 @@ class User implements Identity
      */
     private $signIn;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string|null
+     */
+    private $image;
+
 
 	/**
 	 * @param  string  $email
 	 * @param  string  $name
 	 */
-	public function __construct(string $email, string $name)
+	public function __construct(string $email, string $name = null)
 	{
 		$this->signUp = new DateTime;
 		$this->email = Strings::lower($email);
@@ -77,24 +84,24 @@ class User implements Identity
 	 */
 	public function __toString(): string
 	{
-		return Strings::webalize($this->id.'-'.$this->name);
+		return Strings::webalize($this->id.'-'.$this->email);
 	}
 
 
 	/**
-	 * @param  string  $name
+	 * @param  string|null  $name
 	 * @return void
 	 */
-	public function setName(string $name): void
+	public function setName(?string $name): void
 	{
 		$this->name = $name;
 	}
 
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getName(): string
+	public function getName(): ?string
 	{
 		return $this->name;
 	}
@@ -215,5 +222,33 @@ class User implements Identity
 		}
 
 		return clone $this->signIn;
+	}
+
+
+	/**
+	 * @param  Image|null  $image
+	 * @return void
+	 */
+	public function setImage(?Image $image): void
+	{
+		$this->image = ((string) $image) ?: null;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function hasImage(): bool
+	{
+		return !is_null($this->image);
+	}
+
+
+	/**
+	 * @return string|null
+	 */
+	public function getImage(): ?string
+	{
+		return $this->image;
 	}
 }

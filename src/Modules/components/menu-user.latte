@@ -1,0 +1,20 @@
+{default $isRight = false}
+{default $hasHelp = false}
+
+<ul n:class="navbar-nav, $isRight ? ml-auto" n:if="isset($profile)">
+
+    <li class="nav-item user-menu">
+        <a class="nav-link" n:href=":Web:Auth:profile">
+            <img n:img="$profile->getImage()" class="user-image img-circle elevation-2" alt="{$profile}">
+            <span class="d-none d-md-inline">{$profile->getName() ?? $profile->getEmail()}</span>
+        </a>
+    </li>
+
+    <li class="nav-item" n:if="$hasHelp"><a class="nav-link" href="#" data-widget="control-sidebar" data-slide="true"><i class="fas fa-fw fa-question-circle"></i></a></li>
+
+    <li class="nav-item"><a class="nav-link" n:href=":Web:Home:default" n:if="$presenter->isModuleCurrent('Admin') && $user->isInRole('admin')">{_nette.menu.web-link|noescape}</a></li>
+    <li class="nav-item"><a class="nav-link" n:href=":Admin:User:default" n:if="$presenter->isModuleCurrent('Web') && $user->isInRole('admin')">{_nette.menu.admin-link|noescape}</a></li>
+
+    <li class="nav-item"><a class="nav-link" n:href=":Web:Auth:signOut">{_nette.page.web-auth-signout|noescape}</a></li>
+
+</ul>

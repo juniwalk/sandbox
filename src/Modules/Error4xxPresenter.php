@@ -13,8 +13,8 @@ use Nette\Application\BadRequestException;
 final class Error4xxPresenter extends AbstractPresenter
 {
 	/**
-	 * @return void
 	 * @throws BadRequestException
+	 * @return void
 	 */
 	public function startup(): void
 	{
@@ -27,15 +27,22 @@ final class Error4xxPresenter extends AbstractPresenter
 
 
 	/**
-	 * @param BadRequestException  $exception
+	 * @param  BadRequestException  $exception
+	 * @return void
 	 */
 	public function renderDefault(BadRequestException $exception): void
 	{
-		$file = __DIR__ . '/templates/Error/'.$exception->getCode().'.latte';
-		$file = is_file($file) ? $file : __DIR__.'/templates/Error/4xx.latte';
+		$file = __DIR__.'/templates/Error/'.$exception->getCode().'.latte';
+		$code = $page = $exception->getCode();
+
+		if (!is_file($file)) {
+			$file = __DIR__.'/templates/Error/4xx.latte';
+			$page = '4xx';
+		}
 
 		$template = $this->getTemplate();
-		$template->add('code', $exception->getCode());
+		$template->pageName = 'error-'.$page;
+		$template->code = $code;
 		$template->setFile($file);
 	}
 }

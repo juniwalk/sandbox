@@ -8,6 +8,7 @@
 namespace App\Forms;
 
 use App\Entity\UserRepository;
+use App\Messages\MessageData;
 use App\Messages\PasswordForgotMessage;
 use App\Security\AccessManager;
 use JuniWalk\Form\AbstractForm;
@@ -72,13 +73,16 @@ final class AuthPasswordForgotForm extends AbstractForm
     {
     	try {
 			$user = $this->userRepository->getByEmail($data->email);
-			$hash = $this->accessManager->createToken($user, 'Auth:profile', [
+			$hash = $this->accessManager->createSluggedToken($user, 'Web:Auth:profile', [
 				'expire' => '15 minutes',
 			]);
 
 			$message = $this->messageFactory->createByType(
 				PasswordForgotMessage::class,
-				['user' => $user, 'hash' => $hash]
+				MessageData::from([
+					'profile' => $user,
+					'hash' => $hash,
+				])
 			);
 
 			$message->send();

@@ -8,16 +8,21 @@
 namespace App\Forms;
 
 use App\Entity\User;
+use Contributte\ImageStorage\ImageStorage;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use JuniWalk\Form\AbstractForm;
+use JuniWalk\Form\Renderer;
 
-final class ProfileForm extends AbstractForm
+final class AuthProfileForm extends AbstractForm
 {
 	/** @var EntityManager */
 	private $entityManager;
+
+	/** @var ImageStorage */
+	private $imageStorage;
 
 	/** @var User */
 	private $user;
@@ -25,17 +30,21 @@ final class ProfileForm extends AbstractForm
 
 	/**
 	 * @param User  $user
+	 * @param ImageStorage  $imageStorage
 	 * @param EntityManager  $entityManager
 	 */
 	public function __construct(
 		User $user,
+		ImageStorage $imageStorage,
 		EntityManager $entityManager
 	) {
 		$this->entityManager = $entityManager;
+		$this->imageStorage = $imageStorage;
 		$this->user = $user;
 
-		$this->setTemplateFile(__DIR__.'/templates/profileForm.latte');
+		$this->setTemplateFile(__DIR__.'/templates/authProfileForm.latte');
 		$this->onBeforeRender[] = function ($form, $template) {
+			$template->add('imageStorage', $this->imageStorage);
 			$template->add('profile', $this->user);
 			$this->setDefaults($this->user);
 		};
@@ -49,13 +58,21 @@ final class ProfileForm extends AbstractForm
 	{
     	$user = $this->getUser();
 
+		if (!$image = $user->getImage()) {
+			return;
+		}
+
 		try {
-			$this->entityManager->persist($user);
+			$this->imageStorage->delete($image);
+			$user->setImage(null);
+
 			$this->entityManager->flush();
 
 		} catch(UniqueConstraintViolationException $e) {
 			$form->addError('email', 'nette.message.email-taken');
 		}
+
+		$this->redrawControl('form');
 	}
 
 
@@ -123,12 +140,17 @@ final class ProfileForm extends AbstractForm
 			$user->setPassword($data->password);
 		}
 
+		if ($data->image->isOk()) {
+			$image = $this->imageStorage->saveUpload($data->image, 'avatar');
+			$user->setImage($image);
+		}
+
 		try {
 			$this->entityManager->persist($user);
 			$this->entityManager->flush();
 
 		} catch(UniqueConstraintViolationException $e) {
-			$form->addError('email', 'nette.message.email-taken');
+			$form['email']->addError('nette.message.auth-email-used');
 		}
     }
 }

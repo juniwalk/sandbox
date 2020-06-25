@@ -26,7 +26,12 @@ php:
 di:
 	debugger: %site.debug%
 
+http:
+	cookieSecure: auto
+	frames: false
+
 session:
+	debugger: %site.debug%
 	autoStart: smart
 	expiration: 14 days
 	savePath: %tempDir%/sessions
@@ -45,21 +50,20 @@ extensions:
 	form: JuniWalk\Form\DI\FormExtension
 
 services:
+	security.userStorage: App\Security\UserStorage
 	router: App\Routing\RouterFactory::createRouter
 	authenticator: App\Security\Authenticator
 	authorizator: App\Security\Authorizator
 	- App\Security\AccessManager
-
-	security.userStorage: App\Security\UserStorage
 
 	# DataGrids
 	- App\DataGrids\Factory\UserGridFactory
 
 	# Forms
 	- App\Forms\Factory\AuthPasswordForgotFormFactory
+	- App\Forms\Factory\AuthProfileFormFactory
 	- App\Forms\Factory\AuthSignInFormFactory
 	- App\Forms\Factory\AuthSignUpFormFactory
-	- App\Forms\Factory\ProfileFormFactory
 	- App\Forms\Factory\UserFormFactory
 
 

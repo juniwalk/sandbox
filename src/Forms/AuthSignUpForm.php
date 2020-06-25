@@ -8,6 +8,7 @@
 namespace App\Forms;
 
 use App\Entity\User;
+use App\Messages\MessageData;
 use App\Messages\UserSignUpMessage;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
@@ -48,12 +49,10 @@ final class AuthSignUpForm extends AbstractForm
 	protected function createComponentForm(string $name): Form
 	{
 		$form = parent::createComponentForm($name);
-		$form->addText('name')->setRequired('nette.user.name-required');
         $form->addText('email')->setRequired('nette.user.email-required')
             ->addRule($form::EMAIL, 'nette.user.email-invalid');
         $form->addPassword('password')->setRequired('nette.user.password-required')
             ->addRule($form::MIN_LENGTH, 'nette.user.password-length', 6);
-        $form->addCheckbox('agreement');
 		$form->addReCaptcha('recaptcha')->setRequired('nette.user.captcha-required');
 
         $form->addSubmit('submit');
@@ -69,7 +68,7 @@ final class AuthSignUpForm extends AbstractForm
      */
     protected function handleSuccess(Form $form, ArrayHash $data): void
     {
-    	$user = new User($data->email, $data->name);
+    	$user = new User($data->email);
 		$user->setPassword($data->password);
 
 		try {
@@ -78,7 +77,9 @@ final class AuthSignUpForm extends AbstractForm
 
 			$message = $this->messageFactory->createByType(
 				UserSignUpMessage::class,
-				['user' => $user]
+				MessageData::from([
+					'profile' => $user,
+				])
 			);
 
 			$message->send();

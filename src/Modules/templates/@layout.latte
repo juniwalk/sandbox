@@ -21,96 +21,43 @@
 	{ifset stylesheet}{include stylesheet}{/ifset}
 
 </head>
-<body class="skin-red" n:block="body">
-<div class="wrapper">
+<body class="hold-transition login-page" n:block="body">
 
 	<a id="top" class="sr-only"><!-- top anchor --></a>
 
-	<header class="main-header">
+	<div class="login-box" n:snippet="content">
 
-		<a class="logo" n:href=":Homepage:default">
-			<span class="logo-mini">{_nette.site.icon|noescape}</span>
-			<span class="logo-lg" n:block="appName">{_nette.site.icon|noescape} {_nette.site.name|noescape}</span>
-		</a>
-
-		<nav class="navbar navbar-static-top" role="navigation">
-			<a href="#" class="sidebar-toggle visible-xs-block" data-toggle="push-menu" role="button">
-				<i class="fas fa-fw fa-bars"></i>
-				<span class="sr-only">{_nette.menu.toggle}</span>
-			</a>
-			<div class="navbar-custom-menu" n:if="isset($profile)">
-				<ul class="nav navbar-nav">
-					<li class="user user-menu">
-						<a n:href=":Auth:profile">
-							<img src="{$basePath}/images/avatar/default.png" class="user-image" alt="{$profile}">
-							{$profile->getName()}
-						</a>
-					</li>
-					<li><a n:href=":Auth:signOut">{_nette.page.auth-signout|noescape}</a></li>
-				</ul>
-			</div>
-		</nav>
-
-	</header>
-
-	<aside class="main-sidebar">
-	<section class="sidebar">
-
-		<div class="user-panel" n:if="isset($profile)">
-			<div class="pull-left image">
-				<img src="{$basePath}/images/avatar/default.png" class="img-circle" alt="{$profile}">
-			</div>
-			<div class="pull-left info">
-				<p>{$profile->getName()}</p>
-				<em class="text-muted">{$profile->getEmail()|lower}</em>
-			</div>
+		<div class="login-logo" n:block="appName">
+			<a class="logo" n:href=":Web:Home:default">{_nette.site.icon|noescape} {_nette.site.name|noescape}</a>
 		</div>
 
-		{block beforeMenu}{/block}
-		{include ../components/mainmenu.latte}
-		{include ../components/admin.latte}
-		{block afterMenu}{/block}
+		<div class="card">
+		<div class="card-body login-card-body" n:block="contentWrapper">
 
-	</section>
-	</aside>
+			<section class="content-header p-0 pb-3" n:block="header">
+				<h1 class="p-2 pt-0 border-bottom" n:block="title">{('nette.page.'.$pageName)|translate|noescape}</h1>
+			</section>
 
-	<div class="content-wrapper" n:snippet="content">
-
-		<div class="alerts no-print no-margin" n:snippet="flashMessages">
-			<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} no-margin">
-				<i class="fas {$flashIcon[$flash->type]} fa-fw"></i>
-				{$flash->message|translate:$flash->params ?? []|noescape}
+			<div class="m-0" n:snippet="flashMessages">
+				<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} no-margin">
+					{$flash->message|translate:$flash->params ?? []|noescape}
+				</div>
 			</div>
+
+			{include content|indent:3}
+
+		</div>
 		</div>
 
-		<section class="content-header">
-			<h1 n:block="title">{('nette.page.'.$pageName)|translate|noescape}</h1>
-			{ifset breadcrumbs}{include breadcrumbs}{/ifset}
-		</section>
-
-		{include content|indent:3}
+		<footer class="lockscreen-footer text-center text-muted no-print" n:block="footer">
+			<strong>{_nette.author.name} &copy; {date('Y')}</strong>
+		</footer>
 
 	</div>
 
-	<footer class="main-footer no-print">
-		<strong>{_nette.author.name} &copy; {date('Y')}</strong>
-	</footer>
-
-	<aside n:ifset="helpBlock" class="control-sidebar control-sidebar-dark">
-
-		<a href="#" class="btn btn-link pull-right sidebar-toggle" data-toggle="control-sidebar">
-			<i class="fas fa-fw fa-times"></i>
-		</a>
-
-		{include helpBlock|indent:2|trim}
-
-	</aside>
-	<div n:ifset="helpBlock" class="control-sidebar-bg"></div>
-
-</div>
-
 	<!-- javascript -->
 	{control tessa:js default |indent|trim}
+	{control tessa:js recaptcha |indent|trim}
 	{ifset javascript}{include javascript}{/ifset}
 
 </body>

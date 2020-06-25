@@ -10,29 +10,31 @@ namespace App\Messages;
 use App\Entity\User;
 use App\Exceptions\UserNotFoundException;
 use Nette\Mail\Message;
+use Ublaboo\Mailing\AbstractMail;
 use Ublaboo\Mailing\IComposableMail;
-use Ublaboo\Mailing\Mail;
+use Ublaboo\Mailing\IMessageData;
 
-final class UserSignUpMessage extends Mail implements IComposableMail
+final class UserSignUpMessage extends AbstractMail implements IComposableMail
 {
 	/**
 	 * @param  Message  $message
-	 * @param  mixed[]  $params
+	 * @param  IMessageData  $params
 	 * @throws UserNotFoundException
+	 * @return void
 	 */
-	public function compose(Message $message, $params = [])
+	public function compose(Message $message, ?IMessageData $params): void
 	{
-		$this->setTemplateFile(__DIR__.'/templates/userSignUp.latte');
-		$user = $params['user'] ?? NULL;
+		$user = $params['profile'] ?? null;
 
 		if (!$user || !$user instanceof User) {
-			throw new \Exception;
+			throw new UserNotFoundException;
 		}
 
-		$message->setFrom($this->mails['default_sender']);
+		$message->setFrom($this->mailAddresses['default_sender']);
+		$message->addTo($user->getEmail(), $user->getName());
 
-        foreach ($this->mails['notify'] as $name => $email) {
-    		$message->addTo($email, $name);
-        }
+		foreach ($params as $key => $value) {
+			$this->template->add($key, $value);
+		}
 	}
 }

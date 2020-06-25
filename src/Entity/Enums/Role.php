@@ -7,6 +7,8 @@
 
 namespace App\Entity\Enums;
 
+use App\Exceptions\InvalidEnumException;
+
 final class Role extends AbstractEnum
 {
 	/** @var string */
@@ -18,10 +20,10 @@ final class Role extends AbstractEnum
 
 	/** @var string[] */
 	protected $items = [
-		self::GUEST => 'nette.user.roles.guest',
-		self::USER => 'nette.user.roles.user',
-		self::MANAGER => 'nette.user.roles.manager',
-		self::ADMIN => 'nette.user.roles.admin',
+		self::GUEST => 'nette.enum.role.guest',
+		self::USER => 'nette.enum.role.user',
+		self::MANAGER => 'nette.enum.role.manager',
+		self::ADMIN => 'nette.enum.role.admin',
 	];
 
 	/**
@@ -35,6 +37,14 @@ final class Role extends AbstractEnum
 		self::ADMIN => null,
 	];
 
+	/** @var string[] */
+	private $colors = [
+		self::GUEST => 'secondary',
+		self::USER => 'success',
+		self::MANAGER => 'primary',
+		self::ADMIN => 'warning',
+	];
+
 
 	/**
 	 * @return string[]
@@ -42,5 +52,20 @@ final class Role extends AbstractEnum
 	public function getMap(): iterable
 	{
 		return $this->map;
+	}
+
+
+	/**
+	 * @param  string  $item
+	 * @return string
+	 * @throws InvalidEnumException
+	 */
+	public function getColor(string $item): string
+	{
+		if (!$this->isValidItem($item)) {
+			throw InvalidEnumException::fromItem($item);
+		}
+
+		return $this->colors[$item];
 	}
 }

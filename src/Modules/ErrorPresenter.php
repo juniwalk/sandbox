@@ -14,11 +14,12 @@ use Nette\Application\IResponse;
 use Nette\Application\Request;
 use Nette\Application\Responses;
 use Nette\Http;
+use Nette\SmartObject;
 use Tracy\ILogger;
 
 final class ErrorPresenter implements IPresenter
 {
-	use \Nette\SmartObject;
+	use SmartObject;
 
 	/** @var ILogger */
 	private $logger;
@@ -42,7 +43,10 @@ final class ErrorPresenter implements IPresenter
 		$error = $request->getParameter('exception');
 
 		if ($error instanceof BadRequestException) {
-			return new Responses\ForwardResponse($request->setPresenterName('Error4xx'));
+			[$module, , $sep] = Helpers::splitName($request->getPresenterName());
+			$errorPresenter = $module.$sep.'Error4xx';
+
+			return new Responses\ForwardResponse($request->setPresenterName($errorPresenter));
 		}
 
    		$this->logger->log($error, ILogger::EXCEPTION);

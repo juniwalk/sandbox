@@ -8,13 +8,13 @@
 namespace App\Forms\Factory;
 
 use App\Entity\User;
-use App\Forms\ProfileForm;
+use App\Forms\AuthProfileForm;
 
-interface ProfileFormFactory
+interface AuthProfileFormFactory
 {
     /**
      * @param  User  $user
-     * @return ProfileForm
+     * @return AuthProfileForm
      */
-    public function create(User $user): ProfileForm;
+    public function create(User $user): AuthProfileForm;
 }

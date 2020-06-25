@@ -7,6 +7,7 @@
 
 namespace App\Modules;
 
+use Contributte\ImageStorage\ImageStoragePresenterTrait;
 use JuniWalk\Tessa\BundleManager;
 use JuniWalk\Tessa\TessaControl;
 use Nette\Application\UI\Presenter;
@@ -15,6 +16,8 @@ use Nette\Utils\Strings;
 
 abstract class AbstractPresenter extends Presenter
 {
+	use ImageStoragePresenterTrait;
+
     /** @var BundleManager */
     private $bundleManager;
 
@@ -63,7 +66,7 @@ abstract class AbstractPresenter extends Presenter
 				$this->flashMessage('nette.message.auth-signout', 'warning');
 			}
 
-			$this->redirect(':Auth:signIn', ['redirect' => $this->storeRequest()]);
+			$this->redirect(':Web:Auth:signIn', ['redirect' => $this->storeRequest()]);
 		}
 
 		if (!$user->isAllowed($this->getName(), $this->getAction()) || ($profile && !$profile->isActive())) {

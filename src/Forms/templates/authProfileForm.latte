@@ -1,0 +1,77 @@
+<section n:snippet="form">
+<form n:name="form" class="widget-user-2">
+
+	<div class="alerts text-left" n:if="$form->hasErrors()" n:snippet="errors">
+		<div class="alert alert-danger" n:foreach="$form->getErrors() as $error">{$error}</div>
+	</div>
+
+	<div class="form-group text-center px-5 pb-2">
+		<img n:img="$profile ? $profile->getImage()" class="img-fluid img-circle elevation-2 w-50" alt="{$profile}">
+	</div>
+
+	<div class="form-group">
+		<label n:name="image" class="sr-only">{_nette.user.image}</label>
+		<div class="input-group">
+			<div class="input-group-prepend">
+				<span class="input-group-text"><i class="fas fa-image fa-fw"></i></span>
+			</div>
+			<div class="custom-file">
+				<input n:name="image" type="file" class="custom-file-input">
+				<label class="custom-file-label">{_nette.user.image-select}</label>
+			</div>
+			<div class="input-group-append" n:if="$profile->hasImage()">
+				<a class="btn btn-danger ajax" n:href="removeImage!" title="{_nette.user.image-remove}">
+					<i class="fas fa-times fa-fw"></i>
+					<span class="sr-only">{_nette.user.image-remove}</span>
+				</a>
+			</div>
+		</div>
+		<small class="form-text text-muted font-italic">{_nette.user.image-help}</small>
+	</div>
+
+	<div class="form-group">
+		<label n:name="name" class="control-label sr-only">{_nette.user.name}</label>
+		<div class="input-group">
+			<div class="input-group-prepend">
+				<span class="input-group-text"><i class="fas fa-fw fa-id-card"></i></span>
+			</div>
+			<input type="text" n:name="name" class="form-control input-lg" placeholder="{_nette.user.name}">
+		</div>
+	</div>
+
+	<div class="form-group required">
+		<label n:name="email" class="control-label sr-only">{_nette.user.email}</label>
+		<div class="input-group">
+			<div class="input-group-prepend">
+				<span class="input-group-text"><i class="fas fa-fw fa-envelope"></i></span>
+			</div>
+			<input type="email" n:name="email" class="form-control input-lg" placeholder="{_nette.user.email}">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label n:name="password" class="control-label sr-only">{_nette.user.password-change}</label>
+		<div class="input-group">
+			<div class="input-group-prepend">
+				<span class="input-group-text"><i class="fas fa-fw fa-lock"></i></span>
+			</div>
+			<input type="password" n:name="password" class="form-control input-lg" placeholder="{_nette.user.password-change}" autocomplete="new-password">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<button type="submit" n:name="submit" class="btn btn-primary">{_nette.button.save|noescape}</button>
+		<a href="{plink default}" class="btn btn-secondary">{_nette.button.cancel|noescape}</a>
+	</div>
+
+	<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function() {
+		{foreach $form->getControls() as $input}
+		{continueIf !$input->hasErrors()}
+		$('#' + {$input->getHtmlId()}).addClass('is-invalid');
+		{/foreach}
+	});
+	</script>
+
+</form>
+</section>

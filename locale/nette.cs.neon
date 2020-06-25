@@ -1,6 +1,6 @@
 
 #
-# @copyright Design Point, s.r.o. (c) 2018
+# @copyright Design Point, s.r.o. (c) 2020
 # @license   MIT License
 #
 
@@ -20,56 +20,45 @@ author:
     phone: '+420 720 512 307'
 
 menu:
-    mainmenu: '<i class="fas fa-fw fa-bars"></i> Hlavní menu'
+    web: '<i class="fas fa-fw fa-bars"></i> Hlavní menu'
+    web-link: '<i class="fas fa-fw fa-house-user"></i> <span class="sr-only">Frontend</a>'
+
     admin: '<i class="fas fa-fw fa-cog"></i> Administrace'
-    toggle: 'Menu'
-
-
-#
-# Error pages
-#
-error:
-    homepage: '<i class="fas fa-home fa-fw"></i> Domovská stránka'
-
-    error4xx: 'Oops...'
-    error4xx-description: 'Váš prohlížeč odeslal požadavek, který tento server nedokázal zpracovat.'
-
-    error403: '<i class="fas fa-exclamation-circle fa-fw"></i> Přístup odepřen'
-    error403-description: 'You do not have permission to view this page. Please try contact the web site administrator if you believe you should be able to view this page.'
-
-    error404: '<i class="fas fa-exclamation-triangle fa-fw"></i> Stránka nenalezena'
-    error404-description: 'Stránka, kterou jste požadovali, nebyla nalezena. Je možné, že adresa je nesprávná nebo stránka již neexistuje.'
-
-    error405: '<i class="fas fa-exclamation-triangle fa-fw"></i> Nepovolená metoda'
-    error405-description: 'Metoda požadavku není povolena pro tuto URL.'
-
-    error410: '<i class="fas fa-exclamation-triangle fa-fw"></i> Stránka nenalezena'
-    error410-description: 'Požadovaná stránka byla odebrána z webu. Omlouváme se za nepříjemnosti.'
+    admin-link: '<i class="fas fa-fw fa-cog"></i> <span class="sr-only">Backend</a>'
 
 
 #
 # Page titles
 #
 page:
-    auth-help: '<i class="fas fa-fw fa-question-circle"></i> <span class="sr-only">Nápověda</span>'
-    auth-signout: '<i class="fas fa-fw fa-power-off"></i> <span class="sr-only">Odhlásit</span>'
-    auth-signin: '<i class="fas fa-sign-in-alt fa-fw"></i> Přihlásit'
-    auth-signup: '<i class="fas fa-user-plus fa-fw"></i> Registrovat'
-    auth-profile: '<i class="fas fa-id-card fa-fw"></i> Profil'
-    auth-passwordreset: '<i class="fas fa-user-lock fa-fw"></i> Resetovat heslo'
-    auth-passwordforgot: '<i class="fas fa-key fa-fw"></i> Zapomenuté heslo'
+    # Root Module
+    error-4xx: 'Oops...'
+    error-403: '<i class="fas fa-exclamation-circle fa-fw"></i> Přístup odepřen'
+    error-404: '<i class="fas fa-exclamation-triangle fa-fw"></i> Stránka nenalezena'
+    error-405: '<i class="fas fa-exclamation-triangle fa-fw"></i> Nepovolená metoda'
+    error-410: '<i class="fas fa-exclamation-triangle fa-fw"></i> Stránka nenalezena'
 
-    # Mainmenu
-    homepage-default: '<i class="fas fa-home fa-fw"></i> Přehled'
+    # Web Module
+    web-auth-help: '<i class="fas fa-fw fa-question-circle"></i> <span class="sr-only">Nápověda</span>'
+    web-auth-signout: '<i class="fas fa-fw fa-power-off"></i> <span class="sr-only">Odhlásit</span>'
+    web-auth-signin: '<i class="fas fa-sign-in-alt fa-fw"></i> Přihlásit'
+    web-auth-signup: '<i class="fas fa-user-plus fa-fw"></i> Registrovat'
+    web-auth-profile: '<i class="fas fa-id-card fa-fw"></i> Profil'
+    web-auth-passwordreset: '<i class="fas fa-user-lock fa-fw"></i> Resetovat heslo'
+    web-auth-passwordforgot: '<i class="fas fa-key fa-fw"></i> Zapomenuté heslo'
 
-    # Admin menu
+    web-home-default: '<i class="fas fa-home fa-fw"></i> Přehled'
+
+    # Admin Module
+    admin-home-default: '<i class="fas fa-home fa-fw"></i> Přehled'
+
     admin-user-default: '<i class="fas fa-user fa-fw"></i> Uživatelé'
     admin-user-create: '<i class="fas fa-plus-square fa-fw"></i> Vytvořit uživatele'
     admin-user-edit: '<i class="fas fa-edit fa-fw"></i> Upravit uživatele'
 
 
 #
-# Flash messages
+# Messages
 #
 message:
     something-went-wrong: 'Nastala chyba a nemohli jsme pokračovat.'
@@ -82,6 +71,19 @@ message:
     auth-signout: 'Byl jste odhlášen pro neaktivitu.'
     auth-banned: 'Byl vám zamezen přístup.'
 
+    # Error pages
+    error4xx-description: 'Váš prohlížeč odeslal požadavek, který tento server nedokázal zpracovat.'
+    error403-description: 'You do not have permission to view this page. Please try contact the web site administrator if you believe you should be able to view this page.'
+    error404-description: 'Stránka, kterou jste požadovali, nebyla nalezena. Je možné, že adresa je nesprávná nebo stránka již neexistuje.'
+    error405-description: 'Metoda požadavku není povolena pro tuto URL.'
+    error410-description: 'Požadovaná stránka byla odebrána z webu. Omlouváme se za nepříjemnosti.'
+
+    # GOTO links
+    goto-signIn: 'Už si vzpomínám, přihlásím se!'
+    goto-signIn-existing: 'Účet mám již vytvořený'
+    goto-signUp: 'Ještě nemám účet'
+    goto-passwordForgot: 'Nevzpomínám si na své heslo'
+
 
 #
 # User section
@@ -90,36 +92,55 @@ user:
     name: 'Jméno a příjmení'
     name-required: 'Zadejte prosím své celé jméno.'
     email: 'Email'
-    email-not-found: 'Zadaný email nebyl nalezen.'
     email-required: 'Zadejte váš email.'
     email-invalid: 'V zadaném emailu je chyba.'
     password: 'Heslo'
     password-change: 'Nové heslo'
     password-required: 'Zadejte prosím vaše heslo.'
     password-length: 'Heslo musí být minimálně %d znaků.'
-    password-forgot: 'Nevzpomínám si na své heslo!'
     role: 'Role'
     image: 'Profilový obrázek'
     image-invalid: 'Zkontrolujte typ nahraného obrázku.'
+    image-select: 'Zvolte obrázek…'
     image-too-large: 'Nahraný obrázek je příliš velký.'
     image-help: 'Maximální povolená velikost je 2MB, obrázek bude oříznut.'
     image-remove: 'Odstranit existující obrázek'
-    agreement: 'Souhlasím s pravidly užívání.'
     captcha: 'Captcha'
     captcha-required: 'Vyplňte prosím captchu.'
     active: 'Aktivní'
     active-help: 'Povolit možnosti přihlášení do aplikace.'
-    remember: 'Zapamatuj si mě.'
-
-    roles:
-        guest: 'Žádná'
-        user: 'Uživatel'
-        manager: 'Správce'
-        admin: 'Admin'
 
 
 #
-# General translations
+# Enum translations
+#
+enum:
+
+    role:
+        guest: 'žádná'
+        user: 'uživatel'
+        manager: 'správce'
+        admin: 'admin'
+
+    status:
+        created: 'čeká'
+        active: 'v řešení'
+        finish: 'hotovo'
+        invoice: 'fakturováno'
+        storno: 'zrušeno'
+        delete: 'odstraněno'
+
+
+#
+# Controls
+#
+control:
+    user-grid: '<i class="fas fa-users fa-fw"></i> Správa uživatelů'
+    user-form: '<i class="fas fa-user fa-fw"></i> Uživatel'
+
+
+#
+# Buttons
 #
 button:
     add: '<i class="fas fa-plus fa-fw"></i> Přidat'
@@ -128,6 +149,8 @@ button:
     close: '<i class="fas fa-times fa-fw"></i> Zavřit'
     filter: '<i class="fas fa-filter fa-fw"></i> Filtrovat'
     insert: '<i class="fas fa-share fa-fw"></i> Vložit'
+    homepage: '<i class="fas fa-home fa-fw"></i> Přejít domů'
+    back: '<i class="fas fa-arrow-alt-circle-left fa-fw"></i> Vrátit se'
     passwordForgot: '<i class="fas fa-key fa-fw"></i> Zaslat heslo'
     passwordReset: '<i class="fas fa-user-lock fa-fw"></i> Resetovat heslo'
     save: '<i class="fas fa-save fa-fw"></i> Uložit'
@@ -140,6 +163,7 @@ button:
 # General translations
 #
 general:
+    id: '#'
     all: 'vše'
     actions: 'Akce'
     active: 'Aktivní'

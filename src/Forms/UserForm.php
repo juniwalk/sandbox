@@ -9,6 +9,8 @@ namespace App\Forms;
 
 use App\Entity\User;
 use App\Entity\Enums\Role;
+use Contributte\ImageStorage\ImageStorage;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI\Form;
@@ -20,23 +22,30 @@ final class UserForm extends AbstractForm
 	/** @var EntityManager */
 	private $entityManager;
 
+	/** @var ImageStorage */
+	private $imageStorage;
+
 	/** @var User */
 	private $user;
 
 
 	/**
 	 * @param User|null  $user
+	 * @param ImageStorage  $imageStorage
 	 * @param EntityManager  $entityManager
 	 */
 	public function __construct(
 		?User $user,
+		ImageStorage $imageStorage,
 		EntityManager $entityManager
 	) {
 		$this->entityManager = $entityManager;
+		$this->imageStorage = $imageStorage;
 		$this->user = $user;
 
 		$this->setTemplateFile(__DIR__.'/templates/userForm.latte');
 		$this->onBeforeRender[] = function ($form, $template) {
+			$template->add('imageStorage', $this->imageStorage);
 			$template->add('profile', $this->user);
 			$this->setDefaults($this->user);
 		};
@@ -50,13 +59,21 @@ final class UserForm extends AbstractForm
 	{
     	$user = $this->getUser();
 
+		if (!$image = $user->getImage()) {
+			return;
+		}
+
 		try {
-			$this->entityManager->persist($user);
+			$this->imageStorage->delete($image);
+			$user->setImage(null);
+
 			$this->entityManager->flush();
 
-		} catch(ORMException $e) {
-			$form->addError('email', 'nette.message.something-went-wrong');
+		} catch(UniqueConstraintViolationException $e) {
+			$form->addError('email', 'nette.message.email-taken');
 		}
+
+		$this->redrawControl('form');
 	}
 
 
@@ -127,6 +144,11 @@ final class UserForm extends AbstractForm
 		$user->setEmail($data->email);
 		$user->setRole($data->role);
 		$user->setActive($data->active);
+
+		if ($data->image->isOk()) {
+			$image = $this->imageStorage->saveUpload($data->image, 'avatar');
+			$user->setImage($image);
+		}
 
 		try {
 			$this->entityManager->persist($user);

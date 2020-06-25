@@ -23,6 +23,7 @@ final class RouterFactory
 	{
         $router = new RouteList;
         $router[] = static::getAdminModule();
+        $router[] = static::getWebModule();
         $router[] = static::getRootModule();
 
 		return $router;
@@ -35,7 +36,7 @@ final class RouterFactory
 	private static function getRootModule(): RouteList
 	{
         $router = new RouteList;
-        $router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
+        $router[] = new Route('<presenter>/<action>[/<id>]', 'Error:default');
 
 		return $router;
 	}
@@ -47,7 +48,26 @@ final class RouterFactory
 	private static function getAdminModule(): RouteList
 	{
         $router = new RouteList('Admin');
-		$router[] = new Route('admin/<presenter>/<action>[/<id>]', ['action' => 'default']);
+		$router[] = new Route('admin/<presenter>/<action>[/<id>]', [
+			'presenter' => 'Home',
+			'action' => 'default',
+		]);
+
+		return $router;
+	}
+
+
+	/**
+	 * @return RouteList
+	 */
+	private static function getWebModule(): RouteList
+	{
+        $router = new RouteList('Web');
+		$router[] = new Route('/changelog', 'Home:changelog');
+		$router[] = new Route('<presenter>/<action>[/<id>]', [
+			'presenter' => 'Home',
+			'action' => 'default',
+		]);
 
 		return $router;
 	}

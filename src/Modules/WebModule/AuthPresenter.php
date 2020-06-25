@@ -5,16 +5,19 @@
  * @license   MIT License
  */
 
-namespace App\Modules;
+namespace App\Modules\WebModule;
 
 use App\Entity\User;
 use App\Entity\UserRepository;
 use App\Forms\Factory\AuthPasswordForgotFormFactory;
+use App\Forms\Factory\AuthProfileFormFactory;
 use App\Forms\Factory\AuthSignInFormFactory;
 use App\Forms\Factory\AuthSignUpFormFactory;
-use App\Forms\Factory\ProfileFormFactory;
+use App\Forms\AuthPasswordForgotForm;
+use App\Forms\AuthProfileForm;
 use App\Forms\AuthSignInForm;
 use App\Forms\AuthSignUpForm;
+use App\Modules\AbstractPresenter;
 use App\Security\AccessManager;
 use Ramsey\Uuid\Uuid;
 
@@ -23,14 +26,14 @@ final class AuthPresenter extends AbstractPresenter
 	/** @var AuthPasswordForgotFormFactory */
 	private $authPasswordForgotFormFactory;
 
+	/** @var AuthProfileFormFactory */
+	private $authProfileFormFactory;
+
 	/** @var AuthSignInFormFactory */
 	private $authSignInFormFactory;
 
 	/** @var AuthSignUpFormFactory */
 	private $authSignUpFormFactory;
-
-	/** @var ProfileFormFactory */
-	private $profileFormFactory;
 
 	/** @var UserRepository */
 	private $userRepository;
@@ -45,38 +48,44 @@ final class AuthPresenter extends AbstractPresenter
 	/**
 	 * @param AccessManager  $accessManager
 	 * @param UserRepository  $userRepository
-	 * @param ProfileFormFactory  $profileFormFactory
 	 * @param AuthSignInFormFactory  $authSignInFormFactory
 	 * @param AuthSignUpFormFactory  $authSignUpFormFactory
+	 * @param AuthProfileFormFactory  $authProfileFormFactory
 	 * @param AuthPasswordForgotFormFactory  $authPasswordForgotFormFactory
 	 */
 	public function __construct(
 		AccessManager $accessManager,
 		UserRepository $userRepository,
-		ProfileFormFactory $profileFormFactory,
 		AuthSignInFormFactory $authSignInFormFactory,
 		AuthSignUpFormFactory $authSignUpFormFactory,
+		AuthProfileFormFactory $authProfileFormFactory,
 		AuthPasswordForgotFormFactory $authPasswordForgotFormFactory
 	) {
 		$this->authPasswordForgotFormFactory = $authPasswordForgotFormFactory;
+		$this->authProfileFormFactory = $authProfileFormFactory;
 		$this->authSignInFormFactory = $authSignInFormFactory;
 		$this->authSignUpFormFactory = $authSignUpFormFactory;
-		$this->profileFormFactory = $profileFormFactory;
 		$this->userRepository = $userRepository;
 		$this->accessManager = $accessManager;
 	}
 
 
+	/**
+	 * @return void
+	 */
 	public function actionDefault(): void
 	{
 		if ($this->getUser()->isLoggedIn()) {
-			$this->redirect(':Homepage:default');
+			$this->redirect(':Web:Home:default');
 		}
 
 		$this->redirect('signIn');
 	}
 
 
+	/**
+	 * @return void
+	 */
 	public function actionSignOut(): void
 	{
 		$this->getUser()->logout(true);
@@ -98,6 +107,42 @@ final class AuthPresenter extends AbstractPresenter
 			$data = $this->accessManager->validateToken($hash, false);
 			$this->user = $this->userRepository->getById((int) $data['key']);
 		}
+	}
+
+
+	/**
+	 * @param  string  $name
+	 * @return PasswordForgotForm
+	 */
+	protected function createComponentPasswordForgotForm(string $name): PasswordForgotForm
+	{
+		$form = $this->authPasswordForgotFormFactory->create();
+		$form->onSuccess[] = function ($form, $data) {
+			$this->flashMessage('nette.message.auth-email-sent', 'success');
+			$this->redirect('signIn');
+		};
+
+		return $form;
+	}
+
+
+	/**
+	 * @param  string  $name
+	 * @return AuthProfileForm
+	 */
+	protected function createComponentProfileForm(string $name): AuthProfileForm
+	{
+		$user = $this->user ?: $this->getUser()->getIdentity();
+		$form = $this->authProfileFormFactory->create($user);
+		$form->onSuccess[] = function ($form, $data) {
+			if ($hash = $this->getParameter('hash')) {
+				$this->accessManager->clearToken($hash);
+			}
+
+			$this->redirect('default');
+		};
+
+		return $form;
 	}
 
 
@@ -125,42 +170,6 @@ final class AuthPresenter extends AbstractPresenter
 		$form = $this->authSignUpFormFactory->create($name);
 		$form->onSuccess[] = function ($form, $data) {
 			$this->getUser()->login($data->email, $data->password);
-			$this->redirect('default');
-		};
-
-		return $form;
-	}
-
-
-	/**
-	 * @param  string  $name
-	 * @return PasswordForgotForm
-	 */
-	protected function createComponentPasswordForgotForm(string $name)
-	{
-		$form = $this->authPasswordForgotFormFactory->create();
-		$form->onSuccess[] = function ($form, $data) {
-			$this->flashMessage('nette.message.auth-email-sent', 'success');
-			$this->redirect('signIn');
-		};
-
-		return $form;
-	}
-
-
-	/**
-	 * @param  string  $name
-	 * @return ProfileForm
-	 */
-	protected function createComponentProfileForm(string $name)
-	{
-		$user = $this->user ?: $this->getUser()->getIdentity();
-		$form = $this->profileFormFactory->create($user);
-		$form->onSuccess[] = function ($form, $data) {
-			if ($token = $this->getParam('hash')) {
-				$this->accessManager->clearToken($token);
-			}
-
 			$this->redirect('default');
 		};
 

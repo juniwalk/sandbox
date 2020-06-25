@@ -1,13 +1,12 @@
-{layout ./@layout.latte}
 <section class="login-box-body" n:block="content">
 
-    <div class="page-header no-margin-top">
-        <h2 n:block="title" class="no-margin">{_nette.error.error403|noescape}</h2>
-    </div>
+    <p>{_nette.message.error403-description}</p>
+    <small>error {$code}</small>
 
-    <p>{_nette.error.error403-description}</p>
-    <p><a n:href=":Homepage:default">{_nette.error.homepage|noescape}</a></p>
+    <br>
+    <br>
 
-    <small>error 403</small>
+    <a class="btn btn-primary" href="javascript: history.back();">{_nette.button.back|noescape}</a>
+    <a class="btn btn-secondary" n:href=":Web:Home:default">{_nette.button.homepage|noescape}</a>
 
 </section>

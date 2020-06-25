@@ -3,9 +3,20 @@
 # https://nette.org/security-warning
 #
 extensions:
+	imageStorage: Contributte\ImageStorage\DI\ImageStorageExtension
 	recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
 	tessa: JuniWalk\Tessa\DI\TessaExtension
 
+# Contributte \ ImageStorage
+imageStorage:
+	data_path: %wwwDir%/uploads
+	data_dir: uploads
+	algorithm_file: sha1_file
+	algorithm_content: sha1
+	quality: 85
+	default_transform: fit
+	noimage_identifier: noimage/8f/default.png
+	friendly_url: false
 
 # Contributte \ reCAPTCHA
 recaptcha:
@@ -25,14 +36,16 @@ tessa:
 			- %wwwDir%/vendor/source-sans-pro/source-sans-pro.css
 			- %wwwDir%/vendor/@fortawesome/fontawesome-free/css/all.min.css
 			- %wwwDir%/vendor/jquery/dist/jquery.min.js
-			- %wwwDir%/vendor/bootstrap/dist/css/bootstrap.min.css
+			- %wwwDir%/vendor/popper.js/dist/umd/popper.min.js
 			- %wwwDir%/vendor/bootstrap/dist/js/bootstrap.min.js
-			- %wwwDir%/vendor/admin-lte/dist/css/AdminLTE.min.css
-			- %wwwDir%/vendor/admin-lte/dist/css/skins/skin-red.min.css
+			- %wwwDir%/vendor/select2/dist/js/select2.min.js
+			- %wwwDir%/vendor/select2/dist/css/select2.min.css
+			- %wwwDir%/vendor/admin-lte/dist/css/adminlte.min.css
 			- %wwwDir%/vendor/admin-lte/dist/js/adminlte.min.js
 			- %wwwDir%/vendor/nette-forms/src/assets/netteForms.min.js
 			- %wwwDir%/vendor/nette.ajax.js/nette.ajax.js
-			- %wwwDir%/vendor/ublaboo-datagrid/assets/dist/datagrid.js
+			- %wwwDir%/vendor/ublaboo-datagrid/assets/datagrid.js
+			- %wwwDir%/vendor/ublaboo-datagrid/assets/datagrid-instant-url-refresh.js
 			- %wwwDir%/assets/style.css
 			- %wwwDir%/assets/main.js
 

@@ -1,0 +1,9 @@
+<ul class="nav nav-pills nav-sidebar flex-column mt-3">
+
+	<li class="nav-header text-muted text-uppercase">{_nette.menu.web|noescape}</li>
+
+	<li n:class="nav-item, $presenter->isLinkCurrent(':Web:Home:*') ? active" n:if="$user->isAllowed('Web:Home', 'default')">
+		<a class="nav-link" n:href=":Web:Home:default">{_nette.page.web-home-default|noescape}</a>
+	</li>
+
+</ul>

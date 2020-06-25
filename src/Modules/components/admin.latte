@@ -1,9 +1,0 @@
-<ul class="sidebar-menu" n:if="$user->isInRole('admin')">
-
-	<li class="header text-upper">{_nette.menu.admin|noescape}</li>
-
-	<li n:if="$user->isAllowed('Admin:User', 'default')" n:class="$presenter->isLinkCurrent(':Admin:User:*') ? active">
-		<a n:href=":Admin:User:default">{_nette.page.admin-user-default|noescape}</a>
-	</li>
-
-</ul>

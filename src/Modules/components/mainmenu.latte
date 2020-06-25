@@ -1,9 +1,0 @@
-<ul class="sidebar-menu">
-
-	<li class="header text-upper">{_nette.menu.mainmenu|noescape}</li>
-
-	<li n:if="$user->isAllowed('Homepage', 'default')" n:class="$presenter->isLinkCurrent(':Homepage:*') ? active">
-		<a n:href=":Homepage:default">{_nette.page.homepage-default|noescape}</a>
-	</li>
-
-</ul>

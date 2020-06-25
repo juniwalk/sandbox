@@ -19,9 +19,6 @@ abstract class AbstractGrid extends Control
 	/** @var bool */
 	private $isDisabled = false;
 
-	/** @var bool */
-	private $isTableResponsive = true;
-
 	/** @var string */
 	private $title;
 
@@ -81,16 +78,6 @@ abstract class AbstractGrid extends Control
 
 
 	/**
-	 * @param  bool  $tableResponsive
-	 * @return void
-	 */
-	public function setTableResponsive(bool $tableResponsive): void
-	{
-		$this->isTableResponsive = $tableResponsive;
-	}
-
-
-	/**
 	 * @return bool
 	 */
 	public function isDisabled(): bool
@@ -99,19 +86,9 @@ abstract class AbstractGrid extends Control
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function isTableResponsive(): bool
-	{
-		return $this->isTableResponsive;
-	}
-
-
 	final public function render()
 	{
 		$this->getComponent('grid')->getTemplate()
-			->add('isTableResponsive', $this->isTableResponsive)
 			->add('controlName', $this->getName())
 			->add('isDisabled', $this->isDisabled)
 			->add('title', $this->title);
@@ -170,19 +147,19 @@ abstract class AbstractGrid extends Control
 	final protected function createGrid(string $name, bool $rememberState = true): DataGrid
 	{
 		$grid = new DataGrid(null, $name);
-		$grid->setItemsPerPageList([50, 100, 200]);
-		$grid->setDefaultPerPage(50);
+		$grid->setItemsPerPageList([10, 20, 50]);
+		$grid->setDefaultPerPage(10);
+		$grid->setCustomPaginatorTemplate(__DIR__.'/templates/datagrid_paginator.latte');
 		$grid->setTemplateFile(__DIR__.'/templates/datagrid.latte');
 		$grid->setDataSource($this->createModel());
 		$grid->setRememberState($rememberState);
 		$grid->setOuterFilterRendering(true);
-		$grid->setMultiSortEnabled(true);
 
 		if ($this->translator instanceof ITranslator) {
 			$grid->setTranslator($this->translator);
 		}
 
-		DataGrid::$iconPrefix = 'fas fa-';
+		DataGrid::$iconPrefix = 'fas fa-fw fa-';
 
 		return $grid;
 	}

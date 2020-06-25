@@ -1,28 +1,11 @@
-{**
- * @param Filter                         $filter
- * @param Nette\Forms\Controls\TextInput $input
- * @param string                         $icon_prefix       Icon prefix (fa fa-)
- *}
-
-{if $outer}
-	<div class="form-group">
-		{label $input class => 'col-sm-3 control-label' /}
-		<div class="col-sm-9">
-			<div class="input-group date">
-				<span class="input-group-addon">
-					<span class="fa fa-calendar"></span>
-				</span>
-				{input $input}
+<div class="form-group row">
+	<div class="col-sm-3 text-sm-right">{label $input, class => 'col-form-label font-weight-normal py-1'}</div>
+    <div class="col-sm-9">
+		<div class="input-group input-group-sm">
+			{input $input}
+			<div class="input-group-append">
+				<label class="input-group-text" n:name="$input"><i class="{$iconPrefix}calendar"></i></label>
 			</div>
 		</div>
-	</div>
-{else}
-	<div class="form-inline">
-		<div class="input-group date">
-			{input $input}
-			<span class="input-group-addon">
-				<span class="fa fa-calendar"></span>
-			</span>
-		</div>
-	</div>
-{/if}
+    </div>
+</div>

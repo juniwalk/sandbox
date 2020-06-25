@@ -11,9 +11,12 @@ use App\Entity\User;
 use App\Entity\UserRepository;
 use App\Entity\Enums\Role;
 use App\Tools\HtmlHelper;
+use Contributte\ImageStorage\ImageStorage;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Doctrine\ORM\ORMException;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
+use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
 
 final class UserGrid extends AbstractGrid
@@ -24,19 +27,25 @@ final class UserGrid extends AbstractGrid
 	/** @var EntityManager */
 	private $entityManager;
 
+	/** @var ImageStorage */
+	private $imageStorage;
+
 
 	/**
+	 * @param ImageStorage  $imageStorage
 	 * @param EntityManager  $entityManager
 	 * @param UserRepository  $userRepository
 	 */
 	public function __construct(
+		ImageStorage $imageStorage,
 		EntityManager $entityManager,
 		UserRepository $userRepository
 	) {
 		$this->userRepository = $userRepository;
 		$this->entityManager = $entityManager;
+		$this->imageStorage = $imageStorage;
 
-		$this->setTitle('nette.page.admin-user-default');
+		$this->setTitle('nette.control.user-grid');
 	}
 
 
@@ -50,6 +59,10 @@ final class UserGrid extends AbstractGrid
         try {
             $user = $this->userRepository->getById($id);
 
+			if ($image = $user->getImage()) {
+				$this->imageStorage->delete($image);
+			}
+
             $this->entityManager->remove($user);
             $this->entityManager->flush();
 
@@ -62,14 +75,36 @@ final class UserGrid extends AbstractGrid
 
 	/**
 	 * @param  int  $id
+	 * @param  string  $role
 	 * @return void
 	 * @secured
 	 */
-	public function handleActive(int $id): void
+	public function handleRole(int $id, string $role): void
 	{
         try {
             $user = $this->userRepository->getById($id);
-			$user->setActive(!$user->isActive());
+			$user->setRole($role);
+
+            $this->entityManager->flush();
+
+        } catch (ORMException $e) {
+        }
+
+		$this->redrawGrid();
+	}
+
+
+	/**
+	 * @param  int  $id
+	 * @param  bool  $value
+	 * @return void
+	 * @secured
+	 */
+	public function handleActive(int $id, bool $value): void
+	{
+        try {
+            $user = $this->userRepository->getById($id);
+			$user->setActive($value);
 
             $this->entityManager->flush();
 
@@ -99,12 +134,34 @@ final class UserGrid extends AbstractGrid
 		$grid->setDefaultSort(['name' => 'ASC']);
 
 		$grid->addColumnText('name', 'nette.user.name')->setSortable()
-            ->setRenderer([$this, 'columnName']);
-		$grid->addColumnText('role', 'nette.user.role')->setSortable()
-            ->setRenderer([$this, 'columnRole']);
-		$grid->addColumnText('email', 'nette.user.email')->setSortable();
-		$grid->addColumnText('isActive', 'nette.user.active')->setSortable()->setAlign('right')
-			->setRenderer([$this, 'columnActive']);
+			->setRenderer([$this, 'columnName']);
+		$roleStatus = $grid->addColumnStatus('role', 'nette.user.role')->setSortable();
+		$roleStatus->onChange[] = function($id, $value) { $this->handleRole((int) $id, $value); };
+
+		foreach ((new Role)->getItems() as $key => $role) {
+			$color = (new Role)->getColor($key);
+			$roleStatus->addOption($key, $role)
+				->setClass('btn-'.$color)
+				->endOption();
+		}
+
+		$grid->addColumnText('email', 'nette.user.email')->setSortable()->setDefaultHide();
+		$activeStatus = $grid->addColumnStatus('isActive', 'nette.user.active')->setSortable()->setAlign('right');
+		$activeStatus->onChange[] = function($id, $value) { $this->handleActive((int) $id, (bool) $value); };
+		$activeStatus->addOption(true, 'nette.general.yes')
+				->setIconSecondary('fas fa-check fa-fw')
+				->setIcon('fas fa-check fa-fw')
+				->setClass('btn-success')
+				->endOption()
+			->addOption(false, 'nette.general.no')
+				->setIconSecondary('fas fa-times fa-fw')
+				->setIcon('fas fa-times fa-fw')
+				->setClass('btn-danger')
+				->endOption();
+
+		$grid->addColumnDateTime('signUp', 'nette.user.signUp')->setSortable()->setFormat('j. n. Y G:i');
+		$grid->addColumnDateTime('signIn', 'nette.user.signIn')->setSortable()->setFormat('j. n. Y G:i');
+		$grid->addColumnNumber('id', 'nette.general.id')->setSortable()->setFormat(0, ',', '');
 
 
 		$grid->addFilterText('name', 'nette.user.name')->setCondition(function ($qb, $value) {
@@ -113,7 +170,7 @@ final class UserGrid extends AbstractGrid
 		$grid->addFilterText('email', 'nette.user.email')->setCondition(function ($qb, $value) {
 			$qb->andWhere('LOWER(e.email) LIKE LOWER(:email)')->setParameter('email', '%'.$value.'%');
 		});
-		$grid->addFilterSelect('role', 'nette.user.role', [null => 'nette.general.all'] + (new Role)->getItems())
+		$grid->addFilterMultiSelect('role', 'nette.user.role', [null => 'nette.general.all'] + (new Role)->getItems())
 			->setTranslateOptions(true);
 		$grid->addFilterSelect('isActive', 'nette.user.active', $this->createActiveOptions())
 			->setTranslateOptions(true);
@@ -122,12 +179,12 @@ final class UserGrid extends AbstractGrid
         $grid->addToolbarButton('User:create', 'nette.general.create')
             ->setClass('btn btn-success btn-sm')->setIcon('plus');
 
-		$grid->addAction('User:edit', 'edit')->setIcon('pencil-alt')
+		$grid->addAction('User:edit', 'nette.general.edit')->setIcon('pencil-alt')
 			->setClass('btn btn-primary btn-xs')
 			->setTitle('nette.general.edit');
 
-		$grid->addAction('remove!', 'remove')->setIcon('trash-alt')
-			//->setConfirm('nette.message.confirm-deletion', 'name')
+		$grid->addAction('remove!', 'nette.general.remove')->setIcon('trash-alt')
+			->setConfirmation(new StringConfirmation('nette.message.confirm-deletion', 'name'))
 			->setClass('btn btn-danger btn-xs ajax')
 			->setTitle('nette.general.remove');
 
@@ -142,9 +199,14 @@ final class UserGrid extends AbstractGrid
 	public function columnName(User $user): Html
 	{
 		$presenter = $this->getPresenter();
+		$basePath = $presenter->getHttpRequest()->getUrl()->getBasePath();
 
-		$link = $presenter->lazyLink(':Admin:User:edit', $user->getId());
-		$name = Html::el('a')->setHref($link)
+		$image = $this->imageStorage->fromIdentifier($user->getImage());
+		$avatar = Html::el('img class="img-fluid img-circle mr-2" width="24px" alt="'.$user.'"')
+			->setSrc($basePath.$image->createLink());
+
+		$link = $presenter->lazyLink('User:edit', $user->getId());
+		$name = Html::el('a')->setHref($link)->addHtml($avatar)
 			->addText($user->getName());
 
 		if (!$user->isActive()) {
@@ -170,21 +232,6 @@ final class UserGrid extends AbstractGrid
         $role = (new Role)->getItem($role);
 
 		return HtmlHelper::createLabel($role);
-	}
-
-
-	/**
-	 * @param  User  $user
-	 * @return Html|NULL
-	 */
-	public function columnActive(User $user): ?Html
-	{
-		$status = HtmlHelper::createStatus($user->isActive());
-		$link = $this->lazyLink('active!', $user->getId());
-		$html = Html::el('a class="ajax"')->setHref($link)
-			->addHtml($status);
-
-		return $html;
 	}
 
 

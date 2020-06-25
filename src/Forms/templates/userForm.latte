@@ -1,74 +1,90 @@
-<div class="box box-widget widget-user-2 box-primary" n:snippet="form">
+<section class="card card-outline card-primary" n:snippet="form">
 <form n:name="form">
 
-	<div class="widget-user-header bg-aqua" n:if="$profile">
-		<div class="widget-user-image">
-			<img src="{$basePath}/images/avatar/default.png" class="img-responsive img-circle" alt="{$profile}">
+	<div class="card-header">
+		<h3 class="card-title">{_nette.control.user-form|noescape}</h3>
+	</div>
+
+	<div class="card-body alerts" n:if="$form->hasErrors()" n:snippet="errors" n:inner-foreach="$form->getErrors() as $error">
+		<div n:class="alert, alert-danger, $iterator->isLast() ? mb-0">{$error}</div>
+	</div>
+
+	<div class="card-body">
+
+		<div class="form-group text-center px-5 pb-2">
+			<img n:img="$profile ? $profile->getImage()" class="img-fluid img-circle elevation-2 w-50" alt="{$profile}">
 		</div>
-		<h3 class="widget-user-username">{$profile->getName()}</h3>
-		<h5 class="widget-user-desc">{$profile->getEmail()}</h5>
-	</div>
 
-	<div class="box-body no-padding" n:if="$form->hasErrors()" n:inner-foreach="$form->getErrors() as $error">
-		<div class="alert alert-danger no-margin no-border" n:if="$error">{$error|translate}</div>
-	</div>
-
-	<div class="box-body">
-
-		<div class="form-group required">
+		<div class="form-group">
 			<label n:name="name" class="control-label">{_nette.user.name}</label>
 			<div class="input-group">
-				<label n:name="name" class="input-group-addon"><i class="fas fa-id-card fa-fw"></i></label>
-				<input n:name="name" type="text" class="form-control">
+				<div class="input-group-prepend">
+					<label n:name="name" class="input-group-text"><i class="fas fa-fw fa-id-card"></i></label>
+				</div>
+				<input n:name="name" type="text" class="form-control" placeholder="{_nette.user.name}">
 			</div>
 		</div>
 
 		<div class="form-group required">
 			<label n:name="email" class="control-label">{_nette.user.email}</label>
 			<div class="input-group">
-				<label n:name="email" class="input-group-addon"><i class="fas fa-envelope fa-fw"></i></label>
+				<div class="input-group-prepend">
+					<label n:name="email" class="input-group-text"><i class="fas fa-envelope fa-fw"></i></label>
+				</div>
 				<input n:name="email" type="email" class="form-control">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label n:name="image">{_nette.user.image}</label>
+			<label n:name="image" class="control-label">{_nette.user.image}</label>
 			<div class="input-group">
-				<label n:name="image" class="input-group-addon"><i class="fas fa-image fa-fw"></i></label>
-				<input n:name="image" type="file" class="form-control no-height" style="padding: 4.5px 6px;">
-				<span class="input-group-btn" n:if="$profile">
-					<a class="btn btn-danger" n:href="removeImage!" title="{_nette.user.image-remove}">
+				<div class="input-group-prepend">
+					<label n:name="image" class="input-group-text"><i class="fas fa-image fa-fw"></i></label>
+				</div>
+				<div class="custom-file">
+					<input n:name="image" type="file" class="custom-file-input">
+					<label class="custom-file-label">{_nette.user.image-select}</label>
+				</div>
+				<div class="input-group-append" n:if="$profile && $profile->hasImage()">
+					<a class="btn btn-danger ajax" n:href="removeImage!" title="{_nette.user.image-remove}">
 						<i class="fas fa-times fa-fw"></i>
 						<span class="sr-only">{_nette.user.image-remove}</span>
 					</a>
-				</span>
+				</div>
 			</div>
-			<small class="help-block"><em>{_nette.user.image-help}</em></small>
+			<small class="form-text text-muted font-italic">{_nette.user.image-help}</small>
 		</div>
 
 		<div class="form-group">
 			<label n:name="role" class="control-label">{_nette.user.role}</label>
 			<div class="input-group">
-				<label n:name="role" class="input-group-addon"><i class="fas fa-id-badge fa-fw"></i></label>
+				<div class="input-group-prepend">
+					<label n:name="role" class="input-group-text"><i class="fas fa-id-badge fa-fw"></i></label>
+				</div>
 				<select n:name="role" class="form-control select2"></select>
 			</div>
 		</div>
 
-		<div class="form-group">
-			<div class="checkbox">
-				<label>
-					<input type="checkbox" n:name="active">
-					<strong>{_nette.user.active-help}</strong>
-				</label>
-			</div>
+		<div class="custom-control custom-checkbox">
+			<input n:name="active" type="checkbox" class="custom-control-input">
+			<label n:name="active" class="custom-control-label">{_nette.user.active-help}</label>
 		</div>
 
 	</div>
 
-	<div class="box-footer bg-gray">
+	<div class="card-footer">
 		<button n:name="submit" type="submit" class="btn btn-primary">{_nette.button.save|noescape}</button>
-		<button n:name="apply" type="submit" class="btn btn-default">{_nette.button.apply|noescape}</button>
+		<button n:name="apply" type="submit" class="btn btn-secondary">{_nette.button.apply|noescape}</button>
 	</div>
 
+	<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function() {
+		{foreach $form->getControls() as $input}
+		{continueIf !$input->hasErrors()}
+		$('#' + {$input->getHtmlId()}).addClass('is-invalid');
+		{/foreach}
+	});
+	</script>
+
 </form>
-</div>
+</section>

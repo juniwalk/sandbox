@@ -29,13 +29,14 @@ final class Authorizator extends Permission
 	private function grantPrivileges(): void
 	{
 		// Guest rules
-		$this->allow(Role::GUEST, 'Auth');
 		$this->allow(Role::GUEST, 'Error4xx');
+		$this->allow(Role::GUEST, 'Web:Auth');
 
 		// User rules
-		$this->allow(Role::USER, 'Homepage');
+		$this->allow(Role::USER, 'Web:Home');
 
 		// Manager rules
+		$this->allow(Role::MANAGER, 'Admin:Home');
 		$this->allow(Role::MANAGER, 'Admin:User');
 
 		// Admin has access anywhere
@@ -49,15 +50,16 @@ final class Authorizator extends Permission
 	private function createResources(): void
 	{
 		// Guest resources
-		$this->addResource('Auth');
 		$this->addResource('Error4xx');
+		$this->addResource('Web:Auth');
 
 		// User resources
-		$this->addResource('Homepage');
+		$this->addResource('Web:Home');
 
 		// Manager resources
 
 		// Admin resources
+		$this->addResource('Admin:Home');
 		$this->addResource('Admin:User');
 	}
 }
