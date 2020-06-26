@@ -100,18 +100,4 @@ final class UserRepository extends AbstractRepository
 			return [];
 		}
 	}
-
-
-	/**
-	 * @return string[]
-	 */
-	public function getRoles(): iterable
-	{
-		return [
-			User::GUEST => 'app.user.roles.guest',
-			User::USER => 'app.user.roles.worker',
-			User::MANAGER => 'app.user.roles.manager',
-			User::ADMIN => 'app.user.roles.admin',
-		];
-	}
 }

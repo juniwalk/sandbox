@@ -13,6 +13,9 @@ extensions:
 	- Nettrine\Annotations\DI\AnnotationsExtension
 
 services:
+	- App\Entity\UserManager
+
+	# Repositories
 	- App\Entity\UserRepository
 
 

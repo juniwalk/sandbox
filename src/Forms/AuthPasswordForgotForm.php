@@ -7,6 +7,7 @@
 
 namespace App\Forms;
 
+use App\Entity\UserManager;
 use App\Entity\UserRepository;
 use App\Messages\MessageData;
 use App\Messages\PasswordForgotMessage;
@@ -19,29 +20,23 @@ use Ublaboo\Mailing\MailFactory;
 
 final class AuthPasswordForgotForm extends AbstractForm
 {
-	/** @var AccessManager */
-	private $accessManager;
-
-	/** @var MailFactory */
-	private $messageFactory;
-
 	/** @var UserRepository */
 	private $userRepository;
 
+	/** @var UserManager */
+	private $userManager;
+
 
     /**
-     * @param AccessManager  $accessManager
-     * @param MailFactory  $messageFactory
+	 * @param UserManager  $userManager
      * @param UserRepository  $userRepository
      */
     public function __construct(
-		AccessManager $accessManager,
-		MailFactory $messageFactory,
+		UserManager $userManager,
 		UserRepository $userRepository
 	) {
-		$this->accessManager = $accessManager;
-		$this->messageFactory = $messageFactory;
 		$this->userRepository = $userRepository;
+		$this->userManager = $userManager;
 
 		$this->setTemplateFile(__DIR__.'/templates/authPasswordForgotForm.latte');
     }
@@ -73,20 +68,9 @@ final class AuthPasswordForgotForm extends AbstractForm
     {
     	try {
 			$user = $this->userRepository->getByEmail($data->email);
-			$hash = $this->accessManager->createSluggedToken($user, 'Web:Auth:profile', [
-				'expire' => '15 minutes',
-			]);
+			$this->userManager->passwordForgot($user);
 
-			$message = $this->messageFactory->createByType(
-				PasswordForgotMessage::class,
-				MessageData::from([
-					'profile' => $user,
-					'hash' => $hash,
-				])
-			);
-
-			$message->send();
-
+		// also catch exception from manager
 		} catch (BadRequestException $e) {
 			$form['email']->addError('nette.message.auth-email-unknown');
 		}

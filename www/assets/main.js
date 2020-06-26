@@ -22,6 +22,13 @@ function client_init()
 		templateResult: select2Format,
 		tokenSeparators: []
 	});
+
+	$(document).on('click', '[data-confirm]', function(e) {
+		if (!confirm($(e.target).closest('a').attr('data-confirm'))) {
+			e.stopPropagation();
+			return e.preventDefault();
+		}
+	});
 }
 
 
@@ -54,6 +61,16 @@ function select2Format(state)
     $.nette.ext('snippets').after(function () {
         client_init();
     });
+
+	$.nette.ext('confirm', {
+		before: function (xhr, settings) {
+			var confirm_message = settings.nette.el.data('confirm');
+
+			if (confirm_message) {
+				return confirm(confirm_message);
+			}
+		}
+	});
 
     $.nette.init();
 

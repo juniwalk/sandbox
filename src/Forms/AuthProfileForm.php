@@ -8,6 +8,7 @@
 namespace App\Forms;
 
 use App\Entity\User;
+use App\Entity\UserManager;
 use Contributte\ImageStorage\ImageStorage;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
@@ -24,22 +25,28 @@ final class AuthProfileForm extends AbstractForm
 	/** @var ImageStorage */
 	private $imageStorage;
 
+	/** @var UserManager */
+	private $userManager;
+
 	/** @var User */
 	private $user;
 
 
 	/**
 	 * @param User  $user
+	 * @param UserManager  $userManager
 	 * @param ImageStorage  $imageStorage
 	 * @param EntityManager  $entityManager
 	 */
 	public function __construct(
 		User $user,
+		UserManager $userManager,
 		ImageStorage $imageStorage,
 		EntityManager $entityManager
 	) {
 		$this->entityManager = $entityManager;
 		$this->imageStorage = $imageStorage;
+		$this->userManager = $userManager;
 		$this->user = $user;
 
 		$this->setTemplateFile(__DIR__.'/templates/authProfileForm.latte');
@@ -54,24 +61,20 @@ final class AuthProfileForm extends AbstractForm
 	/**
 	 * @return void
 	 */
-	public function handleRemoveImage(): void
+	public function handleImageRemove(): void
 	{
+		$presenter = $this->getPresenter();
     	$user = $this->getUser();
 
-		if (!$image = $user->getImage()) {
-			return;
-		}
-
 		try {
-			$this->imageStorage->delete($image);
-			$user->setImage(null);
+			$this->userManager->imageRemove($user);
 
-			$this->entityManager->flush();
-
+		// invalid catch
 		} catch(UniqueConstraintViolationException $e) {
-			$form->addError('email', 'nette.message.email-taken');
+			$presenter->flashMessage('nette.message.email-taken', 'danger');
 		}
 
+		$presenter->redrawControl('flashMessages');
 		$this->redrawControl('form');
 	}
 
@@ -114,7 +117,7 @@ final class AuthProfileForm extends AbstractForm
 		$form->addUpload('image')->addCondition($form::FILLED)
 			->addRule($form::MAX_FILE_SIZE, 'nette.user.image-too-large', 2097152)
 			->addRule($form::IMAGE, 'nette.user.image-invalid');
-		$form->addText('name')->setRequired('nette.user.name-required');
+		$form->addText('name');
 		$form->addText('email')->setRequired('nette.user.email-required')->setType('email');
 		$form->addPassword('password')->addCondition($form::FILLED)
 			->addRule($form::MIN_LENGTH, 'nette.user.password-length', 6);
@@ -141,12 +144,15 @@ final class AuthProfileForm extends AbstractForm
 		}
 
 		if ($data->image->isOk()) {
+			if ($user->hasImage()) {
+				$this->imageStorage->delete($user->getImage());
+			}
+
 			$image = $this->imageStorage->saveUpload($data->image, 'avatar');
 			$user->setImage($image);
 		}
 
 		try {
-			$this->entityManager->persist($user);
 			$this->entityManager->flush();
 
 		} catch(UniqueConstraintViolationException $e) {

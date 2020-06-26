@@ -119,9 +119,9 @@ final class AuthPresenter extends AbstractPresenter
 
 	/**
 	 * @param  string  $name
-	 * @return PasswordForgotForm
+	 * @return AuthPasswordForgotForm
 	 */
-	protected function createComponentPasswordForgotForm(string $name): PasswordForgotForm
+	protected function createComponentPasswordForgotForm(string $name): AuthPasswordForgotForm
 	{
 		$form = $this->authPasswordForgotFormFactory->create();
 		$form->onSuccess[] = function ($form, $data) {

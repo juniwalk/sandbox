@@ -17,10 +17,10 @@
 			</div>
 			<div class="custom-file">
 				<input n:name="image" type="file" class="custom-file-input">
-				<label class="custom-file-label">{_nette.user.image-select}</label>
+				<label class="custom-file-label" data-browse="{_nette.general.browse}">{_nette.user.image-select}</label>
 			</div>
 			<div class="input-group-append" n:if="$profile->hasImage()">
-				<a class="btn btn-danger ajax" n:href="removeImage!" title="{_nette.user.image-remove}">
+				<a class="btn btn-danger ajax" n:href="imageRemove!" data-confirm="{_nette.message.confirm-imageRemove}">
 					<i class="fas fa-times fa-fw"></i>
 					<span class="sr-only">{_nette.user.image-remove}</span>
 				</a>
@@ -35,7 +35,7 @@
 			<div class="input-group-prepend">
 				<span class="input-group-text"><i class="fas fa-fw fa-id-card"></i></span>
 			</div>
-			<input type="text" n:name="name" class="form-control input-lg" placeholder="{_nette.user.name}">
+			<input type="text" n:name="name" class="form-control" placeholder="{_nette.user.name}">
 		</div>
 	</div>
 
@@ -45,7 +45,7 @@
 			<div class="input-group-prepend">
 				<span class="input-group-text"><i class="fas fa-fw fa-envelope"></i></span>
 			</div>
-			<input type="email" n:name="email" class="form-control input-lg" placeholder="{_nette.user.email}">
+			<input type="email" n:name="email" class="form-control" placeholder="{_nette.user.email}">
 		</div>
 	</div>
 
@@ -55,7 +55,10 @@
 			<div class="input-group-prepend">
 				<span class="input-group-text"><i class="fas fa-fw fa-lock"></i></span>
 			</div>
-			<input type="password" n:name="password" class="form-control input-lg" placeholder="{_nette.user.password-change}" autocomplete="new-password">
+			<input type="password" n:name="password" class="form-control" placeholder="{_nette.user.password-change}" autocomplete="new-password">
+			<div class="input-group-append">
+				<a class="btn btn-default" data-pwd-toggle="#{$form['password']->getHtmlId()}"><i class="fas fa-eye fa-fw"></i></a>
+			</div>
 		</div>
 	</div>
 
@@ -66,6 +69,17 @@
 
 	<script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
+		$("a[data-pwd-toggle]").click(function() {
+			$('i.fas', this).toggleClass("fa-eye fa-eye-slash");
+			var input = $($(this).data("pwd-toggle"));
+
+			if (input.attr("type") == "password") {
+				input.attr("type", "text");
+			} else {
+				input.attr("type", "password");
+			}
+		});
+
 		{foreach $form->getControls() as $input}
 		{continueIf !$input->hasErrors()}
 		$('#' + {$input->getHtmlId()}).addClass('is-invalid');

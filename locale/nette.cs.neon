@@ -62,6 +62,8 @@ page:
 #
 message:
     something-went-wrong: 'Nastala chyba a nemohli jsme pokračovat.'
+    confirm-passwordForgot: 'Odeslat uživateli email pro reset hesla?'
+    confirm-imageRemove: 'Odstranit existující obrázek?'
     confirm-deletion: 'Opravdu chcete odebrat "%s"?'
 
     auth-email-unknown: 'Zadaný email nebyl nalezen v našem systému.'
@@ -90,19 +92,20 @@ message:
 #
 user:
     name: 'Jméno a příjmení'
-    name-required: 'Zadejte prosím své celé jméno.'
     email: 'Email'
     email-required: 'Zadejte váš email.'
     email-invalid: 'V zadaném emailu je chyba.'
+    email-forgot: 'Resetovat heslo emailem'
     password: 'Heslo'
     password-change: 'Nové heslo'
     password-required: 'Zadejte prosím vaše heslo.'
     password-length: 'Heslo musí být minimálně %d znaků.'
     role: 'Role'
+    role-required: 'Potřebujeme znát roli uživatele.'
     image: 'Profilový obrázek'
     image-invalid: 'Zkontrolujte typ nahraného obrázku.'
     image-select: 'Zvolte obrázek…'
-    image-too-large: 'Nahraný obrázek je příliš velký.'
+    image-too-large: 'Zvolený obrázek je příliš velký.'
     image-help: 'Maximální povolená velikost je 2MB, obrázek bude oříznut.'
     image-remove: 'Odstranit existující obrázek'
     captcha: 'Captcha'
@@ -172,6 +175,7 @@ general:
     copy: 'Kopírovat'
     create: 'Vytvořit'
     edit: 'Upravit'
+    browse: 'Procházet'
     remove: 'Odebrat'
     storno: 'Zrušit'
     yes: 'ano'

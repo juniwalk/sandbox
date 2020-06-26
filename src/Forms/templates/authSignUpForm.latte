@@ -11,7 +11,7 @@
 			<div class="input-group-prepend">
 				<span class="input-group-text"><i class="fas fa-fw fa-envelope"></i></span>
 			</div>
-			<input type="email" n:name="email" class="form-control input-lg" autofocus="autofocus" placeholder="{_nette.user.email}">
+			<input type="email" n:name="email" class="form-control" autofocus="autofocus" placeholder="{_nette.user.email}">
 		</div>
 	</div>
 
@@ -21,7 +21,10 @@
 			<div class="input-group-prepend">
 				<span class="input-group-text"><i class="fas fa-fw fa-lock"></i></span>
 			</div>
-			<input type="password" n:name="password" class="form-control input-lg" placeholder="{_nette.user.password}">
+			<input type="password" n:name="password" class="form-control" placeholder="{_nette.user.password}">
+			<div class="input-group-append">
+				<a class="btn btn-default" data-pwd-toggle="#{$form['password']->getHtmlId()}"><i class="fas fa-eye fa-fw"></i></a>
+			</div>
 		</div>
 	</div>
 
@@ -35,6 +38,17 @@
 
 	<script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
+		$("a[data-pwd-toggle]").click(function() {
+			$('i.fas', this).toggleClass("fa-eye fa-eye-slash");
+			var input = $($(this).data("pwd-toggle"));
+
+			if (input.attr("type") == "password") {
+				input.attr("type", "text");
+			} else {
+				input.attr("type", "password");
+			}
+		});
+
 		{foreach $form->getControls() as $input}
 		{continueIf !$input->hasErrors()}
 		$('#' + {$input->getHtmlId()}).addClass('is-invalid');
