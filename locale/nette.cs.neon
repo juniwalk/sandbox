@@ -107,6 +107,8 @@ user:
     image-remove: 'Odstranit existující obrázek'
     captcha: 'Captcha'
     captcha-required: 'Vyplňte prosím captchu.'
+    signUp: 'Registrace'
+    signIn: 'Přihlášení'
     active: 'Aktivní'
     active-help: 'Povolit možnosti přihlášení do aplikace.'
 

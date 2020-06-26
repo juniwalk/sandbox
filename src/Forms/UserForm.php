@@ -117,9 +117,11 @@ final class UserForm extends AbstractForm
 		$form->addUpload('image')->addCondition($form::FILLED)
 			->addRule($form::MAX_FILE_SIZE, 'nette.user.image-too-large', 2097152)
 			->addRule($form::IMAGE, 'nette.user.image-invalid');
-		$form->addText('name')->setRequired('nette.user.name-required');
-		$form->addSelect('role')->setItems((new Role)->getItems());
-		$form->addText('email')->setRequired('nette.user.email-required')->setType('email');
+		$form->addText('name');
+		$form->addText('email')->setType('email')
+			->setRequired('nette.user.email-required');
+		$form->addSelect('role')->setItems((new Role)->getItems())
+			->setRequired('nette.user.role-required');
 		$form->addCheckbox('active');
 
         $form->addSubmit('submit');

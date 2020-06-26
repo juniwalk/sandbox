@@ -55,7 +55,7 @@
 			<small class="form-text text-muted font-italic">{_nette.user.image-help}</small>
 		</div>
 
-		<div class="form-group">
+		<div class="form-group required">
 			<label n:name="role" class="control-label">{_nette.user.role}</label>
 			<div class="input-group">
 				<div class="input-group-prepend">
@@ -67,7 +67,9 @@
 
 		<div class="custom-control custom-checkbox">
 			<input n:name="active" type="checkbox" class="custom-control-input">
-			<label n:name="active" class="custom-control-label">{_nette.user.active-help}</label>
+			<label n:name="active" class="custom-control-label">
+				<span class="control-label">{_nette.user.active-help}</span>
+			</label>
 		</div>
 
 	</div>

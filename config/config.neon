@@ -35,6 +35,7 @@ session:
 	autoStart: smart
 	expiration: 14 days
 	savePath: %tempDir%/sessions
+	cookieSamesite: true
 
 mail:
 	smtp: true

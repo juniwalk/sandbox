@@ -5,21 +5,31 @@
  */
 
 
-
 /**
  * Forms
  */
-.custom-file-label {
-    color: #939ba2;
+.form-group label.control-label,
+.custom-control span.control-label { font-weight: normal; }
+
+.form-group.required .control-label,
+.custom-control.required .control-label { font-weight: bold; }
+
+.form-group.required .control-label::after,
+.custom-control.required .control-label::after {
+    top: 0;
+    left: 0;
+    position: relative;
+    display: inline;
+	color: #dd4b39;
+	content: "*";
+    padding-left: 4px;
 }
 
+.custom-file-label { color: #939ba2; }
 
-/**
- * Login page
- */
-.login-box, .register-box {
-	width: 420px;
-}
+
+/* Login page */
+.login-box, .register-box { width: 420px; }
 
 .login-box .login-card-body .input-group .input-group-text,
 .register-box .register-card-body .input-group .input-group-text {

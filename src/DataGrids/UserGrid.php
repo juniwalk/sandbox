@@ -207,7 +207,7 @@ final class UserGrid extends AbstractGrid
 
 		$link = $presenter->lazyLink('User:edit', $user->getId());
 		$name = Html::el('a')->setHref($link)->addHtml($avatar)
-			->addText($user->getName());
+			->addText($user->getDisplayName());
 
 		if (!$user->isActive()) {
 			$icon = Html::el('i class="fas fa-ban pull-right"');

@@ -108,6 +108,15 @@ class User implements Identity
 
 
 	/**
+	 * @return string
+	 */
+	public function getDisplayName(): string
+	{
+		return $this->name ?: $this->email;
+	}
+
+
+	/**
 	 * @param  string  $email
 	 * @return void
 	 */

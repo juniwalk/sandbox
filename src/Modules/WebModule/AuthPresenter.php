@@ -75,7 +75,13 @@ final class AuthPresenter extends AbstractPresenter
 	 */
 	public function actionDefault(): void
 	{
-		if ($this->getUser()->isLoggedIn()) {
+		$user = $this->getUser();
+
+		if ($user->isLoggedIn() && $user->isAllowed('Admin:Home')) {
+			$this->redirect(':Admin:Home:default');
+		}
+
+		if ($user->isLoggedIn()) {
 			$this->redirect(':Web:Home:default');
 		}
 
@@ -89,6 +95,7 @@ final class AuthPresenter extends AbstractPresenter
 	public function actionSignOut(): void
 	{
 		$this->getUser()->logout(true);
+		$this->getSession()->destroy();
 		$this->redirect('signIn');
 	}
 
