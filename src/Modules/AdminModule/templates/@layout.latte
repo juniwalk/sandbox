@@ -62,14 +62,14 @@
 					<h1 n:block="title" class="m-0 text-dark">{('nette.page.'.$pageName)|translate|noescape}</h1>
 				</div>
 				<div class="col-sm-6">
-					{ifset breadcrumbs}{include breadcrumbs}{/ifset}
+					{ifset breadcrumbs}{include breadcrumbs|indent:5}{/ifset}
 				</div>
 			</div>
 
 		</div>
 		</div>
 
-		{include content|indent:3}
+		{include content|indent:2}
 
 	</div>
 

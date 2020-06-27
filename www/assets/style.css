@@ -26,6 +26,7 @@
 }
 
 .custom-file-label { color: #939ba2; }
+.form-control.is-invalid { z-index: 3 }
 
 
 /* Login page */
@@ -57,5 +58,5 @@
 
 .login-box .login-card-body .input-group .form-control.is-valid,
 .register-box .register-card-body .input-group .form-control.is-valid {
-    border-right-color: #28a745;;
+    border-right-color: #28a745;
 }

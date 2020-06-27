@@ -145,7 +145,7 @@ final class UserGrid extends AbstractGrid
 				->endOption();
 		}
 
-		$grid->addColumnText('email', 'nette.user.email')->setSortable()->setDefaultHide();
+		$grid->addColumnText('email', 'nette.user.email')->setSortable();
 		$activeStatus = $grid->addColumnStatus('isActive', 'nette.user.active')->setSortable()->setAlign('right');
 		$activeStatus->onChange[] = function($id, $value) { $this->handleActive((int) $id, (bool) $value); };
 		$activeStatus->addOption(true, 'nette.general.yes')

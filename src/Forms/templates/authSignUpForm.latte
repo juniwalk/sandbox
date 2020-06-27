@@ -36,24 +36,9 @@
 		<button type="submit" n:name="submit" class="btn btn-primary">{_nette.button.signUp|noescape}</button>
 	</div>
 
-	<script type="text/javascript">
-	document.addEventListener("DOMContentLoaded", function() {
-		$("a[data-pwd-toggle]").click(function() {
-			$('i.fas', this).toggleClass("fa-eye fa-eye-slash");
-			var input = $($(this).data("pwd-toggle"));
-
-			if (input.attr("type") == "password") {
-				input.attr("type", "text");
-			} else {
-				input.attr("type", "password");
-			}
-		});
-
-		{foreach $form->getControls() as $input}
+	<script type="text/javascript" n:ifcontent n:inner-foreach="$form->getControls() as $input">
 		{continueIf !$input->hasErrors()}
-		$('#' + {$input->getHtmlId()}).addClass('is-invalid');
-		{/foreach}
-	});
+		document.getElementById({$input->getHtmlId()}).classList.add('is-invalid')
 	</script>
 
 </form>

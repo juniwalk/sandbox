@@ -23,6 +23,13 @@ function client_init()
 		tokenSeparators: []
 	});
 
+	$("a[data-pwd-toggle]").click(function() {
+		$('i.fas', this).toggleClass("fa-eye fa-eye-slash");
+		$($(this).data("pwd-toggle")).attr("type", function(k, v) {
+			return v == "text" ? "password" : "text";
+		});
+	});
+
 	$(document).on('click', '[data-confirm]', function(e) {
 		if (!confirm($(e.target).closest('a').attr('data-confirm'))) {
 			e.stopPropagation();

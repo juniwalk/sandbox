@@ -85,13 +85,9 @@
 		<button n:name="apply" type="submit" class="btn btn-secondary">{_nette.button.apply|noescape}</button>
 	</div>
 
-	<script type="text/javascript">
-	document.addEventListener("DOMContentLoaded", function() {
-		{foreach $form->getControls() as $input}
+	<script type="text/javascript" n:ifcontent n:inner-foreach="$form->getControls() as $input">
 		{continueIf !$input->hasErrors()}
-		$('#' + {$input->getHtmlId()}).addClass('is-invalid');
-		{/foreach}
-	});
+		document.getElementById({$input->getHtmlId()}).classList.add('is-invalid')
 	</script>
 
 </form>
