@@ -12,6 +12,10 @@ IS_COMPOSER := $(shell which composer)
 IS_DARWIN := $(shell which darwin)
 IS_YARN := $(shell which yarn)
 
+# Lock and unlock files
+FILE_LOCK := www/lock.phtml
+FILE_UNLOCK := www/lock.off
+
 
 .PHONY: help
 help:
@@ -29,6 +33,9 @@ help:
 	echo "  ${GREEN}install${RESET}           Install composer dependencies"
 	echo "  ${GREEN}upgrade${RESET}           Upgrade composer dependencies"
 	echo "  ${GREEN}assets${RESET}            Update yarn dependencies"
+	echo "  ${GREEN}warmup${RESET}            Compile all available bundles"
+	echo "  ${GREEN}lock${RESET}              LOCK access into website"
+	echo "  ${GREEN}unlock${RESET}            UNLOCK access into website"
 	echo ""
 	echo " ${YELLOW}database${RESET}           Update database structure"
 	echo "  ${GREEN}schema.migrate${RESET}    Migrate to latest database version"
@@ -47,7 +54,7 @@ help:
 	echo ""
 
 .PHONY: deploy
-deploy: source database clean
+deploy: lock source database clean.proxies clean warmup
 
 
 .PHONY: title.source
@@ -72,18 +79,31 @@ code:
 
 .PHONY: install
 install:
-	test ! -e "$(IS_COMPOSER)" || composer install --no-interaction --optimize-autoloader --prefer-dist
+	test ! -e "$(IS_COMPOSER)" || composer install --no-interaction --optimize-autoloader --prefer-dist --no-dev
 	echo ""
 
 .PHONY: upgrade
 upgrade:
-	test ! -e "$(IS_COMPOSER)" || composer update --optimize-autoloader --prefer-dist
+	test ! -e "$(IS_COMPOSER)" || composer update --optimize-autoloader --prefer-dist --no-dev
 	echo ""
 
 .PHONY: assets
 assets:
 	test ! -e "$(IS_YARN)" || yarn install
 	echo ""
+
+.PHONY: warmup
+warmup:
+	php www/index.php tessa:warm-up --quiet
+	test ! -e "$(IS_DARWIN)" || darwin fix --no-interaction
+
+.PHONY: lock
+lock:
+	test ! -e "$(FILE_UNLOCK)" || mv "$(FILE_UNLOCK)" "$(FILE_LOCK)"
+
+.PHONY: unlock
+unlock:
+	test ! -e "$(FILE_LOCK)" || mv "$(FILE_LOCK)" "$(FILE_UNLOCK)"
 
 
 .PHONY: title.database
@@ -153,7 +173,7 @@ clean.proxies:
 
 .PHONY: autoload
 autoload:
-	test ! -e "$(IS_COMPOSER)" || composer dump-autoload --optimize
+	test ! -e "$(IS_COMPOSER)" || composer dump-autoload --optimize --no-dev
 
 .PHONY: darwin
 darwin:

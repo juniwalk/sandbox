@@ -1,9 +1,7 @@
+config/config-access.php
 config/config-params.neon
-config/config-ipconf.php
-config/.ssh/
 vendor/
 www/static/
 www/vendor/
-composer.lock
-yarn.lock
-coverage.xml
+www/lock.phtml
+www/lock.off
