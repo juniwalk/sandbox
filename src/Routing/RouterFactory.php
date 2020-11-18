@@ -48,10 +48,7 @@ final class RouterFactory
 	private static function getAdminModule(): RouteList
 	{
         $router = new RouteList('Admin');
-		$router[] = new Route('admin/<presenter>/<action>[/<id>]', [
-			'presenter' => 'Home',
-			'action' => 'default',
-		]);
+		$router->addRoute('[<locale [a-z]{2}>/]admin/<presenter>/<action>[/<id>]', 'Home:default');
 
 		return $router;
 	}
@@ -63,11 +60,8 @@ final class RouterFactory
 	private static function getWebModule(): RouteList
 	{
         $router = new RouteList('Web');
-		$router[] = new Route('/changelog', 'Home:changelog');
-		$router[] = new Route('<presenter>/<action>[/<id>]', [
-			'presenter' => 'Home',
-			'action' => 'default',
-		]);
+		$router->addRoute('[<locale [a-z]{2}>/]changelog', 'Home:changelog');
+		$router->addRoute('[<locale [a-z]{2}>/]<presenter>/<action>[/<id>]', 'Home:default');
 
 		return $router;
 	}
