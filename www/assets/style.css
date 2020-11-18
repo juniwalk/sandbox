@@ -91,3 +91,39 @@
 .register-box .register-card-body .input-group .form-control.is-valid {
     border-right-color: #28a745;
 }
+
+
+/**
+ * Tables
+ */
+.table th { white-space: nowrap; }
+
+.table .col-action .dropup,
+.table .col-action .dropdown {
+	display: inline-block;
+}
+
+.datagrid .hidden {
+	display: none !important
+}
+
+.datagrid table thead tr th {
+	font-size: 90%;
+	vertical-align: top
+}
+
+.datagrid table tbody td {
+	vertical-align: middle
+}
+
+.datagrid table tbody tr.row-item-detail.toggled {
+	display: table-row
+}
+
+.datagrid table tbody tr.row-item-detail,
+.datagrid table tbody tr.row-item-detail .item-detail-content,
+.datagrid table tbody tr.row-item-detail-helper,
+.datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-toggle::after,
+.datagrid .datagrid-tree .datagrid-tree-item.has-children > .datagrid-tree-item-children {
+	display: none
+}

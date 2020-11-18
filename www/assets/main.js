@@ -8,7 +8,7 @@ function client_init()
 {
     'use strict'
 
-	$('select:not(.ajax)').select2({
+	$('select:not(.ajax):not(.custom-select)').select2({
 		minimumResultsForSearch: 20,
 		templateSelection: select2Format,
 		templateResult: select2Format,
@@ -36,6 +36,9 @@ function client_init()
 			return e.preventDefault();
 		}
 	});
+
+	$('[data-toggle="popover"]').popover();
+	$('[data-toggle="tooltip"]').tooltip();
 }
 
 
@@ -68,16 +71,6 @@ function select2Format(state)
     $.nette.ext('snippets').after(function () {
         client_init();
     });
-
-	$.nette.ext('confirm', {
-		before: function (xhr, settings) {
-			var confirm_message = settings.nette.el.data('confirm');
-
-			if (confirm_message) {
-				return confirm(confirm_message);
-			}
-		}
-	});
 
     $.nette.init();
 

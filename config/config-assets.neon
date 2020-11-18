@@ -6,6 +6,11 @@ extensions:
 	recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
 	tessa: JuniWalk\Tessa\DI\TessaExtension
 
+services:
+	UrlFixerFilter:
+		factory: JuniWalk\Tessa\Filters\UrlFixerFilter
+		arguments: [%wwwDir%]
+
 # Contributte \ reCAPTCHA
 recaptcha:
 	secretKey: %captcha.secret%
@@ -16,7 +21,7 @@ tessa:
 	outputDir: %wwwDir%/static
 	checkLastModified: true
 	filters:
-		- JuniWalk\Tessa\Filters\UrlFixerFilter(%wwwDir%)
+		- @UrlFixerFilter
 
 	default:
 		joinFiles: false
@@ -32,6 +37,7 @@ tessa:
 			- %wwwDir%/vendor/admin-lte/dist/js/adminlte.min.js
 			- %wwwDir%/vendor/nette-forms/src/assets/netteForms.min.js
 			- %wwwDir%/vendor/nette.ajax.js/nette.ajax.js
+			- %wwwDir%/vendor/nette.ajax.js/extensions/confirm.ajax.js
 			- %wwwDir%/vendor/ublaboo-datagrid/assets/datagrid.js
 			- %wwwDir%/vendor/ublaboo-datagrid/assets/datagrid-instant-url-refresh.js
 			- %wwwDir%/assets/style.css
