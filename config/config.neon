@@ -63,6 +63,7 @@ services:
 
 	# DataGrids
 	- App\DataGrids\Factory\UserGridFactory
+	- App\DataGrids\Factory\UserParamGridFactory
 
 	# Forms
 	- App\Forms\Factory\AuthPasswordForgotFormFactory

@@ -19,6 +19,12 @@ abstract class AbstractGrid extends Control
 	/** @var bool */
 	private $isDisabled = false;
 
+	/** @var bool */
+	private $isResponsive = true;
+
+	/** @var bool */
+	private $hasFiltersAlwaysShown = false;
+
 	/** @var string */
 	private $title;
 
@@ -86,12 +92,52 @@ abstract class AbstractGrid extends Control
 	}
 
 
+	/**
+	 * @param  bool  $responsive
+	 * @return void
+	 */
+	public function setResponsive(bool $responsive = true): void
+	{
+		$this->isResponsive = $responsive;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function isResponsive(): bool
+	{
+		return $this->isResponsive;
+	}
+
+
+	/**
+	 * @param  bool  $disabled
+	 * @return void
+	 */
+	public function setFiltersAlwaysShown(bool $filtersAlwaysShown = true): void
+	{
+		$this->hasFiltersAlwaysShown = $filtersAlwaysShown;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function hasFiltersAlwaysShown(): bool
+	{
+		return $this->hasFiltersAlwaysShown;
+	}
+
+
 	final public function render()
 	{
-		$this->getComponent('grid')->getTemplate()
-			->add('controlName', $this->getName())
-			->add('isDisabled', $this->isDisabled)
-			->add('title', $this->title);
+		$gridTemplate = $this->getComponent('grid')->getTemplate();
+		$gridTemplate->controlName = $this->getName();
+		$gridTemplate->hasFiltersAlwaysShown = $this->hasFiltersAlwaysShown;
+		$gridTemplate->isResponsive = $this->isResponsive;
+		$gridTemplate->isDisabled = $this->isDisabled;
+		$gridTemplate->title = $this->title;
 
 		$template = $this->getTemplate();
 		$template->setFile(__DIR__.'/templates/datagrid-wrapper.latte');
@@ -144,15 +190,21 @@ abstract class AbstractGrid extends Control
 	 * @param  bool  $rememberState
 	 * @return DataGrid
 	 */
-	final protected function createGrid(string $name, bool $rememberState = true): DataGrid
+	final protected function createGrid(string $name, bool $rememberState = true, string $primaryKey = null): DataGrid
 	{
 		$grid = new DataGrid(null, $name);
-		$grid->setItemsPerPageList([10, 20, 50]);
-		$grid->setDefaultPerPage(10);
+		$grid->setRememberState($rememberState);
 		$grid->setCustomPaginatorTemplate(__DIR__.'/templates/datagrid_paginator.latte');
 		$grid->setTemplateFile(__DIR__.'/templates/datagrid.latte');
+		$grid->setItemsPerPageList([10, 20, 50], false);
+		$grid->setDefaultPerPage(10);
+
+		if (isset($primaryKey)) {
+			$grid->setPrimaryKey($primaryKey);
+		}
+
 		$grid->setDataSource($this->createModel());
-		$grid->setRememberState($rememberState);
+		$grid->setStrictSessionFilterValues(false);
 		$grid->setOuterFilterRendering(true);
 
 		if ($this->translator instanceof ITranslator) {

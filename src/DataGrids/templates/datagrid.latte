@@ -1,10 +1,10 @@
-<div class="card card-outline card-secondary datagrid datagrid-{$controlName}" data-refresh-state="{link refreshState!}" n:snippet="grid">
+<div class="card card-outline card-secondary datagrid datagrid-{$controlName} p-0" data-refresh-state="{link refreshState!}" n:snippet="grid">
 {snippetArea gridSnippets}
 
 <form n:name="filter" class="ajax">
 
 	<div class="card-header border-0">
-		<h3 class="card-title" n:if="$title">{$title|translate|noescape}</h3>
+		<h3 class="card-title" n:if="$title">{$title|translate:[name => $controlName]|noescape}</h3>
 		<div class="card-tools btn-toolbar">
 
 			<div class="btn-group mr-2" n:if="$toolbarButtons">
@@ -16,7 +16,7 @@
 				{$export->render()}
 			</div>
 
-			<div class="btn-group mr-2" n:if="$control->hasOuterFilterRendering()">
+			<div class="btn-group mr-2" n:if="$control->hasOuterFilterRendering() && $filters && !$hasFiltersAlwaysShown">
 				<a href="#" class="btn bg-info btn-sm" data-toggle="collapse" data-target="#datagrid-{$controlName}-row-filters">
 					<i class="{$iconPrefix}filter"></i> {_ublaboo_datagrid.show_filter}
 				</a>
@@ -46,17 +46,18 @@
 		</div>
 	</div>
 
-	<div n:class="$control->hasCollapsibleOuterFilters() ? collapse, $filter_active ? show" id="datagrid-{$controlName}-row-filters" n:if="$control->hasOuterFilterRendering()">
+	<div n:class="$control->hasCollapsibleOuterFilters() ? collapse, $hasFiltersAlwaysShown || $filter_active ? show" id="datagrid-{$controlName}-row-filters" n:if="$control->hasOuterFilterRendering()">
 	<div class="card-body py-0" n:block="outer-filters">
 
 		<div class="row" n:foreach="array_chunk($filters, $control->getOuterFilterColumnsCount(), true) as $items">
+			{var $items = array_pad($items, $control->getOuterFilterColumnsCount(), null)}
 			{var $isLastRow = $iterator->isLast()}
 			<div class="col-md" n:foreach="$items as $key => $item">
-				{include $item->getTemplate(),
+				{if !is_null($item)}{include $item->getTemplate(),
 					filter => $item,
 					input => $form['filter'][$key],
 					isLastRow => $isLastRow
-				}
+				}{/if}
 			</div>
 		</div>
 
@@ -67,7 +68,7 @@
 	</div>
 	</div>
 
-	<div class="card-body table-responsive p-0">
+	<div n:class="card-body, p-0, $isResponsive ? table-responsive">
 	<table class="table table-sm table-striped table-hover" n:snippet="table" n:block="data">
 
 		<thead n:block="header">
@@ -133,8 +134,8 @@
 							{/foreach}
 
 							<td class="col-action text-right col-action-inline-edit">
-								{input $filter['inline_edit']['cancel'], class => 'btn btn-xs btn-danger'}
 								{input $filter['inline_edit']['submit'], class => 'btn btn-xs btn-primary'}
+								{input $filter['inline_edit']['cancel'], class => 'btn btn-xs btn-danger'}
 								{input $filter['inline_edit']['_id']}
 								{input $filter['inline_edit']['_primary_where_column']}
 							</td>
@@ -150,15 +151,6 @@
 								{$td->endTag()|noescape}
 							{/foreach}
 							<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-right">
-								{foreach $actions as $key => $action}
-									{if $row->hasAction($key)}
-										{if $action->hasTemplate()}
-											{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables(), row => $row}
-										{else}
-											{$action->render($row)|noescape}
-										{/if}
-									{/if}
-								{/foreach}
 								<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
 									<i n:block="icon-arrows-v" class="{$iconPrefix}arrows-v {$iconPrefix}arrows-alt-v"></i>
 								</span>
@@ -168,6 +160,15 @@
 								{if $itemsDetail && $itemsDetail->shouldBeRendered($row)}
 									{$itemsDetail->renderButton($row)|noescape}
 								{/if}
+								{foreach $actions as $key => $action}
+									{if $row->hasAction($key)}
+										{if $action->hasTemplate()}
+											{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables(), row => $row}
+										{else}
+											{$action->render($row)|noescape}
+										{/if}
+									{/if}
+								{/foreach}
 							</td>
 						</tr>
 					{/if}
@@ -190,7 +191,7 @@
 								</td>
 							{elseif $itemsDetail}
 								<td colspan="{$control->getColumnsCount()}" class="p-0">
-									<div class="item-detail-content px-4 py-1">
+									<div class="item-detail-content px-4 py-1 bg-light">
 										{if $itemsDetail->getType() == 'template'}
 											{include $itemsDetail->getTemplate(), (expand) $item_detail_params}
 										{else}

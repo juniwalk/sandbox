@@ -1,0 +1,60 @@
+{var $account = $server->getAccount($item->getName())}
+{var $characters = $account->findCharacters()}
+
+<ul class="list-group list-group-horizontal my-3">
+	<li class="list-group-item flex-fill py-2 px-3">
+		<small class="text-muted text-uppercase">{_lineage2.account.name}</small>
+		<div class="mt-n1">{$account->getUsername()}</div>
+	</li>
+	<li class="list-group-item flex-fill py-2 px-3">
+		<small class="text-muted text-uppercase">{_lineage2.account.lastLogin}</small>
+		<div class="mt-n1">{$account->getLogin()|date:'j. n. Y G:i'}</div>
+	</li>
+	<li class="list-group-item flex-fill py-2 px-3">
+		<small class="text-muted text-uppercase">{_web.general.ban}</small>
+		<div class="mt-n1">
+			<span class="badge badge-success badge-pill" n:if="!$account->hasBAN()">{_web.general.no}</span>
+			<span class="badge badge-danger badge-pill" n:if="$account->hasBAN()">{_web.general.yes}</span>
+			<time n:if="$account->hasTimedBan()">{$account->getBanExpires()|date:'j. n. Y G:i'}</time>
+		</div>
+	</li>
+</ul>
+
+<div class="card">
+<table class="table table-sm m-0">
+	<thead>
+		<tr class="bg-lightblue">
+			<th class="text-muted text-uppercase font-weight-lighter">
+				<small class="text-light">{_lineage2.character.name}</small>
+			</th>
+			<th class="text-muted text-uppercase font-weight-lighter">
+				<small class="text-light">{_lineage2.character.level}</small>
+			</th>
+			<th class="text-muted text-uppercase font-weight-lighter">
+				<small class="text-light">{_lineage2.character.gender}</small>
+			</th>
+			<th class="text-muted text-uppercase font-weight-lighter">
+				<small class="text-light">{_lineage2.character.race}</small>
+			</th>
+			<th class="text-muted text-uppercase font-weight-lighter">
+				<small class="text-light">{_lineage2.character.class}</small>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		<tr n:foreach="$characters as $character">
+			<td>{$character->getName()}</td>
+			<td>{$character->getLevel()}</td>
+			<td>{('vault.enum.sex.'.($character->getGender() ? female : male))|translate|lower}</td>
+			<td>{$race->getItem($character->getRace())|translate}</td>
+			<td>{$class->getItem($character->getClass())|translate}</td>
+		</tr>
+
+		<tr n:if="!$characters">
+			<td colspan="5">{_lineage2.message.account-no-characters|noescape}</td>
+		</tr>
+
+	</tbody>
+</table>
+</div>

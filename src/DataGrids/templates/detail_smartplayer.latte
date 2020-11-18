@@ -1,0 +1,84 @@
+{var $logs = $findBannedLogs($item, 10)}
+{var $detections = $item->getDetections()}
+{php krsort($detections)}
+
+<div class="row my-3">
+
+	<div class="col-4">
+
+		<div class="card m-0">
+		<table class="table table-sm m-0">
+			<thead>
+				<tr class="table-danger">
+					<th class="text-uppercase font-weight-lighter border-0">
+						<small>{_web.smart.date}</small>
+					</th>
+					<th class="text-uppercase font-weight-lighter border-0">
+						<small>{_web.smart.detection}</small>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				<tr n:foreach="$detections as $date => $type">
+					{breakIf $iterator->getCounter() > 10}
+					<td>{$date|date:'j. n. Y G:i'}</td>
+					<td>{$type}</td>
+				</tr>
+
+				<tr n:if="!$detections">
+					<td colspan="5">{_ublaboo_datagrid.no_item_found|noescape}</td>
+				</tr>
+
+			</tbody>
+		</table>
+		</div>
+
+	</div>
+
+	<div class="col-8">
+
+		<div class="card m-0">
+		<table class="table table-sm m-0">
+			<thead>
+				<tr class="table-info">
+					<th class="text-uppercase font-weight-lighter border-0">
+						<small>{_web.smart.account}</small>
+					</th>
+					<th class="text-uppercase font-weight-lighter border-0">
+						<small>{_web.smart.hwid}</small>
+					</th>
+					<th class="text-uppercase font-weight-lighter border-0">
+						<small>{_web.smart.ip}</small>
+					</th>
+					<th class="text-uppercase font-weight-lighter border-0">
+						<small>{_web.smart.lastLogin}</small>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				<tr n:foreach="$logs as $log">
+					<td>{$log->getAccount()}</td>
+					<td>{$log->getHwid()}</td>
+					<td n:if="$log->getIp() !== '0.0.0.0'">
+						<i class="flag-icon rounded mr-2 elevation-1 flag-icon-{$log->getCountry()|lower}" title="{$log->getCountry()}"></i>
+						{$log->getIp()}
+					</td>
+					<td n:if="$log->getIp() == '0.0.0.0'">
+						<i class="text-muted">unknown</i>
+					</td>
+					<td>{$log->getTime()|date:'j. n. Y G:i:s'}</td>
+				</tr>
+
+				<tr n:if="!$logs">
+					<td colspan="5">{_ublaboo_datagrid.no_item_found|noescape}</td>
+				</tr>
+
+			</tbody>
+		</table>
+		</div>
+
+	</div>
+
+</div>

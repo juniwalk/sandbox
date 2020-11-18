@@ -143,6 +143,7 @@ enum:
 #
 control:
 	user-grid: '<i class="fas fa-users fa-fw"></i> Správa uživatelů'
+	userparam-grid: '<i class="fas fa-list-alt fa-fw"></i> Parametry'
 	user-form: '<i class="fas fa-user fa-fw"></i> Uživatel'
 
 

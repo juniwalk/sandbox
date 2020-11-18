@@ -8,6 +8,9 @@
 namespace App\Modules\AdminModule;
 
 use App\DataGrids\Factory\UserGridFactory;
+use App\DataGrids\Factory\UserParamGridFactory;
+use App\DataGrids\UserGrid;
+use App\DataGrids\UserParamGrid;
 use App\Entity\User;
 use App\Entity\UserRepository;
 use App\Forms\Factory\UserFormFactory;
@@ -15,11 +18,14 @@ use App\Modules\AbstractPresenter;
 
 final class UserPresenter extends AbstractPresenter
 {
-	/** @var UserFormFactory */
-	private $userFormFactory;
+	/** @var UserParamGridFactory */
+	private $userParamGridFactory;
 
 	/** @var UserGridFactory */
 	private $userGridFactory;
+
+	/** @var UserFormFactory */
+	private $userFormFactory;
 
 	/** @var UserRepository */
 	private $userRepository;
@@ -30,19 +36,22 @@ final class UserPresenter extends AbstractPresenter
 
 	/**
 	 * @param UserRepository  $userRepository
-	 * @param UserGridFactory  $userGridFactory
 	 * @param UserFormFactory  $userFormFactory
+	 * @param UserGridFactory  $userGridFactory
+	 * @param UserParamGridFactory  $userParamGridFactory
 	 */
 	public function __construct(
 		UserRepository $userRepository,
+		UserFormFactory $userFormFactory,
 		UserGridFactory $userGridFactory,
-		UserFormFactory $userFormFactory
+		UserParamGridFactory $userParamGridFactory
 	) {
 		parent::__construct();
 
-		$this->userRepository = $userRepository;
+		$this->userParamGridFactory = $userParamGridFactory;
 		$this->userGridFactory = $userGridFactory;
 		$this->userFormFactory = $userFormFactory;
+		$this->userRepository = $userRepository;
 	}
 
 
@@ -79,8 +88,18 @@ final class UserPresenter extends AbstractPresenter
 	 * @param  string  $name
 	 * @return UserGrid
 	 */
-	protected function createComponentUserGrid(string $name)
+	protected function createComponentUserGrid(string $name): UserGrid
 	{
 		return $this->userGridFactory->create();
+	}
+
+
+	/**
+	 * @param  string  $name
+	 * @return UserParamGrid
+	 */
+	protected function createComponentUserParamGrid(string $name): UserParamGrid
+	{
+		return $this->userParamGridFactory->create($this->user);
 	}
 }
