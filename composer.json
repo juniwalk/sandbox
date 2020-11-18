@@ -1,5 +1,5 @@
 {
-	"name": "design-point/sandbox",
+	"name": "juniwalk/sandbox",
 	"description": "The sandbox is a pre-packaged Nette Framework project, basic configured structure for your application.",
 	"type": "project",
 	"license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
@@ -10,26 +10,23 @@
 	},
 
 	"require": {
-		"php": ">=7.1",
+		"php": ">=7.3",
 		"nette/application": "^3.0",
 		"nette/bootstrap": "^3.0",
 		"nette/caching": "^3.0",
 		"nette/di": "^3.0",
-		"nette/http": "^3.0",
 		"nette/security": "^3.0",
-		"nette/utils": "^3.0",
-		"latte/latte": "^2.0",
 		"tracy/tracy": "^2.0",
+		"nettrine/migrations": "^0.6",
+		"nettrine/orm": "^0.6",
+        "juniwalk/tessa": "^1.0",
+		"juniwalk/form": "^3.0",
 		"ublaboo/datagrid": "^6.0",
 		"ublaboo/mailing": "^1.0",
 		"contributte/image-storage": "^2.0",
 		"contributte/translation": "^0.6",
 		"contributte/recaptcha": "^3.0",
 		"contributte/console": "^0.8",
-		"nettrine/migrations": "^0.6",
-		"nettrine/orm": "^0.6",
-        "juniwalk/tessa": "^1.0",
-		"juniwalk/form": "^3.0",
 		"ramsey/uuid": "^3.0"
 	},
 

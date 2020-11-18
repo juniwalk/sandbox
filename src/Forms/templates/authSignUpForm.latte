@@ -6,22 +6,22 @@
 	</div>
 
 	<div class="form-group required">
-		<label n:name="email" class="control-label sr-only">{_nette.user.email}</label>
+		<label n:name="email" class="control-label sr-only">{_web.user.email}</label>
 		<div class="input-group">
 			<div class="input-group-prepend">
 				<span class="input-group-text"><i class="fas fa-fw fa-envelope"></i></span>
 			</div>
-			<input type="email" n:name="email" class="form-control" autofocus="autofocus" placeholder="{_nette.user.email}">
+			<input type="email" n:name="email" class="form-control" autofocus="autofocus" placeholder="{_web.user.email}">
 		</div>
 	</div>
 
 	<div class="form-group required">
-		<label n:name="password" class="control-label sr-only">{_nette.user.password}</label>
+		<label n:name="password" class="control-label sr-only">{_web.user.password}</label>
 		<div class="input-group">
 			<div class="input-group-prepend">
 				<span class="input-group-text"><i class="fas fa-fw fa-lock"></i></span>
 			</div>
-			<input type="password" n:name="password" class="form-control" placeholder="{_nette.user.password}">
+			<input type="password" n:name="password" class="form-control" placeholder="{_web.user.password}">
 			<div class="input-group-append">
 				<a class="btn btn-default" data-pwd-toggle="#{$form['password']->getHtmlId()}"><i class="fas fa-eye fa-fw"></i></a>
 			</div>
@@ -33,7 +33,7 @@
 	</div>
 
 	<div class="form-group mb-0">
-		<button type="submit" n:name="submit" class="btn btn-primary">{_nette.button.signUp|noescape}</button>
+		<button type="submit" n:name="submit" class="btn btn-primary">{_web.button.signUp|noescape}</button>
 	</div>
 
 	<script type="text/javascript" n:ifcontent n:inner-foreach="$form->getControls() as $input">

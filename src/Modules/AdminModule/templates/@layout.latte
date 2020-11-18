@@ -21,8 +21,8 @@
 	<aside class="main-sidebar sidebar-dark-primary elevation-4">
 
 		<a n:href="Home:default" class="brand-link">
-			<span class="pl-2"><span class="px-2">{_nette.site.icon|noescape}</span></span>
-			<span class="brand-text font-weight-light" n:block="appName">{_nette.site.name|noescape}</span>
+			<span class="pl-2"><span class="px-2">{_web.site.icon|noescape}</span></span>
+			<span class="brand-text font-weight-light" n:block="appName">{_web.site.name|noescape}</span>
 		</a>
 
 		<div class="sidebar">
@@ -59,7 +59,7 @@
 
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h1 n:block="title" class="m-0 text-dark">{('nette.page.'.$pageName)|translate|noescape}</h1>
+					<h1 n:block="title" class="m-0 text-dark">{('web.page.'.$pageName)|translate|noescape}</h1>
 				</div>
 				<div class="col-sm-6">
 					{ifset breadcrumbs}{include breadcrumbs|indent:5}{/ifset}
@@ -74,7 +74,7 @@
 	</div>
 
 	<footer class="main-footer no-print">
-		<strong>{_nette.author.name} &copy; {date('Y')}</strong>
+		<strong>{_web.author.name} &copy; {date('Y')}</strong>
 	</footer>
 
 	<aside class="control-sidebar control-sidebar-dark" n:ifset="helpBlock">

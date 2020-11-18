@@ -1,76 +1,47 @@
-{extends '@layout.latte'}
-{block content}
+{layout '@layout.latte'}
+<div n:block="content">
 
-    <!-- 1 Column Text + Button : BEGIN -->
-    <tr>
-        <td style="background-color: #ffffff;">
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                <tr>
-                    <td style="padding: 20px; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
-                        <h1 n:block="title" style="margin: 0 0 10px; font-size: 25px; line-height: 30px; color: #333333; font-weight: normal;">{_message.signUp.subject|stripHtml|trim}</h1>
-                        <p n:block="description" style="margin: 0 0 10px;">{_message.signUp.description}</p>
+	<h1 n:block="title" >{_message.signUp.subject|stripHtml|trim}</h1>
+	<p n:block="description">{_message.signUp.description}</p>
 
-                        <br><!-- spacer -->
+	<br><!-- spacer -->
 
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                            <tr>
-                                <th style="padding: 5px; text-align: left; font-family: sans-serif; font-size: 15px; line-height: 20px;">
-                                    <p style="margin: 0;">{_nette.user.name}:</p>
-                                </th>
-                                <td style="padding: 5px; text-align: left; font-family: sans-serif; font-size: 15px; line-height: 20px;">
-                                    <p style="margin: 0;">{$profile->getName()}</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th style="padding: 5px; text-align: left; font-family: sans-serif; font-size: 15px; line-height: 20px;">
-                                    <p style="margin: 0;">{_nette.user.email}:</p>
-                                </th>
-                                <td style="padding: 5px; text-align: left; font-family: sans-serif; font-size: 15px; line-height: 20px;">
-                                    <p style="margin: 0;">{$profile->getEmail()}</p>
-                                </td>
-                            </tr>
-                        </table>
+	<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+		<tr n:if="$profile->getName()">
+			<th style="padding: 5px; text-align: left; line-height: 20px;">
+				<p style="margin: 0;">{_web.user.name}:</p>
+			</th>
+			<td style="padding: 5px; text-align: left; line-height: 20px;">
+				<p style="margin: 0;">{$profile->getName()}</p>
+			</td>
+		</tr>
+		<tr>
+			<th style="padding: 5px; text-align: left; line-height: 20px;">
+				<p style="margin: 0;">{_web.user.email}:</p>
+			</th>
+			<td style="padding: 5px; text-align: left; line-height: 20px;">
+				<p style="margin: 0;">{$profile->getEmail()}</p>
+			</td>
+		</tr>
+	</table>
 
-                        <br><br><!-- spacer -->
+	<br><!-- spacer -->
+	<br><!-- spacer -->
 
-                        <!-- Button : BEGIN -->
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" class="center-on-narrow" style="float:left;">
-                            <tr>
-                                <td class="button-td button-td-primary" style="border-radius: 4px; background: #222222;">
-                                    <a class="button-a button-a-primary" href="{link Web:Auth:profile}" style="background: #222222; border: 1px solid #000000; font-family: sans-serif; font-size: 15px; line-height: 15px; text-decoration: none; padding: 13px 17px; color: #ffffff; display: block; border-radius: 4px;">{_message.signUp.button|noescape|stripHtml}</a>
-                                </td>
-                            </tr>
-                        </table>
-                        <!-- Button : END -->
+	<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" n:if="$hash">
+	<tbody>
+		<tr>
+			<td align="left">
+				<table role="presentation" border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td> <a href="{link Web:Auth:activate $hash}" target="_blank">{_message.signUp.button|noescape|stripHtml}</a> </td>
+					</tr>
+				</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+	</table>
 
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <!-- 1 Column Text + Button : END -->
-
-    <!-- Clear Spacer : BEGIN -->
-    <tr>
-        <td aria-hidden="true" height="40" style="font-size: 0px; line-height: 0px;">
-            &nbsp;
-        </td>
-    </tr>
-    <!-- Clear Spacer : END -->
-
-    <!-- 1 Column Text : BEGIN -->
-    <tr>
-        <td style="background-color: #ffffff;">
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                <tr>
-                    <td style="padding: 20px; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
-                        {_message.signUp.link-problem}:<br>
-                        {link Web:Auth:profile}
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <!-- 1 Column Text : END -->
-
-{/block}
+</div>

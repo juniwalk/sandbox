@@ -8,7 +8,8 @@
 namespace App\Forms;
 
 use App\Entity\User;
-use App\Entity\UserManager;
+use App\Managers\MessageManager;
+use App\Managers\UserManager;
 use Contributte\ImageStorage\ImageStorage;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
@@ -19,6 +20,9 @@ use JuniWalk\Form\Renderer;
 
 final class AuthProfileForm extends AbstractForm
 {
+	/** @var MessageManager */
+	private $messageManager;
+
 	/** @var EntityManager */
 	private $entityManager;
 
@@ -37,13 +41,16 @@ final class AuthProfileForm extends AbstractForm
 	 * @param UserManager  $userManager
 	 * @param ImageStorage  $imageStorage
 	 * @param EntityManager  $entityManager
+	 * @param MessageManager  $messageManager
 	 */
 	public function __construct(
 		User $user,
 		UserManager $userManager,
 		ImageStorage $imageStorage,
-		EntityManager $entityManager
+		EntityManager $entityManager,
+		MessageManager $messageManager
 	) {
+		$this->messageManager = $messageManager;
 		$this->entityManager = $entityManager;
 		$this->imageStorage = $imageStorage;
 		$this->userManager = $userManager;
@@ -80,30 +87,48 @@ final class AuthProfileForm extends AbstractForm
 
 
 	/**
-	 * @return User|null
+	 * @return User
 	 */
-	public function getUser(): ?User
+	public function getUser(): User
 	{
 		return $this->user;
 	}
 
 
 	/**
-	 * @param  User|null  $user
+	 * @param  User  $user
 	 * @return void
 	 */
-	public function setDefaults(?User $user): void
+	public function setDefaults(User $user): void
 	{
 		$form = $this->getForm();
-
-		if (!isset($user)) {
-			return;
-		}
-
 		$form->setDefaults([
 			'name' => $user->getName(),
 			'email' => $user->getEmail(),
 		]);
+	}
+
+
+	/**
+	 * @return void
+	 * @secured
+	 */
+	public function handleResendActivationEmail(): void
+	{
+		$presenter = $this->getPresenter();
+		$user = $this->getUser();
+
+		if ($user->isEmailActivated()) {
+			$this->redirect('this');
+		}
+
+		$this->userManager->deactivateUser($user);
+		$this->entityManager->flush();
+
+		$this->messageManager->sendUserSignUpMessage($user);
+
+		$presenter->flashMessage('web.message.auth-email-sent', 'success');
+		$presenter->redrawControl('flashMessages');
 	}
 
 

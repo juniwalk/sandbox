@@ -4,12 +4,12 @@
 
 	<a id="top" class="sr-only"><!-- top anchor --></a>
 
-	<nav class="main-header navbar navbar-expand-md bg-lightblue navbar-dark">
+	<nav class="main-header navbar navbar-expand-md bg-lightblue navbar-dark border-0">
 	<div class="container">
 
 		<a n:href="Home:default" class="navbar-brand">
-			<span class="brand-image">{_nette.site.icon|noescape}</span>
-			<span class="brand-text font-weight-light" n:block="appName">{_nette.site.name|noescape}</span>
+			<span class="brand-image">{_web.site.icon|noescape}</span>
+			<span class="brand-text font-weight-light" n:block="appName">{_web.site.name|noescape}</span>
 		</a>
       
 		<a class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -35,8 +35,8 @@
 	<aside class="main-sidebar sidebar-dark-primary elevation-4" n:if="$user->isAllowed('Admin:Home')">
 
 		<a n:href="Home:default" class="brand-link">
-			<span class="pl-2"><span class="px-2">{_nette.site.icon|noescape}</span></span>
-			<span class="brand-text font-weight-light">{_nette.site.name|noescape}</span>
+			<span class="pl-2"><span class="px-2">{_web.site.icon|noescape}</span></span>
+			<span class="brand-text font-weight-light">{_web.site.name|noescape}</span>
 		</a>
 
 		<div class="sidebar">
@@ -60,10 +60,13 @@
 	<div class="content-wrapper">
 
 		<div class="alerts no-print no-margin" n:snippet="flashMessages">
-			<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} no-margin">
-				<i class="fas {$flashIcon[$flash->type]} fa-fw"></i>
+
+			<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} no-margin rounded-0">
+		<div class="container">
 				{$flash->message|translate:$flash->params ?? []|noescape}
 			</div>
+
+		</div>
 		</div>
 
 		<div class="content-header" n:block="header">
@@ -71,7 +74,7 @@
 
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h1 n:block="title" class="m-0 text-dark">{('nette.page.'.$pageName)|translate|noescape}</h1>
+					<h1 n:block="title" class="m-0 text-dark">{('web.page.'.$pageName)|translate|noescape}</h1>
 				</div>
 				<div class="col-sm-6">
 					{ifset breadcrumbs}{include breadcrumbs|indent:5|trim}{/ifset}
@@ -87,7 +90,7 @@
 
 	<footer class="main-footer">
 	<div class="container">
-		<strong>{_nette.author.name} &copy; {date('Y')}</strong>
+		<strong>{_web.author.name} &copy; {date('Y')}</strong>
 	</div>
 	</footer>
 

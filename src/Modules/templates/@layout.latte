@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html dir="{_nette.site.dir}" lang="{_nette.site.lang}">
+<html dir="{_web.site.dir}" lang="{_web.site.lang}">
 <head>
 
 	<!-- browsers -->
@@ -28,14 +28,14 @@
 	<div class="login-box" n:snippet="content">
 
 		<div class="login-logo" n:block="appName">
-			<a class="logo" n:href=":Web:Home:default">{_nette.site.icon|noescape} {_nette.site.name|noescape}</a>
+			<a class="logo" n:href=":Web:Home:default">{_web.site.icon|noescape} {_web.site.name|noescape}</a>
 		</div>
 
 		<div class="card">
 		<div class="card-body login-card-body" n:block="contentWrapper">
 
 			<section class="content-header p-0 pb-3" n:block="header">
-				<h1 class="p-2 pt-0 border-bottom" n:block="title">{('nette.page.'.$pageName)|translate|noescape}</h1>
+				<h1 class="p-2 pt-0 border-bottom" n:block="title">{('web.page.'.$pageName)|translate|noescape}</h1>
 			</section>
 
 			<div class="m-0" n:snippet="flashMessages">
@@ -50,7 +50,7 @@
 		</div>
 
 		<footer class="lockscreen-footer text-center text-muted no-print" n:block="footer">
-			<strong>{_nette.author.name} &copy; {date('Y')}</strong>
+			<strong>{_web.author.name} &copy; {date('Y')}</strong>
 		</footer>
 
 	</div>

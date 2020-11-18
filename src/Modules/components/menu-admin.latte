@@ -1,13 +1,13 @@
 <ul class="nav nav-pills nav-sidebar flex-column mt-3" n:if="$user->isInRole('admin')">
 
-	<li class="nav-header text-muted text-uppercase">{_nette.menu.admin|noescape}</li>
+	<li class="nav-header text-muted text-uppercase">{_web.menu.admin|noescape}</li>
 
 	<li n:class="nav-item, $presenter->isLinkCurrent(':Admin:Home:*') ? active" n:if="$user->isAllowed('Admin:Home', 'default')">
-		<a class="nav-link" n:href=":Admin:Home:default">{_nette.page.admin-home-default|noescape}</a>
+		<a class="nav-link" n:href=":Admin:Home:default">{_web.page.admin-home-default|noescape}</a>
 	</li>
 
 	<li n:class="nav-item, $presenter->isLinkCurrent(':Admin:User:*') ? active" n:if="$user->isAllowed('Admin:User', 'default')">
-		<a class="nav-link" n:href=":Admin:User:default">{_nette.page.admin-user-default|noescape}</a>
+		<a class="nav-link" n:href=":Admin:User:default">{_web.page.admin-user-default|noescape}</a>
 	</li>
 
 </ul>

@@ -16,15 +16,15 @@
     </li>
 
     <li class="nav-item" n:if="$presenter->isModuleCurrent('Admin') && $user->isAllowed('Admin:Home')">
-        <a class="nav-link" n:href=":Web:Home:default">{_nette.menu.web-link|noescape}</a>
+        <a class="nav-link" n:href=":Web:Home:default">{_web.menu.web-link|noescape}</a>
     </li>
 
     <li class="nav-item" n:if="$presenter->isModuleCurrent('Web') && $user->isAllowed('Admin:Home')">
-		<a class="nav-link" href="#" data-widget="pushmenu">{_nette.menu.admin-link|noescape}</a>
+		<a class="nav-link" href="#" data-widget="pushmenu">{_web.menu.admin-link|noescape}</a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" n:href=":Web:Auth:signOut">{_nette.page.web-auth-signout|noescape}</a>
+        <a class="nav-link" n:href=":Web:Auth:signOut">{_web.page.web-auth-signout|noescape}</a>
     </li>
 
 </ul>

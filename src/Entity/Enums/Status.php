@@ -20,11 +20,11 @@ final class Status extends AbstractEnum
 
 	/** @var string[] */
 	protected $items = [
-		self::CREATED => 'nette.enum.status.created',
-		self::ACTIVE => 'nette.enum.status.active',
-		self::FINISH => 'nette.enum.status.finish',
-		self::INVOICE => 'nette.enum.status.invoice',
-		self::DELETE => 'nette.enum.status.delete',
+		self::CREATED => 'web.enum.status.created',
+		self::ACTIVE => 'web.enum.status.active',
+		self::FINISH => 'web.enum.status.finish',
+		self::INVOICE => 'web.enum.status.invoice',
+		self::DELETE => 'web.enum.status.delete',
 	];
 
 	/** @var string[] */

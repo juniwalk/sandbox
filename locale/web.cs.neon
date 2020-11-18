@@ -1,0 +1,184 @@
+
+#
+# @copyright Design Point, s.r.o. (c) 2020
+# @license   MIT License
+#
+
+site:
+	name: 'Sand<strong>box</strong>'
+	icon: '<i class="fas fa-fw fa-box"></i>'
+	description: 'Jednoduchá, předem zabalená a předkonfigurovaná aplikace s použitím Nette, kterou můžete použít jako výchozí bod pro vaše nové aplikace.'
+	currency: 'Kč'
+	lang: cs
+	dir: ltr
+
+author:
+	name: 'Design Point'
+	street: 'Mydlářská 189/3'
+	city: Liberec
+	zip: 46010
+	phone: '+420 720 512 307'
+
+menu:
+	web: '<i class="fas fa-fw fa-bars"></i> Hlavní menu'
+	web-link: '<i class="fas fa-fw fa-house-user"></i> <span class="sr-only">Frontend</a>'
+
+	admin: '<i class="fas fa-fw fa-cog"></i> Administrace'
+	admin-link: '<i class="fas fa-fw fa-cog"></i> <span class="sr-only">Backend</a>'
+
+
+#
+# Page titles
+#
+page:
+	# Root Module
+	error-4xx: 'Oops...'
+	error-403: '<i class="fas fa-exclamation-circle fa-fw"></i> Přístup odepřen'
+	error-404: '<i class="fas fa-exclamation-triangle fa-fw"></i> Stránka nenalezena'
+	error-405: '<i class="fas fa-exclamation-triangle fa-fw"></i> Nepovolená metoda'
+	error-410: '<i class="fas fa-exclamation-triangle fa-fw"></i> Stránka nenalezena'
+
+	# Web Module
+	web-auth-help: '<i class="fas fa-fw fa-question-circle"></i> <span class="sr-only">Nápověda</span>'
+	web-auth-signout: '<i class="fas fa-fw fa-power-off"></i> <span class="sr-only">Odhlásit</span>'
+	web-auth-signin: '<i class="fas fa-sign-in-alt fa-fw"></i> Přihlásit'
+	web-auth-signup: '<i class="fas fa-user-plus fa-fw"></i> Registrovat'
+	web-auth-profile: '<i class="fas fa-id-card fa-fw"></i> Profil'
+	web-auth-passwordreset: '<i class="fas fa-user-lock fa-fw"></i> Resetovat heslo'
+	web-auth-passwordforgot: '<i class="fas fa-key fa-fw"></i> Zapomenuté heslo'
+
+	web-home-default: '<i class="fas fa-home fa-fw"></i> Přehled'
+
+	# Admin Module
+	admin-home-default: '<i class="fas fa-home fa-fw"></i> Přehled'
+
+	admin-user-default: '<i class="fas fa-user fa-fw"></i> Uživatelé'
+	admin-user-create: '<i class="fas fa-plus-square fa-fw"></i> Vytvořit uživatele'
+	admin-user-edit: '<i class="fas fa-edit fa-fw"></i> Upravit uživatele'
+
+
+#
+# Messages
+#
+message:
+	something-went-wrong: 'Nastala chyba a nemohli jsme pokračovat.'
+	confirm-passwordForgot: 'Odeslat uživateli email pro reset hesla?'
+	confirm-imageRemove: 'Odstranit existující obrázek?'
+	confirm-deletion: 'Opravdu chcete odebrat "%s"?'
+
+	auth-email-unknown: 'Zadaný email nebyl nalezen v našem systému.'
+	auth-email-used: 'Zadaný email je již využíván u jiného účtu.'
+	auth-email-sent: 'Byl Vám odeslán email s potřebnými informacemi.'
+	auth-invalid: 'Nepodařilo se Vás přihlásit. Zkontrolujte kombinaci emailu a hesla.'
+	auth-signout: 'Byl jste odhlášen pro neaktivitu.'
+	auth-banned: 'Byl vám zamezen přístup.'
+	auth-activated: 'Váš účet byl aktivován.'
+	auth-not-activated: 'Váš účet není aktivovaný, použijte tlačítko v emailu, který vám přišel po registraci.'
+
+	# Error pages
+	error4xx-description: 'Váš prohlížeč odeslal požadavek, který tento server nedokázal zpracovat.'
+	error403-description: 'You do not have permission to view this page. Please try contact the web site administrator if you believe you should be able to view this page.'
+	error404-description: 'Stránka, kterou jste požadovali, nebyla nalezena. Je možné, že adresa je nesprávná nebo stránka již neexistuje.'
+	error405-description: 'Metoda požadavku není povolena pro tuto URL.'
+	error410-description: 'Požadovaná stránka byla odebrána z webu. Omlouváme se za nepříjemnosti.'
+
+	# GOTO links
+	goto-signIn: 'Už si vzpomínám, přihlásím se!'
+	goto-signIn-existing: 'Účet mám již vytvořený'
+	goto-signUp: 'Ještě nemám účet'
+	goto-passwordForgot: 'Nevzpomínám si na své heslo'
+
+
+#
+# User section
+#
+user:
+	name: 'Jméno a příjmení'
+	email: 'Email'
+	email-required: 'Zadejte váš email.'
+	email-invalid: 'V zadaném emailu je chyba.'
+	email-forgot: 'Resetovat heslo emailem'
+	password: 'Heslo'
+	password-change: 'Nové heslo'
+	password-required: 'Zadejte prosím vaše heslo.'
+	password-length: 'Heslo musí být minimálně %d znaků.'
+	role: 'Role'
+	role-required: 'Potřebujeme znát roli uživatele.'
+	image: 'Profilový obrázek'
+	image-invalid: 'Zkontrolujte typ nahraného obrázku.'
+	image-select: 'Zvolte obrázek…'
+	image-too-large: 'Zvolený obrázek je příliš velký.'
+	image-help: 'Maximální povolená velikost je 2MB, obrázek bude oříznut.'
+	image-remove: 'Odstranit existující obrázek'
+	captcha: 'Captcha'
+	captcha-required: 'Vyplňte prosím captchu.'
+	signUp: 'Registrace'
+	signIn: 'Přihlášení'
+	active: 'Aktivní'
+	active-help: 'Povolit možnosti přihlášení do aplikace.'
+
+
+#
+# Enum translations
+#
+enum:
+
+	role:
+		guest: 'žádná'
+		user: 'uživatel'
+		manager: 'správce'
+		admin: 'admin'
+
+	status:
+		created: 'čeká'
+		active: 'v řešení'
+		finish: 'hotovo'
+		invoice: 'fakturováno'
+		storno: 'zrušeno'
+		delete: 'odstraněno'
+
+
+#
+# Controls
+#
+control:
+	user-grid: '<i class="fas fa-users fa-fw"></i> Správa uživatelů'
+	user-form: '<i class="fas fa-user fa-fw"></i> Uživatel'
+
+
+#
+# Buttons
+#
+button:
+	add: '<i class="fas fa-plus fa-fw"></i> Přidat'
+	apply: '<i class="fas fa-check fa-fw"></i> Použít'
+	cancel: '<i class="fas fa-ban fa-fw"></i> Zrušit'
+	close: '<i class="fas fa-times fa-fw"></i> Zavřit'
+	filter: '<i class="fas fa-filter fa-fw"></i> Filtrovat'
+	insert: '<i class="fas fa-share fa-fw"></i> Vložit'
+	homepage: '<i class="fas fa-home fa-fw"></i> Přejít domů'
+	back: '<i class="fas fa-arrow-alt-circle-left fa-fw"></i> Vrátit se'
+	passwordForgot: '<i class="fas fa-key fa-fw"></i> Zaslat heslo'
+	passwordReset: '<i class="fas fa-user-lock fa-fw"></i> Resetovat heslo'
+	save: '<i class="fas fa-save fa-fw"></i> Uložit'
+	signIn: '<i class="fas fa-sign-in-alt fa-fw"></i> Přihlásit'
+	signUp: '<i class="fas fa-user-plus fa-fw"></i> Vytvořit účet'
+	submit: '<i class="fas fa-paper-plane fa-fw"></i> Odeslat'
+
+
+#
+# General translations
+#
+general:
+	id: '#'
+	all: 'vše'
+	actions: 'Akce'
+	active: 'Aktivní'
+	copy: 'Kopírovat'
+	create: 'Vytvořit'
+	edit: 'Upravit'
+	browse: 'Procházet'
+	remove: 'Odebrat'
+	storno: 'Zrušit'
+	yes: 'ano'
+	no: 'ne'

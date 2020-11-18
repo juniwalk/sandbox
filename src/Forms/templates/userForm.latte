@@ -2,7 +2,7 @@
 <form n:name="form">
 
 	<div class="card-header">
-		<h3 class="card-title">{_nette.control.user-form|noescape}</h3>
+		<h3 class="card-title">{_web.control.user-form|noescape}</h3>
 	</div>
 
 	<div class="card-body alerts" n:if="$form->hasErrors()" n:snippet="errors" n:inner-foreach="$form->getErrors() as $error">
@@ -16,53 +16,53 @@
 		</div>
 
 		<div class="form-group">
-			<label n:name="name" class="control-label">{_nette.user.name}</label>
+			<label n:name="name" class="control-label">{_web.user.name}</label>
 			<div class="input-group">
 				<div class="input-group-prepend">
 					<label n:name="name" class="input-group-text"><i class="fas fa-fw fa-id-card"></i></label>
 				</div>
-				<input n:name="name" type="text" class="form-control" placeholder="{_nette.user.name}">
+				<input n:name="name" type="text" class="form-control" placeholder="{_web.user.name}">
 			</div>
 		</div>
 
 		<div class="form-group required">
-			<label n:name="email" class="control-label">{_nette.user.email}</label>
+			<label n:name="email" class="control-label">{_web.user.email}</label>
 			<div class="input-group">
 				<div class="input-group-prepend">
 					<label n:name="email" class="input-group-text"><i class="fas fa-envelope fa-fw"></i></label>
 				</div>
 				<input n:name="email" type="email" class="form-control">
 				<div class="input-group-append">
-					<a class="btn btn-default ajax" n:href="passwordForgot!" data-confirm="{_nette.message.confirm-passwordForgot}">
+					<a class="btn btn-default ajax" n:href="passwordForgot!" data-confirm="{_web.message.confirm-passwordForgot}">
 						<i class="fas fa-key fa-fw"></i>
-						<span class="sr-only">{_nette.user.email-forgot}</span>
+						<span class="sr-only">{_web.user.email-forgot}</span>
 					</a>
 				</div>
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label n:name="image" class="control-label">{_nette.user.image}</label>
+			<label n:name="image" class="control-label">{_web.user.image}</label>
 			<div class="input-group">
 				<div class="input-group-prepend">
 					<label n:name="image" class="input-group-text"><i class="fas fa-image fa-fw"></i></label>
 				</div>
 				<div class="custom-file">
 					<input n:name="image" type="file" class="custom-file-input">
-					<label class="custom-file-label" data-browse="{_nette.general.browse}">{_nette.user.image-select}</label>
+					<label class="custom-file-label" data-browse="{_web.general.browse}">{_web.user.image-select}</label>
 				</div>
 				<div class="input-group-append" n:if="$profile && $profile->hasImage()">
-					<a class="btn btn-danger ajax" n:href="imageRemove!" data-confirm="{_nette.message.confirm-imageRemove}">
+					<a class="btn btn-danger ajax" n:href="imageRemove!" data-confirm="{_web.message.confirm-imageRemove}">
 						<i class="fas fa-times fa-fw"></i>
-						<span class="sr-only">{_nette.user.image-remove}</span>
+						<span class="sr-only">{_web.user.image-remove}</span>
 					</a>
 				</div>
 			</div>
-			<small class="form-text text-muted font-italic">{_nette.user.image-help}</small>
+			<small class="form-text text-muted font-italic">{_web.user.image-help}</small>
 		</div>
 
 		<div class="form-group required">
-			<label n:name="role" class="control-label">{_nette.user.role}</label>
+			<label n:name="role" class="control-label">{_web.user.role}</label>
 			<div class="input-group">
 				<div class="input-group-prepend">
 					<label n:name="role" class="input-group-text"><i class="fas fa-id-badge fa-fw"></i></label>
@@ -74,15 +74,15 @@
 		<div class="custom-control custom-checkbox">
 			<input n:name="active" type="checkbox" class="custom-control-input">
 			<label n:name="active" class="custom-control-label">
-				<span class="control-label">{_nette.user.active-help}</span>
+				<span class="control-label">{_web.user.active-help}</span>
 			</label>
 		</div>
 
 	</div>
 
 	<div class="card-footer">
-		<button n:name="submit" type="submit" class="btn btn-primary">{_nette.button.save|noescape}</button>
-		<button n:name="apply" type="submit" class="btn btn-secondary">{_nette.button.apply|noescape}</button>
+		<button n:name="submit" type="submit" class="btn btn-primary">{_web.button.save|noescape}</button>
+		<button n:name="apply" type="submit" class="btn btn-secondary">{_web.button.apply|noescape}</button>
 	</div>
 
 	<script type="text/javascript" n:ifcontent n:inner-foreach="$form->getControls() as $input">

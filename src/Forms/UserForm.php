@@ -7,9 +7,9 @@
 
 namespace App\Forms;
 
-use App\Entity\User;
-use App\Entity\UserManager;
 use App\Entity\Enums\Role;
+use App\Entity\User;
+use App\Managers\UserManager;
 use Contributte\ImageStorage\ImageStorage;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;

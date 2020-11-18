@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c8fb94b44ee411881671ab9b0e4333a",
+    "content-hash": "bc16f47a368d993491b5ac9fb900e675",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -786,16 +786,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "2.12.0",
+            "version": "2.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "c6d37b4c42aaa3c3ee175f05eca68056f4185646"
+                "reference": "adce7a954a1c2f14f85e94aed90c8489af204086"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/c6d37b4c42aaa3c3ee175f05eca68056f4185646",
-                "reference": "c6d37b4c42aaa3c3ee175f05eca68056f4185646",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/adce7a954a1c2f14f85e94aed90c8489af204086",
+                "reference": "adce7a954a1c2f14f85e94aed90c8489af204086",
                 "shasum": ""
             },
             "require": {
@@ -889,7 +889,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-22T17:26:24+00:00"
+            "time": "2020-11-14T20:26:58+00:00"
         },
         {
             "name": "doctrine/event-manager",
@@ -1667,22 +1667,22 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.8.3",
+            "version": "v2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "321f17d07d1091af8b5001d1c3cbd178b6b89b55"
+                "reference": "21861cfee4ba19f853a34bcaab15d6ec332d8fa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/321f17d07d1091af8b5001d1c3cbd178b6b89b55",
-                "reference": "321f17d07d1091af8b5001d1c3cbd178b6b89b55",
+                "url": "https://api.github.com/repos/nette/latte/zipball/21861cfee4ba19f853a34bcaab15d6ec332d8fa0",
+                "reference": "21861cfee4ba19f853a34bcaab15d6ec332d8fa0",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-tokenizer": "*",
-                "php": ">=7.1"
+                "php": ">=7.1 <8.1"
             },
             "conflict": {
                 "nette/application": "<2.4.1"
@@ -1704,7 +1704,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "2.9-dev"
                 }
             },
             "autoload": {
@@ -1740,7 +1740,7 @@
                 "template",
                 "twig"
             ],
-            "time": "2020-11-04T12:04:47+00:00"
+            "time": "2020-11-15T23:01:29+00:00"
         },
         {
             "name": "nette/application",
@@ -1906,27 +1906,28 @@
         },
         {
             "name": "nette/caching",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/caching.git",
-                "reference": "b9ecbf920f240bd1ab14900d9a77876924ad7fb4"
+                "reference": "7cab46d8d436e26a874715e6fff13b74d29dbf8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/caching/zipball/b9ecbf920f240bd1ab14900d9a77876924ad7fb4",
-                "reference": "b9ecbf920f240bd1ab14900d9a77876924ad7fb4",
+                "url": "https://api.github.com/repos/nette/caching/zipball/7cab46d8d436e26a874715e6fff13b74d29dbf8c",
+                "reference": "7cab46d8d436e26a874715e6fff13b74d29dbf8c",
                 "shasum": ""
             },
             "require": {
                 "nette/finder": "^2.4 || ^3.0",
                 "nette/utils": "^2.4 || ^3.0",
-                "php": ">=7.1"
+                "php": ">=7.1 <8.1"
             },
             "require-dev": {
-                "latte/latte": "^2.4",
+                "latte/latte": "^2.9",
                 "nette/di": "^v3.0",
                 "nette/tester": "^2.0",
+                "phpstan/phpstan": "^0.12",
                 "tracy/tracy": "^2.4"
             },
             "suggest": {
@@ -1946,8 +1947,8 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause",
-                "GPL-2.0",
-                "GPL-3.0"
+                "GPL-2.0-only",
+                "GPL-3.0-only"
             ],
             "authors": [
                 {
@@ -1968,7 +1969,7 @@
                 "nette",
                 "sqlite"
             ],
-            "time": "2019-11-19T18:41:40+00:00"
+            "time": "2020-11-16T01:37:04+00:00"
         },
         {
             "name": "nette/component-model",
@@ -4772,16 +4773,16 @@
         },
         {
             "name": "ublaboo/datagrid",
-            "version": "v6.2.29",
+            "version": "v6.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contributte/datagrid.git",
-                "reference": "038cd34cf8daee8e8f8f6fc69d07392d417fa1f0"
+                "reference": "38948d9a12114e4237eb991681a5ef52dca1a887"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contributte/datagrid/zipball/038cd34cf8daee8e8f8f6fc69d07392d417fa1f0",
-                "reference": "038cd34cf8daee8e8f8f6fc69d07392d417fa1f0",
+                "url": "https://api.github.com/repos/contributte/datagrid/zipball/38948d9a12114e4237eb991681a5ef52dca1a887",
+                "reference": "38948d9a12114e4237eb991681a5ef52dca1a887",
                 "shasum": ""
             },
             "require": {
@@ -4796,11 +4797,12 @@
             "require-dev": {
                 "dibi/dibi": "^3.0.0 || ^4.0.0",
                 "doctrine/orm": "~2.6.3",
+                "elasticsearch/elasticsearch": "^7.1",
                 "gamee/php-code-checker-rules": "^1.0",
                 "mockery/mockery": "~1.2.2",
                 "nette/database": "~3.0.2",
                 "nette/tester": "^2.2",
-                "nextras/orm": "~3.1.0",
+                "nextras/orm": "~3.1.0 || ^4.0",
                 "ninjify/coding-standard": "^0.9.0",
                 "phpstan/phpstan": "^0.11.12",
                 "phpstan/phpstan-strict-rules": "^0.11.1",
@@ -4838,7 +4840,7 @@
                 "grid",
                 "nette"
             ],
-            "time": "2020-09-29T12:08:24+00:00"
+            "time": "2020-11-17T19:22:52+00:00"
         },
         {
             "name": "ublaboo/mailing",
@@ -5015,7 +5017,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.1"
+        "php": ">=7.3"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"

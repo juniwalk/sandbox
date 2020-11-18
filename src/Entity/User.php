@@ -11,6 +11,7 @@ use App\Entity\Enums\Role;
 use App\Exceptions\InvalidEnumException;
 use Contributte\ImageStorage\Image;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Security\IIdentity as Identity;
 use Nette\Utils\Strings;
@@ -22,6 +23,7 @@ use Nette\Utils\Strings;
 class User implements Identity
 {
 	use Attributes\Identifier;
+	use Attributes\Parametrized;
 	use Attributes\Activable;
 
     /**
@@ -73,7 +75,9 @@ class User implements Identity
 	 */
 	public function __construct(string $email, string $name = null)
 	{
+		$this->params = new ArrayCollection;
 		$this->signUp = new DateTime;
+
 		$this->email = Strings::lower($email);
 		$this->name = $name;
 	}
@@ -132,6 +136,15 @@ class User implements Identity
 	public function getEmail(): string
 	{
 		return $this->email;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function isEmailActivated(): bool
+	{
+		return ! (bool) $this->getParam('activate');
 	}
 
 

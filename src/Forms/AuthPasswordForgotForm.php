@@ -7,16 +7,12 @@
 
 namespace App\Forms;
 
-use App\Entity\UserManager;
 use App\Entity\UserRepository;
-use App\Messages\MessageData;
-use App\Messages\PasswordForgotMessage;
-use App\Security\AccessManager;
+use App\Managers\UserManager;
 use JuniWalk\Form\AbstractForm;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Ublaboo\Mailing\MailFactory;
 
 final class AuthPasswordForgotForm extends AbstractForm
 {

@@ -45,7 +45,7 @@ final class UserGrid extends AbstractGrid
 		$this->entityManager = $entityManager;
 		$this->imageStorage = $imageStorage;
 
-		$this->setTitle('nette.control.user-grid');
+		$this->setTitle('web.control.user-grid');
 	}
 
 
@@ -133,9 +133,9 @@ final class UserGrid extends AbstractGrid
 		$grid = $this->createGrid($name);
 		$grid->setDefaultSort(['name' => 'ASC']);
 
-		$grid->addColumnText('name', 'nette.user.name')->setSortable()
+		$grid->addColumnText('name', 'web.user.name')->setSortable()
 			->setRenderer([$this, 'columnName']);
-		$roleStatus = $grid->addColumnStatus('role', 'nette.user.role')->setSortable();
+		$roleStatus = $grid->addColumnStatus('role', 'web.user.role')->setSortable();
 		$roleStatus->onChange[] = function($id, $value) { $this->handleRole((int) $id, $value); };
 
 		foreach ((new Role)->getItems() as $key => $role) {
@@ -145,48 +145,48 @@ final class UserGrid extends AbstractGrid
 				->endOption();
 		}
 
-		$grid->addColumnText('email', 'nette.user.email')->setSortable();
-		$activeStatus = $grid->addColumnStatus('isActive', 'nette.user.active')->setSortable()->setAlign('right');
+		$grid->addColumnText('email', 'web.user.email')->setSortable();
+		$activeStatus = $grid->addColumnStatus('isActive', 'web.user.active')->setSortable()->setAlign('right');
 		$activeStatus->onChange[] = function($id, $value) { $this->handleActive((int) $id, (bool) $value); };
-		$activeStatus->addOption(true, 'nette.general.yes')
+		$activeStatus->addOption(true, 'web.general.yes')
 				->setIconSecondary('fas fa-check fa-fw')
 				->setIcon('fas fa-check fa-fw')
 				->setClass('btn-success')
 				->endOption()
-			->addOption(false, 'nette.general.no')
+			->addOption(false, 'web.general.no')
 				->setIconSecondary('fas fa-times fa-fw')
 				->setIcon('fas fa-times fa-fw')
 				->setClass('btn-danger')
 				->endOption();
 
-		$grid->addColumnDateTime('signUp', 'nette.user.signUp')->setSortable()->setFormat('j. n. Y G:i');
-		$grid->addColumnDateTime('signIn', 'nette.user.signIn')->setSortable()->setFormat('j. n. Y G:i');
-		$grid->addColumnNumber('id', 'nette.general.id')->setSortable()->setFormat(0, ',', '');
+		$grid->addColumnDateTime('signUp', 'web.user.signUp')->setSortable()->setFormat('j. n. Y G:i');
+		$grid->addColumnDateTime('signIn', 'web.user.signIn')->setSortable()->setFormat('j. n. Y G:i');
+		$grid->addColumnNumber('id', 'web.general.id')->setSortable()->setFormat(0, ',', '');
 
 
-		$grid->addFilterText('name', 'nette.user.name')->setCondition(function ($qb, $value) {
+		$grid->addFilterText('name', 'web.user.name')->setCondition(function ($qb, $value) {
 			$qb->andWhere('LOWER(e.name) LIKE LOWER(:name)')->setParameter('name', '%'.$value.'%');
 		});
-		$grid->addFilterText('email', 'nette.user.email')->setCondition(function ($qb, $value) {
+		$grid->addFilterText('email', 'web.user.email')->setCondition(function ($qb, $value) {
 			$qb->andWhere('LOWER(e.email) LIKE LOWER(:email)')->setParameter('email', '%'.$value.'%');
 		});
-		$grid->addFilterMultiSelect('role', 'nette.user.role', [null => 'nette.general.all'] + (new Role)->getItems())
+		$grid->addFilterMultiSelect('role', 'web.user.role', [null => 'web.general.all'] + (new Role)->getItems())
 			->setTranslateOptions(true);
-		$grid->addFilterSelect('isActive', 'nette.user.active', $this->createActiveOptions())
+		$grid->addFilterSelect('isActive', 'web.user.active', $this->createActiveOptions())
 			->setTranslateOptions(true);
 
 
-        $grid->addToolbarButton('User:create', 'nette.general.create')
+        $grid->addToolbarButton('User:create', 'web.general.create')
             ->setClass('btn btn-success btn-sm')->setIcon('plus');
 
-		$grid->addAction('User:edit', 'nette.general.edit')->setIcon('pencil-alt')
+		$grid->addAction('User:edit', 'web.general.edit')->setIcon('pencil-alt')
 			->setClass('btn btn-primary btn-xs')
-			->setTitle('nette.general.edit');
+			->setTitle('web.general.edit');
 
-		$grid->addAction('remove!', 'nette.general.remove')->setIcon('trash-alt')
-			->setConfirmation(new StringConfirmation('nette.message.confirm-deletion', 'name'))
+		$grid->addAction('remove!', 'web.general.remove')->setIcon('trash-alt')
+			->setConfirmation(new StringConfirmation('web.message.confirm-deletion', 'name'))
 			->setClass('btn btn-danger btn-xs ajax')
-			->setTitle('nette.general.remove');
+			->setTitle('web.general.remove');
 
 		return $grid;
 	}
@@ -241,9 +241,9 @@ final class UserGrid extends AbstractGrid
 	private function createActiveOptions(): iterable
 	{
 		return [
-			NULL => 'nette.general.all',
-			1 => 'nette.general.yes',
-			0 => 'nette.general.no',
+			NULL => 'web.general.all',
+			1 => 'web.general.yes',
+			0 => 'web.general.no',
 		];
 	}
 }

@@ -8,6 +8,7 @@
 namespace App\Modules;
 
 use App\Bootstrap;
+use App\Modules\WebModule\AuthPresenter;
 use Contributte\ImageStorage\ImageStoragePresenterTrait;
 use Contributte\Translation\LocalesResolvers\Session as SessionResolver;
 use JuniWalk\Tessa\BundleManager;
@@ -115,9 +116,10 @@ abstract class AbstractPresenter extends Presenter
 
         $profile = $user->getIdentity();
 
-		//if ($profile && $profile->getParam('activate') && !$this instanceof AuthPresenter) {
-		//	$this->redirect(':Web:Auth:profile');
-		//}
+		if ($profile && !$profile->isEmailActivated() && !$this instanceof AuthPresenter) {
+			$this->flashMessage('web.message.auth-not-activated', 'warning');
+			$this->redirect(':Web:Auth:profile');
+		}
 
 		if ($profile && !$profile->isActive() && !$this instanceof AuthPresenter) {
 			$this->flashMessage('web.message.auth-banned', 'warning');

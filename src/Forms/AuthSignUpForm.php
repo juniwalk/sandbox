@@ -8,35 +8,41 @@
 namespace App\Forms;
 
 use App\Entity\User;
-use App\Messages\MessageData;
-use App\Messages\UserSignUpMessage;
+use App\Managers\MessageManager;
+use App\Managers\UserManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Doctrine\ORM\ORMException;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use JuniWalk\Form\AbstractForm;
-use Ublaboo\Mailing\MailFactory;
+use Ublaboo\Mailing\Exception\MailingException;
 
 final class AuthSignUpForm extends AbstractForm
 {
-	/** @var MailFactory */
-	private $messageFactory;
+	/** @var MessageManager */
+	private $messageManager;
 
 	/** @var EntityManager */
 	private $entityManager;
 
+	/** @var UserManager */
+	private $userManager;
+
 
 	/**
-     * @param MailFactory  $messageFactory
+	 * @param UserManager  $userManager
 	 * @param EntityManager  $entityManager
+     * @param MessageManager  $messageManager
 	 */
 	public function __construct(
-		MailFactory $messageFactory,
-		EntityManager $entityManager
+		UserManager $userManager,
+		EntityManager $entityManager,
+		MessageManager $messageManager
 	) {
-		$this->messageFactory = $messageFactory;
+		$this->messageManager = $messageManager;
 		$this->entityManager = $entityManager;
+		$this->userManager = $userManager;
 
 		$this->setTemplateFile(__DIR__.'/templates/authSignUpForm.latte');
 	}
@@ -49,11 +55,11 @@ final class AuthSignUpForm extends AbstractForm
 	protected function createComponentForm(string $name): Form
 	{
 		$form = parent::createComponentForm($name);
-        $form->addText('email')->setRequired('nette.user.email-required')
-            ->addRule($form::EMAIL, 'nette.user.email-invalid');
-        $form->addPassword('password')->setRequired('nette.user.password-required')
-            ->addRule($form::MIN_LENGTH, 'nette.user.password-length', 6);
-		$form->addReCaptcha('recaptcha')->setRequired('nette.user.captcha-required');
+        $form->addText('email')->setRequired('web.user.email-required')
+            ->addRule($form::EMAIL, 'web.user.email-invalid');
+        $form->addPassword('password')->setRequired('web.user.password-required')
+            ->addRule($form::MIN_LENGTH, 'web.user.password-length', 6);
+		$form->addReCaptcha('recaptcha')->setRequired('web.user.captcha-required');
 
         $form->addSubmit('submit');
 
@@ -68,27 +74,26 @@ final class AuthSignUpForm extends AbstractForm
      */
     protected function handleSuccess(Form $form, ArrayHash $data): void
     {
-    	$user = new User($data->email);
-		$user->setPassword($data->password);
-
 		try {
+			$user = $this->userManager->createUser(
+				$data->email,
+				$data->password,
+				true
+			);
+
 			$this->entityManager->persist($user);
 			$this->entityManager->flush();
 
-			$message = $this->messageFactory->createByType(
-				UserSignUpMessage::class,
-				MessageData::from([
-					'profile' => $user,
-				])
-			);
-
-			$message->send();
+			$this->messageManager->sendUserSignUpMessage($user);
 
 		} catch(UniqueConstraintViolationException $e) {
-			$form['email']->addError('nette.message.auth-email-used');
+			$form['email']->addError('web.message.auth-email-used');
+
+		} catch (MailingException $e) {
+			$form->addError('web.message.something-went-wrong');
 
 		} catch (ORMException $e) {
-			$form->addError('nette.message.something-went-wrong');
+			$form->addError('web.message.something-went-wrong');
 		}
     }
 }

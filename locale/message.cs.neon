@@ -5,13 +5,11 @@
 #
 
 passwordForgot:
-    subject: 'Zapomenuté heslo'
-    description: 'Byla vyvolána funkce zapomenutého hesla, níže je odkaz pro jeho změnu, platný po dobu 15 minut.'
-    button: 'Zmenit heslo'
-    link-problem: 'Pokud vám nefunguje tlačítko pro změnu hesla, použíjte tento odkaz'
+	subject: 'Zapomenuté heslo'
+	description: 'Byla vyvolána funkce zapomenutého hesla, níže je odkaz pro jeho změnu, platný po dobu 15 minut.'
+	button: 'Zmenit heslo'
 
 signUp:
-    subject: 'Nová registrace'
-    description: 'Váš nový účet byl vytvořen. Zde máte shrnutí použitých údajů.'
-    button: 'Zobrazit profil'
-    link-problem: 'Pokud vám nefunguje tlačítko pro zobrazení profilu, použíjte tento odkaz'
+	subject: 'Aktivovat účet'
+	description: 'Už máte skoro hotovo, aktivujte svuj nový účet tlačítkem níže.'
+	button: 'Aktivovat'

@@ -24,9 +24,9 @@ final class PasswordForgotMessage extends AbstractMail implements IComposableMai
 	 */
 	public function compose(Message $message, ?IMessageData $params): void
 	{
-		$user = $params['profile'] ?? null;
+		$user = $params->profile;
 
-		if (!$user || !$user instanceof User) {
+		if (!$user instanceof User) {
 			throw new UserNotFoundException;
 		}
 

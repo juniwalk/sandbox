@@ -17,8 +17,11 @@ use App\Forms\AuthPasswordForgotForm;
 use App\Forms\AuthProfileForm;
 use App\Forms\AuthSignInForm;
 use App\Forms\AuthSignUpForm;
+use App\Managers\UserManager;
 use App\Modules\AbstractPresenter;
 use App\Security\AccessManager;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Ramsey\Uuid\Uuid;
 
 final class AuthPresenter extends AbstractPresenter
@@ -41,11 +44,18 @@ final class AuthPresenter extends AbstractPresenter
 	/** @var AccessManager */
 	private $accessManager;
 
+	/** @var UserManager */
+	private $userManager;
+
 	/** @var User */
 	private $user;
 
+	/** @var string @persistent */
+	public $redirect = '';
+
 
 	/**
+	 * @param UserManager  $userManager
 	 * @param AccessManager  $accessManager
 	 * @param UserRepository  $userRepository
 	 * @param AuthSignInFormFactory  $authSignInFormFactory
@@ -54,6 +64,7 @@ final class AuthPresenter extends AbstractPresenter
 	 * @param AuthPasswordForgotFormFactory  $authPasswordForgotFormFactory
 	 */
 	public function __construct(
+		UserManager $userManager,
 		AccessManager $accessManager,
 		UserRepository $userRepository,
 		AuthSignInFormFactory $authSignInFormFactory,
@@ -67,6 +78,7 @@ final class AuthPresenter extends AbstractPresenter
 		$this->authSignUpFormFactory = $authSignUpFormFactory;
 		$this->userRepository = $userRepository;
 		$this->accessManager = $accessManager;
+		$this->userManager = $userManager;
 	}
 
 
@@ -82,7 +94,7 @@ final class AuthPresenter extends AbstractPresenter
 		}
 
 		if ($user->isLoggedIn()) {
-			$this->redirect(':Web:Home:default');
+			$this->redirect(':Web:Home:default', ['userMenu' => true]);
 		}
 
 		$this->redirect('signIn');
@@ -96,7 +108,7 @@ final class AuthPresenter extends AbstractPresenter
 	{
 		$this->getUser()->logout(true);
 		$this->getSession()->destroy();
-		$this->redirect('signIn');
+		$this->redirect(':Web:Home:default');
 	}
 
 
@@ -111,9 +123,46 @@ final class AuthPresenter extends AbstractPresenter
 		}
 
 		if ($hash && Uuid::isValid($hash)) {
-			$data = $this->accessManager->validateToken($hash, false);
-			$this->user = $this->userRepository->getById((int) $data['key']);
+			$this->user = $this->accessManager->validateSluggedToken('Web:Auth:profile', $hash, false);
 		}
+	}
+
+
+	/**
+	 * @param  string  $hash
+	 * @return void
+	 * @throws ForbiddenRequestException
+	 * @throws BadRequestException
+	 */
+	public function actionActivate(string $hash): void
+	{
+		$data = $this->accessManager->validateToken($hash, false);
+
+		if ($data['_slug'] !== 'Web:Auth:activate') {
+			throw new ForbiddenRequestException('Slug missmatch, expected '.$data['_slug'].' but '.$slug.' was given');
+		}
+
+		$user = $this->userRepository->getByEmail($data['key']);
+		$this->userManager->activateUser($user, $hash);
+
+		$this->getUser()->login($user);
+		$this->flashMessage('web.message.auth-activated', 'success');
+		$this->redirect(':Web:Auth:default');
+	}
+
+
+	/**
+	 * @return void
+	 */
+	protected function beforeRender()
+	{
+		$profile = $this->getUser()->getIdentity();
+
+		if ($profile && !$profile->isEmailActivated()) {
+			$this->flashMessage('web.message.auth-not-activated', 'warning');
+		}
+
+		return parent::beforeRender();
 	}
 
 
@@ -125,7 +174,7 @@ final class AuthPresenter extends AbstractPresenter
 	{
 		$form = $this->authPasswordForgotFormFactory->create();
 		$form->onSuccess[] = function ($form, $data) {
-			$this->flashMessage('nette.message.auth-email-sent', 'success');
+			$this->flashMessage('web.message.auth-email-sent', 'success');
 			$this->redirect('signIn');
 		};
 
@@ -161,6 +210,7 @@ final class AuthPresenter extends AbstractPresenter
 	{
 		$form = $this->authSignInFormFactory->create($name);
 		$form->onSuccess[] = function ($form, $data) {
+			$this->restoreRequest($this->redirect);
 			$this->redirect('default');
 		};
 

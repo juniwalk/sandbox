@@ -20,10 +20,10 @@ final class Role extends AbstractEnum
 
 	/** @var string[] */
 	protected $items = [
-		self::GUEST => 'nette.enum.role.guest',
-		self::USER => 'nette.enum.role.user',
-		self::MANAGER => 'nette.enum.role.manager',
-		self::ADMIN => 'nette.enum.role.admin',
+		self::GUEST => 'web.enum.role.guest',
+		self::USER => 'web.enum.role.user',
+		self::MANAGER => 'web.enum.role.manager',
+		self::ADMIN => 'web.enum.role.admin',
 	];
 
 	/**

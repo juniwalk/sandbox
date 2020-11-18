@@ -55,6 +55,10 @@ services:
 	router: App\Routing\RouterFactory::createRouter
 	authenticator: App\Security\Authenticator
 	authorizator: App\Security\Authorizator
+
+	# Managers
+	- App\Managers\MessageManager
+	- App\Managers\UserManager
 	- App\Security\AccessManager
 
 	# DataGrids

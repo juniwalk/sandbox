@@ -106,7 +106,7 @@ final class AccessManager
 		}
 
 		unset($data['_slug']);
-		return $this->userRepository->getReference($data['key']);
+		return $this->userRepository->getReference((int) $data['key']);
 	}
 
 
