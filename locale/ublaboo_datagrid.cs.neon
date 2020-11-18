@@ -1,12 +1,7 @@
 
 #
-# @author    Design Point, s.r.o. <info@dpoint.cz>
-# @package   design-point/errest-menu
-# @link      https://gitlab.com/design-point/errest-menu
-# @copyright Design Point, s.r.o. (c) 2018
+# @copyright Martin Procházka (c) 2020
 # @license   MIT License
-#
-# Czech translation for Ublaboo\Datagrid.
 #
 
 no_item_found_reset: 'Nenalezeny žádné záznamy. Můžete resetovat filtraci'

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Design Point, s.r.o. (c) 2020
+ * @copyright Martin Procházka (c) 2020
  * @license   MIT License
  */
 
@@ -23,8 +23,6 @@ final class Bootstrap
 
 	/** @var string[] */
 	private static $trustedProxies = [
-		'185.30.164.2',		// HWP
-		'185.30.164.10',	// HPP
 	];
 
 
