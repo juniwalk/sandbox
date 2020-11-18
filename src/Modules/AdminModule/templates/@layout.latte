@@ -11,7 +11,7 @@
 		</ul>
 
 		{include $appDir.'/Modules/components/menu-user.latte'
-			hasHelp => isset($_b->blocks['helpBlock']),
+			hasHelp => $this->hasBlock('helpBlock'),
 			module => 'Admin',
 			isRight => true,
 		}
