@@ -119,6 +119,14 @@ user:
 
 
 #
+# Param section
+#
+param:
+	key: 'Parametr'
+	value: 'Hodnota'
+
+
+#
 # Enum translations
 #
 enum:
@@ -177,7 +185,9 @@ general:
 	active: 'Aktivní'
 	copy: 'Kopírovat'
 	create: 'Vytvořit'
+	created: 'Vytvořeno'
 	edit: 'Upravit'
+	modified: 'Editováno'
 	browse: 'Procházet'
 	remove: 'Odebrat'
 	storno: 'Zrušit'
