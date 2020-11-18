@@ -8,7 +8,6 @@
 namespace App\Managers;
 
 use App\Entity\User;
-use App\Security\AccessManager;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 
 final class UserManager

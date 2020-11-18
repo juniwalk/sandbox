@@ -18,11 +18,10 @@ use App\Forms\AuthProfileForm;
 use App\Forms\AuthSignInForm;
 use App\Forms\AuthSignUpForm;
 use App\Managers\UserManager;
+use App\Managers\AccessManager;
 use App\Modules\AbstractPresenter;
-use App\Security\AccessManager;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Ramsey\Uuid\Uuid;
 
 final class AuthPresenter extends AbstractPresenter
 {
@@ -122,7 +121,7 @@ final class AuthPresenter extends AbstractPresenter
 			$this->redirect('signIn');
 		}
 
-		if ($hash && Uuid::isValid($hash)) {
+		if ($hash) {
 			$this->user = $this->accessManager->validateSluggedToken('Web:Auth:profile', $hash, false);
 		}
 	}

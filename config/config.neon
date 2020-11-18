@@ -57,9 +57,9 @@ services:
 	authorizator: App\Security\Authorizator
 
 	# Managers
+	- App\Managers\AccessManager
 	- App\Managers\MessageManager
 	- App\Managers\UserManager
-	- App\Security\AccessManager
 
 	# DataGrids
 	- App\DataGrids\Factory\UserGridFactory

@@ -5,7 +5,7 @@
  * @license   MIT License
  */
 
-namespace App\Security;
+namespace App\Managers;
 
 use App\Entity\User;
 use App\Entity\UserRepository;
