@@ -10,7 +10,6 @@ namespace App\Forms;
 use App\Entity\Enums\Role;
 use App\Entity\User;
 use App\Managers\UserManager;
-use Contributte\ImageStorage\ImageStorage;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Doctrine\ORM\ORMException;
@@ -23,9 +22,6 @@ final class UserForm extends AbstractForm
 	/** @var EntityManager */
 	private $entityManager;
 
-	/** @var ImageStorage */
-	private $imageStorage;
-
 	/** @var UserManager */
 	private $userManager;
 
@@ -36,47 +32,22 @@ final class UserForm extends AbstractForm
 	/**
 	 * @param User|null  $user
 	 * @param UserManager  $userManager
-	 * @param ImageStorage  $imageStorage
 	 * @param EntityManager  $entityManager
 	 */
 	public function __construct(
 		?User $user,
 		UserManager $userManager,
-		ImageStorage $imageStorage,
 		EntityManager $entityManager
 	) {
 		$this->entityManager = $entityManager;
-		$this->imageStorage = $imageStorage;
 		$this->userManager = $userManager;
 		$this->user = $user;
 
 		$this->setTemplateFile(__DIR__.'/templates/userForm.latte');
 		$this->onBeforeRender[] = function ($form, $template) {
-			$template->add('imageStorage', $this->imageStorage);
 			$template->add('profile', $this->user);
 			$this->setDefaults($this->user);
 		};
-	}
-
-
-	/**
-	 * @return void
-	 */
-	public function handleImageRemove(): void
-	{
-		$presenter = $this->getPresenter();
-    	$user = $this->getUser();
-
-		try {
-			$this->userManager->imageRemove($user);
-
-		// invalid catch
-		} catch(UniqueConstraintViolationException $e) {
-			$presenter->flashMessage('nette.message.email-taken', 'danger');
-		}
-
-		$presenter->redrawControl('flashMessages');
-		$this->redrawControl('form');
 	}
 
 
@@ -138,9 +109,6 @@ final class UserForm extends AbstractForm
 	protected function createComponentForm(string $name): Form
 	{
 		$form = parent::createComponentForm($name);
-		$form->addUpload('image')->addCondition($form::FILLED)
-			->addRule($form::MAX_FILE_SIZE, 'nette.user.image-too-large', 2097152)
-			->addRule($form::IMAGE, 'nette.user.image-invalid');
 		$form->addText('name');
 		$form->addText('email')->setType('email')
 			->setRequired('nette.user.email-required');
@@ -167,15 +135,6 @@ final class UserForm extends AbstractForm
 		$user->setEmail($data->email);
 		$user->setRole($data->role);
 		$user->setActive($data->active);
-
-		if ($data->image->isOk()) {
-			if ($user->hasImage()) {
-				$this->imageStorage->delete($user->getImage());
-			}
-
-			$image = $this->imageStorage->saveUpload($data->image, 'avatar');
-			$user->setImage($image);
-		}
 
 		try {
 			$this->entityManager->persist($user);

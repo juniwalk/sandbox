@@ -23,7 +23,6 @@ final class Version20200617134912 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE "user" ALTER name DROP NOT NULL');
-        $this->addSql('ALTER TABLE "user" ALTER sign_up SET DEFAULT CURRENT_TIMESTAMP');
     }
 
     public function down(Schema $schema) : void
@@ -33,6 +32,5 @@ final class Version20200617134912 extends AbstractMigration
 
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE "user" ALTER name SET NOT NULL');
-        $this->addSql('ALTER TABLE "user" ALTER sign_up SET DEFAULT \'now()\'');
     }
 }

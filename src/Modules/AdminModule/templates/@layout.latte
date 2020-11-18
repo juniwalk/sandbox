@@ -27,11 +27,8 @@
 
 		<div class="sidebar">
 
-			<div class="user-panel mt-3 pb-3 mb-3 d-flex">
-				<div class="image">
-					<img n:img="$profile->getImage()" class="img-circle" alt="{$profile}">
-				</div>
-				<div class="info">
+			<div class="user-panel mt-3 pb-3 mb-3 text-center">
+				<div class="info d-block py-1 px-2">
 					<a n:href=":Web:Auth:profile" class="d-block">{$profile->getDisplayName()}</a>
 					<em class="text-muted" n:if="$profile->getName()">{$profile->getEmail()|lower}</em>
 				</div>

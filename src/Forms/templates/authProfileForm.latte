@@ -5,30 +5,6 @@
 		<div class="alert alert-danger" n:foreach="$form->getErrors() as $error">{$error}</div>
 	</div>
 
-	<div class="form-group text-center px-5 pb-2">
-		<img n:img="$profile ? $profile->getImage()" class="img-fluid img-circle elevation-2 w-50" alt="{$profile}">
-	</div>
-
-	<div class="form-group">
-		<label n:name="image" class="sr-only">{_web.user.image}</label>
-		<div class="input-group">
-			<div class="input-group-prepend">
-				<span class="input-group-text"><i class="fas fa-image fa-fw"></i></span>
-			</div>
-			<div class="custom-file">
-				<input n:name="image" type="file" class="custom-file-input">
-				<label class="custom-file-label" data-browse="{_web.general.browse}">{_web.user.image-select}</label>
-			</div>
-			<div class="input-group-append" n:if="$profile->hasImage()">
-				<a class="btn btn-danger ajax" n:href="imageRemove!" data-confirm="{_web.message.confirm-imageRemove}">
-					<i class="fas fa-times fa-fw"></i>
-					<span class="sr-only">{_web.user.image-remove}</span>
-				</a>
-			</div>
-		</div>
-		<small class="form-text text-muted font-italic">{_web.user.image-help}</small>
-	</div>
-
 	<div class="form-group">
 		<label n:name="name" class="control-label sr-only">{_web.user.name}</label>
 		<div class="input-group">

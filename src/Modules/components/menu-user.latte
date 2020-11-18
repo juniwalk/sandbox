@@ -5,10 +5,7 @@
 <ul n:class="navbar-nav, navbar-no-expand, $isRight ? ml-md-auto, $module == 'Admin' ? ml-auto" n:if="isset($profile)">
 
     <li class="nav-item user-menu">
-        <a class="nav-link px-2" n:href=":Web:Auth:profile">
-            <img n:img="$profile->getImage()" class="user-image img-circle mr-0 mr-lg-2 mt-n1 elevation-2" alt="{$profile}">
-            <span class="d-none d-lg-inline">{$profile->getDisplayName()}</span>
-        </a>
+        <a class="nav-link px-2" n:href=":Web:Auth:profile">{$profile->getDisplayName()}</a>
     </li>
 
     <li class="nav-item" n:if="$hasHelp">

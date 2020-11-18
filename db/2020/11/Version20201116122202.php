@@ -26,7 +26,6 @@ final class Version20201116122202 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_463887D1A76ED395 ON user_param (user_id)');
         $this->addSql('CREATE UNIQUE INDEX user_unique ON user_param (user_id, key)');
         $this->addSql('ALTER TABLE user_param ADD CONSTRAINT FK_463887D1A76ED395 FOREIGN KEY (user_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE "user" ALTER sign_up SET DEFAULT CURRENT_TIMESTAMP');
     }
 
     public function down(Schema $schema) : void
@@ -35,6 +34,5 @@ final class Version20201116122202 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('DROP TABLE user_param');
-        $this->addSql('ALTER TABLE "user" ALTER sign_up SET DEFAULT \'now()\'');
     }
 }

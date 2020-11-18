@@ -10,7 +10,6 @@ namespace App\Forms;
 use App\Entity\User;
 use App\Managers\MessageManager;
 use App\Managers\UserManager;
-use Contributte\ImageStorage\ImageStorage;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Nette\Application\UI\Form;
@@ -26,9 +25,6 @@ final class AuthProfileForm extends AbstractForm
 	/** @var EntityManager */
 	private $entityManager;
 
-	/** @var ImageStorage */
-	private $imageStorage;
-
 	/** @var UserManager */
 	private $userManager;
 
@@ -39,50 +35,25 @@ final class AuthProfileForm extends AbstractForm
 	/**
 	 * @param User  $user
 	 * @param UserManager  $userManager
-	 * @param ImageStorage  $imageStorage
 	 * @param EntityManager  $entityManager
 	 * @param MessageManager  $messageManager
 	 */
 	public function __construct(
 		User $user,
 		UserManager $userManager,
-		ImageStorage $imageStorage,
 		EntityManager $entityManager,
 		MessageManager $messageManager
 	) {
 		$this->messageManager = $messageManager;
 		$this->entityManager = $entityManager;
-		$this->imageStorage = $imageStorage;
 		$this->userManager = $userManager;
 		$this->user = $user;
 
 		$this->setTemplateFile(__DIR__.'/templates/authProfileForm.latte');
 		$this->onBeforeRender[] = function ($form, $template) {
-			$template->add('imageStorage', $this->imageStorage);
 			$template->add('profile', $this->user);
 			$this->setDefaults($this->user);
 		};
-	}
-
-
-	/**
-	 * @return void
-	 */
-	public function handleImageRemove(): void
-	{
-		$presenter = $this->getPresenter();
-    	$user = $this->getUser();
-
-		try {
-			$this->userManager->imageRemove($user);
-
-		// invalid catch
-		} catch(UniqueConstraintViolationException $e) {
-			$presenter->flashMessage('nette.message.email-taken', 'danger');
-		}
-
-		$presenter->redrawControl('flashMessages');
-		$this->redrawControl('form');
 	}
 
 
@@ -139,9 +110,6 @@ final class AuthProfileForm extends AbstractForm
 	protected function createComponentForm(string $name): Form
 	{
 		$form = parent::createComponentForm($name);
-		$form->addUpload('image')->addCondition($form::FILLED)
-			->addRule($form::MAX_FILE_SIZE, 'nette.user.image-too-large', 2097152)
-			->addRule($form::IMAGE, 'nette.user.image-invalid');
 		$form->addText('name');
 		$form->addText('email')->setRequired('nette.user.email-required')->setType('email');
 		$form->addPassword('password')->addCondition($form::FILLED)
@@ -166,15 +134,6 @@ final class AuthProfileForm extends AbstractForm
 
 		if (!empty($data->password)) {
 			$user->setPassword($data->password);
-		}
-
-		if ($data->image->isOk()) {
-			if ($user->hasImage()) {
-				$this->imageStorage->delete($user->getImage());
-			}
-
-			$image = $this->imageStorage->saveUpload($data->image, 'avatar');
-			$user->setImage($image);
 		}
 
 		try {

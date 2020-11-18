@@ -11,7 +11,6 @@ use App\Entity\User;
 use App\Entity\UserRepository;
 use App\Entity\Enums\Role;
 use App\Tools\HtmlHelper;
-use Contributte\ImageStorage\ImageStorage;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Doctrine\ORM\ORMException;
 use Nette\Utils\ArrayHash;
@@ -27,23 +26,17 @@ final class UserGrid extends AbstractGrid
 	/** @var EntityManager */
 	private $entityManager;
 
-	/** @var ImageStorage */
-	private $imageStorage;
-
 
 	/**
-	 * @param ImageStorage  $imageStorage
 	 * @param EntityManager  $entityManager
 	 * @param UserRepository  $userRepository
 	 */
 	public function __construct(
-		ImageStorage $imageStorage,
 		EntityManager $entityManager,
 		UserRepository $userRepository
 	) {
 		$this->userRepository = $userRepository;
 		$this->entityManager = $entityManager;
-		$this->imageStorage = $imageStorage;
 
 		$this->setTitle('web.control.user-grid');
 	}
@@ -201,13 +194,8 @@ final class UserGrid extends AbstractGrid
 		$presenter = $this->getPresenter();
 		$basePath = $presenter->getHttpRequest()->getUrl()->getBasePath();
 
-		$image = $this->imageStorage->fromIdentifier($user->getImage());
-		$avatar = Html::el('img class="img-fluid img-circle mr-2" width="24px" alt="'.$user.'"')
-			->setSrc($basePath.$image->createLink());
-
 		$link = $presenter->lazyLink('User:edit', $user->getId());
-		$name = Html::el('a')->setHref($link)->addHtml($avatar)
-			->addText($user->getDisplayName());
+		$name = Html::el('a', $user->getDisplayName())->setHref($link);
 
 		if (!$user->isActive()) {
 			$icon = Html::el('i class="fas fa-ban pull-right"');
@@ -221,12 +209,12 @@ final class UserGrid extends AbstractGrid
 
 	/**
 	 * @param  User  $user
-	 * @return Html|NULL
+	 * @return Html|null
 	 */
 	public function columnRole(User $user): ?Html
 	{
         if (!$role = $user->getRole()) {
-            return NULL;
+            return null;
         }
 
         $role = (new Role)->getItem($role);
@@ -241,7 +229,7 @@ final class UserGrid extends AbstractGrid
 	private function createActiveOptions(): iterable
 	{
 		return [
-			NULL => 'web.general.all',
+			null => 'web.general.all',
 			1 => 'web.general.yes',
 			0 => 'web.general.no',
 		];

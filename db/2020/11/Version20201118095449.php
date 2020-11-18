@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200625090549 extends AbstractMigration
+final class Version20201118095449 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,7 +22,7 @@ final class Version20200625090549 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE "user" ADD image VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE "user" DROP image');
     }
 
     public function down(Schema $schema) : void
@@ -31,6 +31,6 @@ final class Version20200625090549 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('CREATE SCHEMA public');
-        $this->addSql('ALTER TABLE "user" DROP image');
+        $this->addSql('ALTER TABLE "user" ADD image VARCHAR(255) DEFAULT NULL');
     }
 }

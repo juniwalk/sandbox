@@ -51,7 +51,7 @@ class User implements Identity
 	private $role = Role::USER;
 
     /**
-     * @ORM\Column(type="datetimetz", options={"default": "CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetimetz", options={"default": "now()"})
      * @var DateTime
      */
     private $signUp;
@@ -61,12 +61,6 @@ class User implements Identity
      * @var DateTime|null
      */
     private $signIn;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     * @var string|null
-     */
-    private $image;
 
 
 	/**
@@ -244,33 +238,5 @@ class User implements Identity
 		}
 
 		return clone $this->signIn;
-	}
-
-
-	/**
-	 * @param  Image|null  $image
-	 * @return void
-	 */
-	public function setImage(?Image $image): void
-	{
-		$this->image = ((string) $image) ?: null;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public function hasImage(): bool
-	{
-		return !is_null($this->image);
-	}
-
-
-	/**
-	 * @return string|null
-	 */
-	public function getImage(): ?string
-	{
-		return $this->image;
 	}
 }
