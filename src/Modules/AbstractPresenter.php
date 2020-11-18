@@ -9,7 +9,6 @@ namespace App\Modules;
 
 use App\Bootstrap;
 use App\Modules\WebModule\AuthPresenter;
-use Contributte\ImageStorage\ImageStoragePresenterTrait;
 use Contributte\Translation\LocalesResolvers\Session as SessionResolver;
 use JuniWalk\Tessa\BundleManager;
 use JuniWalk\Tessa\TessaControl;
@@ -20,8 +19,6 @@ use Nette\Utils\Strings;
 
 abstract class AbstractPresenter extends Presenter
 {
-	use ImageStoragePresenterTrait;
-
     /** @var SessionResolver */
 	private $sessionResolver;
 
