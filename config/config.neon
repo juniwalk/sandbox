@@ -11,14 +11,17 @@ includes:
 tracy:
 	strictMode: %site.debug%
 	showBar: true
-	maxDepth: 5
-	maxLength: 300
+	maxDepth: 6
+	maxLength: 500
 
 application:
 	errorPresenter: Error
 	scanDirs: no
 	mapping:
 		*: App\Modules\*Module\*Presenter
+
+constants:
+	LANG_DEFAULT: %site.lang%
 
 php:
 	date.timezone: Europe/Prague
@@ -55,6 +58,7 @@ services:
 	router: App\Routing\RouterFactory::createRouter
 	authenticator: App\Security\Authenticator
 	authorizator: App\Security\Authorizator
+	- App\Tools\HtmlHelper
 
 	# Managers
 	- App\Managers\AccessManager
@@ -95,6 +99,12 @@ console:
 # Contributte \ Translation
 translation:
 	locales:
-		whitelist: %lang.allowed%
-		default: %lang.default%
+		default: %site.lang%
+		whitelist: [cs]
+		fallback: [%site.lang%]
 	dirs: [%appDir%/../locale]
+	localeResolvers:
+		- Contributte\Translation\LocalesResolvers\Router
+		- Contributte\Translation\LocalesResolvers\Parameter
+		- Contributte\Translation\LocalesResolvers\Session
+		- Contributte\Translation\LocalesResolvers\Header

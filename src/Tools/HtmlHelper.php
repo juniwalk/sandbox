@@ -13,18 +13,16 @@ use Nette\Utils\Strings;
 
 final class HtmlHelper
 {
-	/**
-	 * @var ITranslator|null
-	 */
+	/** @var ITranslator|null */
 	private static $translator;
 
 
 	/**
 	 * @param  ITranslator|null  $translator
-	 * @return void
 	 */
-	public static function setTranslator(ITranslator $translator = null): void
-	{
+	public function __construct(
+		ITranslator $translator = null
+	) {
 		static::$translator = $translator;
 	}
 
@@ -37,7 +35,7 @@ final class HtmlHelper
 	public static function createPrice(float $value, string $unit = '%s Kč'): Html
 	{
 		$value = number_format($value, 2, ',', ' ');
-		//$unit = static::translate($unit);
+		$unit = static::translate($unit);
 		$value = sprintf($unit, $value);
 
 		return Html::el('span class="badge"', $value);
@@ -52,7 +50,7 @@ final class HtmlHelper
 	 */
 	public static function createStatus($status, bool $hasIcons = true, bool $hasContent = true): Html
 	{
-		$content = $status ? 'nette.general.yes' : 'nette.general.no';
+		$content = $status ? 'web.general.yes' : 'web.general.no';
 		$type = $status ? 'success' : 'danger';
 		$icon = null;
 
@@ -78,9 +76,9 @@ final class HtmlHelper
 	public static function createLabel(string $content, string $type = 'default', string $icon = null, bool $translate = true): Html
 	{
 		$label = Html::el('span class="label"')->addClass('label-'.$type);
-		//$content = $translate == true
-		//	? static::$translator->translate($content)
-		//	: $content;
+		$content = $translate == true
+			? static::$translator->translate($content)
+			: $content;
 
 		if (!empty($icon)) {
 			$icon = Html::el('i class="fas"')->addClass($icon);
@@ -136,7 +134,7 @@ final class HtmlHelper
 	 */
 	public static function createOption(string $content): Html
 	{
-		//$content = static::translate($content);
+		$content = static::translate($content);
 		$option = Html::el('option', strip_tags($content));
 
 		if ($option->getText() !== $content) {
@@ -156,7 +154,7 @@ final class HtmlHelper
 	public static function createPopover(string $value, string $content, string $type = 'default'): Html
 	{
 		return Html::el('button type="button" class="btn btn-'.$type.'"')
-			//->setHtml(static::translate($value))
+			->setHtml(static::translate($value))
 			->setHtml($value)
 			->data('content', static::translate($content))
 			->data('container', 'body')
@@ -187,10 +185,31 @@ final class HtmlHelper
 
 
 	/**
+	 * @param  float  $amount
+	 * @param  int  $decimals
+	 * @return string
+	 */
+	public static function formatNumber(float $amount, int $decimals = 2, string $format = '%g%s'): string
+	{
+	    $size = ['', 'k', 'M', 'B', 'T', 'Q', 'S', 'O', 'N'];
+	    $factor = floor((strlen((string) intval($amount)) - 1) / 3);
+
+		$amount = $amount / pow(1000, $factor);
+		$amount = round($amount, $decimals);
+
+	    return sprintf(
+			$format,
+			$amount,
+			$size[$factor]
+		);
+	}
+
+
+	/**
 	 * @param  string  $content
 	 * @return string
 	 */
-	public static function translate(string $content): string
+	private static function translate(string $content): string
 	{
 		return static::$translator->translate($content);
 	}

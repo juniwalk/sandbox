@@ -19,6 +19,8 @@ services:
 
 # Nettrine \ DBAL
 dbal:
+	debug:
+		panel: %debugMode%
 	connection:
 		host: 127.0.0.1
 		user: %db.user%
