@@ -30,7 +30,7 @@ menu:
 #
 # Page titles
 #
-page:
+pages:
 	# Root Module
 	error-4xx: 'Oops...'
 	error-403: '<i class="fas fa-exclamation-circle fa-fw"></i> Přístup odepřen'

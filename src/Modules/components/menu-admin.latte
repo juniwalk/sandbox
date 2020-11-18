@@ -1,13 +1,17 @@
-<ul class="nav nav-pills nav-sidebar flex-column mt-3" n:if="$user->isInRole('admin')">
+<ul class="nav nav-pills nav-sidebar flex-column menu-admin mt-3" data-widget="treeview" role="menu" data-accordion="false" n:if="$user->isAllowed('Admin:Home')">
 
 	<li class="nav-header text-muted text-uppercase">{_web.menu.admin|noescape}</li>
 
-	<li n:class="nav-item, $presenter->isLinkCurrent(':Admin:Home:*') ? active" n:if="$user->isAllowed('Admin:Home', 'default')">
-		<a class="nav-link" n:href=":Admin:Home:default">{_web.page.admin-home-default|noescape}</a>
+	<li class="nav-item" n:if="$user->isAllowed('Admin:Home', 'default')">
+		<a n:href=":Admin:Home:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:Home:*') ? active">
+			{_web.pages.admin-home-default|noescape}
+		</a>
 	</li>
 
-	<li n:class="nav-item, $presenter->isLinkCurrent(':Admin:User:*') ? active" n:if="$user->isAllowed('Admin:User', 'default')">
-		<a class="nav-link" n:href=":Admin:User:default">{_web.page.admin-user-default|noescape}</a>
+	<li class="nav-item" n:if="$user->isAllowed('Admin:User', 'default')">
+		<a n:href=":Admin:User:default" n:class="nav-link, $presenter->isLinkCurrent(':Admin:User:*') ? active">
+			{_web.pages.admin-user-default|noescape}
+		</a>
 	</li>
 
 </ul>

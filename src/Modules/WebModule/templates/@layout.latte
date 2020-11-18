@@ -16,12 +16,14 @@
 			<span class="navbar-toggler-icon"></span>
 		</a>
 
-		<div class="collapse navbar-collapse" id="navbarCollapse">
+		<div class="collapse navbar-collapse ml-lg-2 py-2 py-md-0" id="navbarCollapse">
+		<ul class="navbar-nav">
 
-			{block beforeMenu}{/block}
-			{include $appDir.'/Modules/components/menu-web.latte'}
-			{block afterMenu}{/block}
+			<li n:class="nav-item, rounded, $presenter->isLinkCurrent(':Web:Home:*') ? active" n:if="$user->isAllowed('Web:Home', 'default')">
+				<a class="nav-link" n:href=":Web:Home:default">{_web.pages.web-home-default|noescape}</a>
+			</li>
 
+		</ul>
 		</div>
 
 		{include $appDir.'/Modules/components/menu-user.latte'
@@ -71,7 +73,7 @@
 
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h1 n:block="title" class="m-0 text-dark">{('web.page.'.$pageName)|translate|noescape}</h1>
+					<h1 n:block="title" class="m-0 text-dark">{('web.pages.'.$pageName)|translate|noescape}</h1>
 				</div>
 				<div class="col-sm-6">
 					{ifset breadcrumbs}{include breadcrumbs|indent:5|trim}{/ifset}

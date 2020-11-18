@@ -4,24 +4,24 @@
 
 <ul n:class="navbar-nav, navbar-no-expand, $isRight ? ml-md-auto, $module == 'Admin' ? ml-auto" n:if="isset($profile)">
 
-    <li class="nav-item user-menu">
+    <li class="nav-item rounded user-menu">
         <a class="nav-link px-2" n:href=":Web:Auth:profile">{$profile->getDisplayName()}</a>
     </li>
 
-    <li class="nav-item" n:if="$hasHelp">
+    <li class="nav-item rounded" n:if="$hasHelp">
         <a class="nav-link" href="#" data-widget="control-sidebar" data-slide="true"><i class="fas fa-fw fa-question-circle"></i></a>
     </li>
 
-    <li class="nav-item" n:if="$presenter->isModuleCurrent('Admin') && $user->isAllowed('Admin:Home')">
+    <li class="nav-item rounded" n:if="$presenter->isModuleCurrent('Admin') && $user->isAllowed('Admin:Home')">
         <a class="nav-link" n:href=":Web:Home:default">{_web.menu.web-link|noescape}</a>
     </li>
 
-    <li class="nav-item" n:if="$presenter->isModuleCurrent('Web') && $user->isAllowed('Admin:Home')">
+    <li class="nav-item rounded" n:if="$presenter->isModuleCurrent('Web') && $user->isAllowed('Admin:Home')">
 		<a class="nav-link" href="#" data-widget="pushmenu">{_web.menu.admin-link|noescape}</a>
     </li>
 
-    <li class="nav-item">
-        <a class="nav-link" n:href=":Web:Auth:signOut">{_web.page.web-auth-signout|noescape}</a>
+    <li class="nav-item rounded">
+        <a class="nav-link" n:href=":Web:Auth:signOut">{_web.pages.web-auth-signout|noescape}</a>
     </li>
 
 </ul>
