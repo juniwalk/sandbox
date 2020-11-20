@@ -47,7 +47,7 @@
 	</div>
 
 	<div n:class="$control->hasCollapsibleOuterFilters() ? collapse, $hasFiltersAlwaysShown || $filter_active ? show" id="datagrid-{$controlName}-row-filters" n:if="$control->hasOuterFilterRendering()">
-	<div class="card-body py-0" n:block="outer-filters">
+	<div class="card-body datagrid-filters py-0" n:block="outer-filters">
 
 		<div class="row" n:foreach="array_chunk($filters, $control->getOuterFilterColumnsCount(), true) as $items">
 			{var $items = array_pad($items, $control->getOuterFilterColumnsCount(), null)}
@@ -234,9 +234,9 @@
 	</div>
 
 	<div class="card-footer" n:block="pagination" n:if="($control->isPaginated() || $filter_active) && !$control->isTreeView()">
-	<div class="row justify-content-md-center" n:snippet="pagination">
+	<div class="d-flex flex-wrap" n:snippet="pagination">
 
-		<div class="col-md-auto pb-2 pb-sm-0 col-items text-muted">
+		<div class="flex-grow-1 pb-2 pb-sm-0 px-2 col-items text-muted">
 
 			<small class="align-middle" n:if="$control->isPaginated()">
 				({var $paginator = $control['paginator']->getPaginator()}
@@ -251,11 +251,11 @@
 
 		</div>
 
-		<div class="col pb-2 pb-sm-0 col-pagination clearfix text-md-right">
+		<div class="pb-2 pb-sm-0 px-2 col-pagination clearfix text-md-right">
 			{control paginator}
 		</div>
 
-		<div class="col-md-auto pb-2 pb-sm-0 col-per-page">
+		<div class="pb-2 pb-sm-0 px-2 col-per-page">
 			<a n:href="resetFilter!" n:if="$filter_active" class="ajax btn btn-danger btn-sm reset-filter">{_ublaboo_datagrid.reset_filter}</a>
 			<span class="datagrid-per-page" n:if="$control->isPaginated()">
 				{input $filter['perPage'], data-autosubmit-per-page => true, class => 'form-control form-control-sm', style => 'max-width: 64px;'}

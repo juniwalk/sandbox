@@ -57,7 +57,9 @@
 }
 
 .custom-file-label { color: #939ba2; }
-.form-control.is-invalid { z-index: 3 }
+.form-control.is-invalid { z-index: 3; }
+
+.select2-container { flex: 1 1 auto; }
 
 
 /* Login page */
@@ -102,6 +104,8 @@
 .table .col-action .dropdown {
 	display: inline-block;
 }
+
+.datagrid .datagrid-filters .select2-container { display: block; }
 
 .datagrid .hidden {
 	display: none !important
