@@ -9,7 +9,6 @@ namespace App\Entity;
 
 use App\Entity\Enums\Role;
 use App\Exceptions\InvalidEnumException;
-use Contributte\ImageStorage\Image;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
