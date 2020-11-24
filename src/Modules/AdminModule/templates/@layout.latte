@@ -84,6 +84,20 @@
 
 	</aside>
 
+	<div class="modals" n:snippet="modals" n:ifset="#modal">
+
+		{include #modal}
+
+		<script n:ifset="$openModal" type="text/javascript">
+		$({$openModal}).modal({
+			backdrop: 'static',
+			keyboard: false,
+			show: true
+		});
+		</script>
+
+	</div>
+
 </div>
 
 	<!-- javascript -->

@@ -74,14 +74,16 @@ abstract class AbstractPresenter extends Presenter
 
 
 	/**
-	 * @param  string  $modal
+	 * @param  string  $component
 	 * @param  mixed[]  $params
 	 * @return void
 	 */
-	public function openModal(string $modal, iterable $params = []): void
+	public function openModal(string $component, iterable $params = []): void
 	{
+		$control = $this->getComponent($component, true);
+
 		$template = $this->getTemplate();
-		$template->add('openModal', '#'.$modal);
+		$template->add('openModal', '#'.$control->getName());
 
 		foreach ($params as $key => $value) {
 			$template->add($key, $value);
