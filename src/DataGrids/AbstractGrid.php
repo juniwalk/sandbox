@@ -194,6 +194,7 @@ abstract class AbstractGrid extends Control
 	{
 		$grid = new DataGrid(null, $name);
 		$grid->setRememberState($rememberState);
+		$grid->setRefreshUrl(!$rememberState);
 		$grid->setCustomPaginatorTemplate(__DIR__.'/templates/datagrid_paginator.latte');
 		$grid->setTemplateFile(__DIR__.'/templates/datagrid.latte');
 		$grid->setItemsPerPageList([10, 20, 50], false);
