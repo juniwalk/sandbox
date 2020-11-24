@@ -8,6 +8,7 @@
 namespace App;
 
 use Nette\Configurator;
+use Nette\DI\Container;
 
 final class Bootstrap
 {
@@ -27,9 +28,9 @@ final class Bootstrap
 
 
 	/**
-	 * @return Configurator
+	 * @return Container
 	 */
-	public static function boot(): Configurator
+	public static function boot(): Container
 	{;
 		$configurator = new Configurator;
 		$configurator->setDebugMode(static::isDebugMode());
@@ -37,7 +38,10 @@ final class Bootstrap
 		$configurator->setTempDirectory(__DIR__.'/../temp');
 		$configurator->addConfig(__DIR__.'/../config/config.neon');
 
-		return $configurator;
+		$container = $configurator->createContainer();
+		$container->getService('htmlHelper');
+
+		return $container;
 	}
 
 

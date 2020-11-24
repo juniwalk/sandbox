@@ -58,7 +58,7 @@ services:
 	router: App\Routing\RouterFactory::createRouter
 	authenticator: App\Security\Authenticator
 	authorizator: App\Security\Authorizator
-	- App\Tools\HtmlHelper
+	htmlHelper: App\Tools\HtmlHelper
 
 	# Managers
 	- App\Managers\AccessManager

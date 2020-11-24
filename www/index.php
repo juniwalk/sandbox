@@ -14,6 +14,6 @@ $class = php_sapi_name() == 'cli'
     ? CliApplication::class
     : HttpApplication::class;
 
-Bootstrap::boot()->createContainer()
+Bootstrap::boot()
 	->getByType($class)
 	->run();
