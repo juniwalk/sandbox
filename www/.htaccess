@@ -1,10 +1,6 @@
 # Apache configuration file (see https://httpd.apache.org/docs/current/mod/quickreference.html)
 Require all granted
 
-<FilesMatch ".+.ph(p[3457]?|t|tml)$">
-	SetHandler "proxy:unix:/run/php/php7.3-fpm.sock|fcgi://localhost73"
-</FilesMatch>
-
 # disable directory listing
 <IfModule mod_autoindex.c>
 	Options -Indexes
