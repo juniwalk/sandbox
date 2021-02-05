@@ -43,6 +43,16 @@ final class UserGrid extends AbstractGrid
 
 
 	/**
+	 * @return void
+	 * @secured
+	 */
+	public function handleCreate(): void
+	{
+		$this->getPresenter()->openModal('userForm');
+	}
+
+
+	/**
 	 * @param  int  $id
 	 * @return void
 	 * @secured
@@ -169,8 +179,8 @@ final class UserGrid extends AbstractGrid
 			->setTranslateOptions(true);
 
 
-        $grid->addToolbarButton('User:create', 'web.general.create')
-            ->setClass('btn btn-success btn-sm')->setIcon('plus');
+		$grid->addToolbarButton('create!', 'web.general.create')
+            ->setClass('btn btn-success btn-sm ajax')->setIcon('plus');
 
 		$grid->addAction('User:edit', 'web.general.edit')->setIcon('pencil-alt')
 			->setClass('btn btn-primary btn-xs')

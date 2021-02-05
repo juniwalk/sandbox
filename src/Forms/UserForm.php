@@ -113,7 +113,8 @@ final class UserForm extends AbstractForm
 		$form->addText('email')->setType('email')
 			->setRequired('nette.user.email-required');
 		$form->addSelect('role')->setItems((new Role)->getItems())
-			->setRequired('nette.user.role-required');
+			->setRequired('nette.user.role-required')
+			->setTranslator($this->getTranslator());
 		$form->addCheckbox('active');
 
         $form->addSubmit('submit');

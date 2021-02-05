@@ -1,70 +1,60 @@
-<section class="card card-outline card-primary" n:snippet="form">
-<form n:name="form">
+{layout $control->getLayoutPath()}
+{var $color = $headColor = 'success'}
 
-	<div class="card-header">
-		<h3 class="card-title">{_web.control.user-form|noescape}</h3>
+<span n:block="title">{_web.control.user-form|noescape}</span>
+
+<div n:block="controls">
+
+	<div class="form-group">
+		<label n:name="name" class="control-label">{_web.user.name}</label>
+		<div class="input-group">
+			<div class="input-group-prepend">
+				<label n:name="name" class="input-group-text"><i class="fas fa-fw fa-id-card"></i></label>
+			</div>
+			<input n:name="name" type="text" class="form-control" placeholder="{_web.user.name}">
+		</div>
 	</div>
 
-	<div class="card-body alerts" n:if="$form->hasErrors()" n:snippet="errors" n:inner-foreach="$form->getErrors() as $error">
-		<div n:class="alert, alert-danger, $iterator->isLast() ? mb-0">{$error}</div>
-	</div>
-
-	<div class="card-body">
-
-		<div class="form-group">
-			<label n:name="name" class="control-label">{_web.user.name}</label>
-			<div class="input-group">
-				<div class="input-group-prepend">
-					<label n:name="name" class="input-group-text"><i class="fas fa-fw fa-id-card"></i></label>
-				</div>
-				<input n:name="name" type="text" class="form-control" placeholder="{_web.user.name}">
+	<div class="form-group required">
+		<label n:name="email" class="control-label">{_web.user.email}</label>
+		<div class="input-group">
+			<div class="input-group-prepend">
+				<label n:name="email" class="input-group-text"><i class="fas fa-envelope fa-fw"></i></label>
+			</div>
+			<input n:name="email" type="email" class="form-control">
+			<div class="input-group-append" n:ifset="$profile">
+				<a class="btn btn-default ajax" n:href="passwordForgot!" data-confirm="{_web.message.confirm-passwordForgot}">
+					<i class="fas fa-key fa-fw"></i>
+					<span class="sr-only">{_web.user.email-forgot}</span>
+				</a>
 			</div>
 		</div>
-
-		<div class="form-group required">
-			<label n:name="email" class="control-label">{_web.user.email}</label>
-			<div class="input-group">
-				<div class="input-group-prepend">
-					<label n:name="email" class="input-group-text"><i class="fas fa-envelope fa-fw"></i></label>
-				</div>
-				<input n:name="email" type="email" class="form-control">
-				<div class="input-group-append">
-					<a class="btn btn-default ajax" n:href="passwordForgot!" data-confirm="{_web.message.confirm-passwordForgot}">
-						<i class="fas fa-key fa-fw"></i>
-						<span class="sr-only">{_web.user.email-forgot}</span>
-					</a>
-				</div>
-			</div>
-		</div>
-
-		<div class="form-group required">
-			<label n:name="role" class="control-label">{_web.user.role}</label>
-			<div class="input-group">
-				<div class="input-group-prepend">
-					<label n:name="role" class="input-group-text"><i class="fas fa-id-badge fa-fw"></i></label>
-				</div>
-				<select n:name="role" class="form-control select2"></select>
-			</div>
-		</div>
-
-		<div class="custom-control custom-checkbox">
-			<input n:name="active" type="checkbox" class="custom-control-input">
-			<label n:name="active" class="custom-control-label">
-				<span class="control-label">{_web.user.active-help}</span>
-			</label>
-		</div>
-
 	</div>
 
-	<div class="card-footer">
-		<button n:name="submit" type="submit" class="btn btn-primary">{_web.button.save|noescape}</button>
-		<button n:name="apply" type="submit" class="btn btn-secondary">{_web.button.apply|noescape}</button>
+	<div class="form-group required">
+		<label n:name="role" class="control-label">{_web.user.role}</label>
+		<div class="input-group">
+			<div class="input-group-prepend">
+				<label n:name="role" class="input-group-text"><i class="fas fa-id-badge fa-fw"></i></label>
+			</div>
+			<select n:name="role" class="form-control select2"></select>
+		</div>
 	</div>
 
-	<script type="text/javascript" n:ifcontent n:inner-foreach="$form->getControls() as $input">
-		{continueIf !$input->hasErrors()}
-		document.getElementById({$input->getHtmlId()}).classList.add('is-invalid')
-	</script>
+	<div class="custom-control custom-switch">
+		<input n:name="active" type="checkbox" class="custom-control-input">
+		<label n:name="active" class="custom-control-label">
+			<span class="control-label">{_web.user.active-help}</span>
+		</label>
+	</div>
 
-</form>
-</section>
+</div>
+
+<div n:block="buttons">
+	<button n:name="submit" type="submit" class="btn btn-primary">{_web.button.save|noescape}</button>
+	<button n:name="apply" type="submit" class="btn btn-secondary">{_web.button.apply|noescape}</button>
+</div>
+
+<div n:block="buttons-modal">
+	<button n:name="submit" type="submit" class="btn btn-primary">{_web.button.save|noescape}</button>
+</div>
