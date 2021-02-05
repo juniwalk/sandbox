@@ -38,7 +38,7 @@ session:
 	autoStart: smart
 	expiration: 14 days
 	savePath: %tempDir%/sessions
-	cookieSamesite: true
+	cookieSamesite: Lax
 
 mail:
 	smtp: true
@@ -54,7 +54,6 @@ extensions:
 	form: JuniWalk\Form\DI\FormExtension
 
 services:
-	security.userStorage: App\Security\UserStorage
 	router: App\Routing\RouterFactory::createRouter
 	authenticator: App\Security\Authenticator
 	authorizator: App\Security\Authorizator
