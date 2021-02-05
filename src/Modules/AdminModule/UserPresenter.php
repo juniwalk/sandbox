@@ -14,6 +14,7 @@ use App\DataGrids\UserParamGrid;
 use App\Entity\User;
 use App\Entity\UserRepository;
 use App\Forms\Factory\UserFormFactory;
+use App\Forms\UserForm;
 use App\Modules\AbstractPresenter;
 
 final class UserPresenter extends AbstractPresenter
@@ -69,15 +70,23 @@ final class UserPresenter extends AbstractPresenter
 	 * @param  string  $name
 	 * @return UserForm
 	 */
-	protected function createComponentUserForm(string $name)
+	protected function createComponentUserForm(string $name): UserForm
 	{
 		$form = $this->userFormFactory->create($this->user);
-		$form->onSuccess[] = function ($frm, $data) use ($form) {
+		$form->onSuccess[] = function($frm, $data) use ($form) {
 	    	if ($frm['apply']->isSubmittedBy()) {
 				$this->redirect('edit', ['id' => $form->getUser()->getId()]);
 	    	}
 
 			$this->redirect('default');
+		};
+
+		$form->onError[] = function() use ($name) {
+			if ($this->getAction() == 'default') {
+				return;
+			}
+
+			$this->openModal($name);
 		};
 
 		return $form;

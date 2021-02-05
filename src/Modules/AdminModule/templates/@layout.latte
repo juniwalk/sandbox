@@ -1,4 +1,4 @@
-{extends $appDir.'/Modules/templates/@layout.latte'}
+{extends '../../templates/@layout.latte'}
 <body n:block="body">
 <div class="wrapper">
 
@@ -10,7 +10,7 @@
 			<li class="nav-item rounded"><a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars fa-fw"></i></a></li>
 		</ul>
 
-		{include $appDir.'/Modules/components/menu-user.latte'
+		{include '../../components/menu-user.latte'
 			hasHelp => $this->hasBlock('helpBlock'),
 			module => 'Admin',
 			isRight => true,
@@ -35,7 +35,7 @@
 			</div>
 
 			{block beforeMenu}{/block}
-			{include $appDir.'/Modules/components/menu-admin.latte'}
+			{include '../../components/menu-admin.latte'}
 			{block afterMenu}{/block}
 
 		</div>

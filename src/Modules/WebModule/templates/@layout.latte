@@ -1,4 +1,4 @@
-{extends $appDir.'/Modules/templates/@layout.latte'}
+{extends '../../templates/@layout.latte'}
 <body n:block="body" class="hold-transition sidebar-collapse layout-top-nav">
 <div class="wrapper">
 
@@ -26,7 +26,7 @@
 		</ul>
 		</div>
 
-		{include $appDir.'/Modules/components/menu-user.latte'
+		{include '../../components/menu-user.latte'
 			hasHelp => $this->hasBlock('helpBlock'),
 			isRight => true,
 		}
@@ -50,7 +50,7 @@
 				</div>
 			</div>
 
-			{include $appDir.'/Modules/components/menu-admin.latte'}
+			{include '../../components/menu-admin.latte'}
 
 		</div>
 

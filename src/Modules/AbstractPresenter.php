@@ -14,7 +14,7 @@ use JuniWalk\Tessa\BundleManager;
 use JuniWalk\Tessa\TessaControl;
 use Nette\Application\UI\Presenter;
 use Nette\Localization\ITranslator as Translator;
-use Nette\Security\IUserStorage;
+use Nette\Security\UserStorage;
 use Nette\Utils\Strings;
 
 abstract class AbstractPresenter extends Presenter
@@ -102,7 +102,7 @@ abstract class AbstractPresenter extends Presenter
 		$user = $this->getUser();
 
 		if (!$user->isLoggedIn() && !$user->isAllowed($this->getName(), $this->getAction())) {
-			if ($user->getLogoutReason() === IUserStorage::INACTIVITY) {
+			if ($user->getLogoutReason() === UserStorage::LOGOUT_INACTIVITY) {
 				$this->flashMessage('web.message.auth-signout', 'warning');
 			}
 
@@ -151,7 +151,6 @@ abstract class AbstractPresenter extends Presenter
 
 		$template = $this->getTemplate();
 		$template->add('pageName', Strings::webalize($this->getAction(true)));
-		$template->add('appDir', $this->getContext()->parameters['appDir']);
 		$template->add('profile', $this->getUser()->getIdentity());
 		$template->add('isLocked', Bootstrap::isLocked());
 		$template->add('locales', $locales);
