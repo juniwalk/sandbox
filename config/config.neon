@@ -69,11 +69,11 @@ services:
 	- App\DataGrids\Factory\UserParamGridFactory
 
 	# Forms
+	- App\Forms\Factory\AdminUserFormFactory
 	- App\Forms\Factory\AuthPasswordForgotFormFactory
 	- App\Forms\Factory\AuthProfileFormFactory
 	- App\Forms\Factory\AuthSignInFormFactory
 	- App\Forms\Factory\AuthSignUpFormFactory
-	- App\Forms\Factory\UserFormFactory
 
 
 # Nette \ DI \ Decorator

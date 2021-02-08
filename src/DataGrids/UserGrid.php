@@ -48,7 +48,7 @@ final class UserGrid extends AbstractGrid
 	 */
 	public function handleCreate(): void
 	{
-		$this->getPresenter()->openModal('userForm');
+		$this->getPresenter()->openModal('adminUserForm');
 	}
 
 

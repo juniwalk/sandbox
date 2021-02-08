@@ -13,20 +13,20 @@ use App\DataGrids\UserGrid;
 use App\DataGrids\UserParamGrid;
 use App\Entity\User;
 use App\Entity\UserRepository;
-use App\Forms\Factory\UserFormFactory;
-use App\Forms\UserForm;
+use App\Forms\Factory\AdminUserFormFactory;
+use App\Forms\AdminUserForm;
 use App\Modules\AbstractPresenter;
 
 final class UserPresenter extends AbstractPresenter
 {
+	/** @var AdminUserFormFactory */
+	private $adminUserFormFactory;
+
 	/** @var UserParamGridFactory */
 	private $userParamGridFactory;
 
 	/** @var UserGridFactory */
 	private $userGridFactory;
-
-	/** @var UserFormFactory */
-	private $userFormFactory;
 
 	/** @var UserRepository */
 	private $userRepository;
@@ -37,21 +37,21 @@ final class UserPresenter extends AbstractPresenter
 
 	/**
 	 * @param UserRepository  $userRepository
-	 * @param UserFormFactory  $userFormFactory
 	 * @param UserGridFactory  $userGridFactory
 	 * @param UserParamGridFactory  $userParamGridFactory
+	 * @param AdminUserFormFactory  $adminUserFormFactory
 	 */
 	public function __construct(
 		UserRepository $userRepository,
-		UserFormFactory $userFormFactory,
 		UserGridFactory $userGridFactory,
-		UserParamGridFactory $userParamGridFactory
+		UserParamGridFactory $userParamGridFactory,
+		AdminUserFormFactory $adminUserFormFactory
 	) {
 		parent::__construct();
 
+		$this->adminUserFormFactory = $adminUserFormFactory;
 		$this->userParamGridFactory = $userParamGridFactory;
 		$this->userGridFactory = $userGridFactory;
-		$this->userFormFactory = $userFormFactory;
 		$this->userRepository = $userRepository;
 	}
 
@@ -68,11 +68,11 @@ final class UserPresenter extends AbstractPresenter
 
 	/**
 	 * @param  string  $name
-	 * @return UserForm
+	 * @return AdminUserForm
 	 */
-	protected function createComponentUserForm(string $name): UserForm
+	protected function createComponentAdminUserForm(string $name): AdminUserForm
 	{
-		$form = $this->userFormFactory->create($this->user);
+		$form = $this->adminUserFormFactory->create($this->user);
 		$form->onSuccess[] = function($frm, $data) use ($form) {
 	    	if ($frm['apply']->isSubmittedBy()) {
 				$this->redirect('edit', ['id' => $form->getUser()->getId()]);

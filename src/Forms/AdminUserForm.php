@@ -17,7 +17,7 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use JuniWalk\Form\AbstractForm;
 
-final class UserForm extends AbstractForm
+final class AdminUserForm extends AbstractForm
 {
 	/** @var EntityManager */
 	private $entityManager;
@@ -43,7 +43,7 @@ final class UserForm extends AbstractForm
 		$this->userManager = $userManager;
 		$this->user = $user;
 
-		$this->setTemplateFile(__DIR__.'/templates/userForm.latte');
+		$this->setTemplateFile(__DIR__.'/templates/adminUserForm.latte');
 		$this->onBeforeRender[] = function ($form, $template) {
 			$template->add('profile', $this->user);
 			$this->setDefaults($this->user);
@@ -111,10 +111,9 @@ final class UserForm extends AbstractForm
 		$form = parent::createComponentForm($name);
 		$form->addText('name');
 		$form->addText('email')->setType('email')
-			->setRequired('nette.user.email-required');
+			->setRequired('web.user.email-required');
 		$form->addSelect('role')->setItems((new Role)->getItems())
-			->setRequired('nette.user.role-required')
-			->setTranslator($this->getTranslator());
+			->setRequired('web.user.role-required');
 		$form->addCheckbox('active');
 
         $form->addSubmit('submit');

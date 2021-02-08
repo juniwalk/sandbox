@@ -8,13 +8,13 @@
 namespace App\Forms\Factory;
 
 use App\Entity\User;
-use App\Forms\UserForm;
+use App\Forms\AdminUserForm;
 
-interface UserFormFactory
+interface AdminUserFormFactory
 {
     /**
      * @param  User|null  $user
-     * @return UserForm
+     * @return AdminUserForm
      */
-    public function create(?User $user): UserForm;
+    public function create(?User $user): AdminUserForm;
 }
