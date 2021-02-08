@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d2b8a27f110e853b3658d29890a95587",
+    "content-hash": "3170c367bf5858a4697cd3cff38344b2",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -1596,27 +1596,23 @@
         },
         {
             "name": "juniwalk/form",
-            "version": "dev-master",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/juniwalk/form.git",
-                "reference": "833b13257ebc7c3b548f29ecd2740eae0a2e8f1c"
+                "reference": "9406f06bab069f5d16b2aee003f77d614635d936"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/juniwalk/form/zipball/833b13257ebc7c3b548f29ecd2740eae0a2e8f1c",
-                "reference": "833b13257ebc7c3b548f29ecd2740eae0a2e8f1c",
+                "url": "https://api.github.com/repos/juniwalk/form/zipball/9406f06bab069f5d16b2aee003f77d614635d936",
+                "reference": "9406f06bab069f5d16b2aee003f77d614635d936",
                 "shasum": ""
             },
             "require": {
                 "nette/application": ">=2.4",
                 "nette/di": ">=2.4",
                 "nette/forms": ">=2.4",
-                "php": ">=7.1"
-            },
-            "require-dev": {
-                "nette/bootstrap": ">=2.4",
-                "nette/tester": "^1.0"
+                "php": ">=7.3"
             },
             "type": "library",
             "autoload": {
@@ -1641,7 +1637,7 @@
                 "nette",
                 "nettefw"
             ],
-            "time": "2021-02-05T14:06:42+00:00"
+            "time": "2021-02-08T11:04:27+00:00"
         },
         {
             "name": "juniwalk/tessa",
@@ -2768,16 +2764,16 @@
         },
         {
             "name": "nette/routing",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/routing.git",
-                "reference": "d989c52fa70708816253f2adab7f57ba039a4b4f"
+                "reference": "5532e7e3612e13def357f089c1a5c25793a16843"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/routing/zipball/d989c52fa70708816253f2adab7f57ba039a4b4f",
-                "reference": "d989c52fa70708816253f2adab7f57ba039a4b4f",
+                "url": "https://api.github.com/repos/nette/routing/zipball/5532e7e3612e13def357f089c1a5c25793a16843",
+                "reference": "5532e7e3612e13def357f089c1a5c25793a16843",
                 "shasum": ""
             },
             "require": {
@@ -2822,7 +2818,7 @@
             "keywords": [
                 "nette"
             ],
-            "time": "2020-11-02T15:13:26+00:00"
+            "time": "2021-02-06T04:08:30+00:00"
         },
         {
             "name": "nette/schema",
@@ -5051,9 +5047,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "juniwalk/form": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
