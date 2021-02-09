@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use App\Exceptions\EntityNotFoundException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Doctrine\ORM\Proxy\Proxy;
 use Doctrine\ORM\Query;
@@ -25,14 +26,14 @@ abstract class AbstractRepository
 
 	/**
 	 * @param  EntityManager  $entityManager
-	 * @throws Exception
+	 * @throws EntityNotFoundException
 	 */
 	final public function __construct(EntityManager $entityManager)
 	{
 		$this->entityManager = $entityManager;
 
 		if (!$this->entityName) {
-			throw new \Exception;
+			throw EntityNotFoundException::fromName($this->entityName);
 		}
 	}
 

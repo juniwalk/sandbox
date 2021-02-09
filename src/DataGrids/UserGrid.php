@@ -231,17 +231,4 @@ final class UserGrid extends AbstractGrid
 
 		return HtmlHelper::createLabel($role);
 	}
-
-
-	/**
-	 * @return string[]
-	 */
-	private function createActiveOptions(): iterable
-	{
-		return [
-			null => 'web.general.all',
-			1 => 'web.general.yes',
-			0 => 'web.general.no',
-		];
-	}
 }

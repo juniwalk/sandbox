@@ -7,6 +7,7 @@
 
 namespace App\Commands\Tools;
 
+use Throwable;
 use Symfony\Component\Console\Helper;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -66,11 +67,11 @@ final class ProgressBar
 		$renderer->setBeforeRender([$progress, 'clear']);
 		$renderer->setAfterRender([$progress, 'display']);
 
-		foreach ($values as $value) {
+		foreach ($values as $key => $value) {
 			try {
-				$callback($progress, $value);
+				$callback($progress, $value, $key);
 
-			} catch (\Exception $e) {
+			} catch (Throwable $e) {
 				if ($this->throwExceptions) {
 					throw $e;
 				}

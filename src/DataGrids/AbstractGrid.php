@@ -198,7 +198,7 @@ abstract class AbstractGrid extends Control
 		$grid->setCustomPaginatorTemplate(__DIR__.'/templates/datagrid_paginator.latte');
 		$grid->setTemplateFile(__DIR__.'/templates/datagrid.latte');
 		$grid->setItemsPerPageList([10, 20, 50], false);
-		$grid->setDefaultPerPage(10);
+		$grid->setDefaultPerPage(20);
 
 		if (isset($primaryKey)) {
 			$grid->setPrimaryKey($primaryKey);
@@ -215,5 +215,18 @@ abstract class AbstractGrid extends Control
 		DataGrid::$iconPrefix = 'fas fa-fw fa-';
 
 		return $grid;
+	}
+
+
+	/**
+	 * @return string[]
+	 */
+	protected function createActiveOptions(): iterable
+	{
+		return [
+			null => 'web.general.all',
+			1 => 'web.general.yes',
+			0 => 'web.general.no',
+		];
 	}
 }
