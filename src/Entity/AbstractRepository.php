@@ -9,7 +9,6 @@ namespace App\Entity;
 
 use App\Exceptions\EntityNotFoundException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
-use Doctrine\ORM\Proxy\Proxy;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\NoResultException;
@@ -39,22 +38,39 @@ abstract class AbstractRepository
 
 
 	/**
-	 * @param  int  $id
-	 * @return object
-	 * @throws BadRequestException
+	 * @param  callable  $where
+	 * @return object[]
 	 */
-	public function getById(int $id)
+	public function findBy(callable $where): iterable
 	{
-		$builder = $this->createQueryBuilder('e')
-			->where('e.id = :id');
+		$builder = $this->createQueryBuilder('e', 'e.id');
+		$builder = $where($builder) ?: $builder;
 
 		try {
 			return $builder->getQuery()
-				->setParameter('id', $id)
+				->getResult();
+
+		} catch (NoResultException $e) {
+			return [];
+		}
+	}
+
+
+	/**
+	 * @param  callable  $where
+	 * @return object|null
+	 */
+	public function findOneBy(callable $where)
+	{
+		$builder = $this->createQueryBuilder('e', 'e.id');
+		$builder = $where($builder) ?: $builder;
+
+		try {
+			return $builder->getQuery()
 				->getSingleResult();
 
 		} catch (NoResultException $e) {
-			throw new BadRequestException;
+			return null;
 		}
 	}
 
@@ -65,12 +81,25 @@ abstract class AbstractRepository
 	 */
 	public function findById(int $id)
 	{
-		try {
-			return $this->getById($id);
+		return $this->findOneBy(function($qb) use ($id) {
+			$qb->setParameter('id', $id);
+			$qb->where('e.id = :id');
+		});
+	}
 
-		} catch (BadRequestException $e) {
-			return null;
+
+	/**
+	 * @param  int  $id
+	 * @return object
+	 * @throws BadRequestException
+	 */
+	public function getById(int $id)
+	{
+		if (!$object = $this->findById($id)) {
+			throw new BadRequestException;
 		}
+
+		return $object;
 	}
 
 
@@ -99,7 +128,7 @@ abstract class AbstractRepository
 	/**
 	 * @param  int|null  $id
 	 * @param  string|null  $entityName
-	 * @return Proxy|Entity|null
+	 * @return object|null
 	 */
 	public function getReference(?int $id, string $entityName = null)
 	{
@@ -108,5 +137,22 @@ abstract class AbstractRepository
 		}
 
 		return $this->entityManager->getReference($entityName ?: $this->entityName, $id);
+	}
+
+
+	/**
+	 * @param  bool  $cascade
+	 * @param  string|null  $entityName
+	 * @return void
+	 * @throws ORMException
+	 */
+	public function truncateTable(bool $cascade = false, string $entityName = null): void
+	{
+		$entityName = $entityName ?: $this->entityName;
+		$metaData = $this->entityManager->getClassMetadata($entityName);
+		$tableName = $metaData->getSchemaName().'.'.$metaData->getTableName();
+
+		$connection = $this->entityManager->getConnection();
+		$connection->query('TRUNCATE TABLE '.$tableName.' RESTART IDENTITY'.($cascade == true ? ' CASCADE' : null));
 	}
 }

@@ -3,14 +3,14 @@
 # https://nette.org/security-warning
 #
 extensions:
+	annotations: Nettrine\Annotations\DI\AnnotationsExtension
+	migrations: Nettrine\Migrations\DI\MigrationsExtension
+
 	dbal: Nettrine\DBAL\DI\DbalExtension
 	orm: Nettrine\ORM\DI\OrmExtension
 	orm.cache: Nettrine\Cache\DI\CacheExtension
 	orm.console: Nettrine\ORM\DI\OrmConsoleExtension
 	orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
-	migrations: Nettrine\Migrations\DI\MigrationsExtension
-
-	- Nettrine\Annotations\DI\AnnotationsExtension
 
 services:
 	- App\Entity\ParameterRepository
@@ -29,10 +29,18 @@ dbal:
 		driver: %db.driver%
 
 # Nettrine \ ORM
+orm:
+	configuration:
+		customStringFunctions:
+			date_trunc: App\Entity\Functions\DateTrunc
+			date_part: App\Entity\Functions\DatePart
+			unaccent: App\Entity\Functions\Unaccent
+			floor: App\Entity\Functions\Floor
+
+# Nettrine \ ORM
 orm.annotations:
-	namespaces: ['App\']
-	paths:
-		- %appDir%/Entity
+	mapping:
+		App\Entity: %appDir%/Entity
 
 # Nettrine \ Migrations
 migrations:

@@ -103,11 +103,13 @@
 
 	</aside>
 
-	<div class="modals" n:snippet="modals" n:ifset="#modal">
+	<div class="modals" n:snippet="modals">
 
-		{include #modal}
+		{ifset #modal}{include #modal}{/ifset}
 
-		<script n:ifset="$openModal" type="text/javascript">
+		<script n:ifset="$openModal" type="text/javascript" defer>
+		$('.modal.in').modal('hide');
+		$('.modal-backdrop').remove();
 		$({$openModal}).modal({
 			backdrop: 'static',
 			keyboard: false,
@@ -117,11 +119,9 @@
 
 	</div>
 
+	<div class="overlay" style="display: none">
+		<i class="fas fa-3x fa-sync-alt fa-spin"></i>
+	</div>
+
 </div>
-
-	<!-- javascript -->
-	{control tessa:js default |indent|trim}
-	{control tessa:js recaptcha |indent|trim}
-	{ifset javascript}{include javascript}{/ifset}
-
 </body>

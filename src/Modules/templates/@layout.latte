@@ -17,8 +17,13 @@
 	<title n:snippet="title">{ifset title}{include title|stripHtml|trim} | {/ifset}{include appName|stripHtml|trim}</title>
 
 	<!-- stylesheet -->
-	{control tessa:css default |indent|trim}
+	{control tessa:css default}
 	{ifset stylesheet}{include stylesheet}{/ifset}
+
+	<!-- javascript -->
+	{control tessa:js default}
+	{control tessa:js recaptcha}
+	{ifset javascript}{include javascript}{/ifset}
 
 </head>
 <body class="hold-transition login-page" n:block="body">
@@ -54,11 +59,6 @@
 		</footer>
 
 	</div>
-
-	<!-- javascript -->
-	{control tessa:js default |indent|trim}
-	{control tessa:js recaptcha |indent|trim}
-	{ifset javascript}{include javascript}{/ifset}
 
 </body>
 </html>
