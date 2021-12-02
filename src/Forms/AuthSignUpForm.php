@@ -43,8 +43,6 @@ final class AuthSignUpForm extends AbstractForm
 		$this->messageManager = $messageManager;
 		$this->entityManager = $entityManager;
 		$this->userManager = $userManager;
-
-		$this->setTemplateFile(__DIR__.'/templates/authSignUpForm.latte');
 	}
 
 

@@ -1,4 +1,4 @@
-<div class="card card-outline card-secondary datagrid datagrid-{$controlName} p-0" data-refresh-state="{link refreshState!}" n:snippet="grid">
+<div class="card card-outline card-secondary datagrid datagrid-{$controlName} datagrid-{$control->getFullName()} p-0" data-refresh-state="{link refreshState!}" n:snippet="grid">
 {snippetArea gridSnippets}
 
 <form n:name="filter" class="ajax">
@@ -12,9 +12,11 @@
 				{if $inlineAdd}{$inlineAdd->renderButtonAdd()}{/if}
 			</div>
 
+			{snippet exports}
 			<div class="btn-group mr-2 datagrid-exports" n:if="$exports" n:block="exports" n:inner-foreach="$exports as $export">
 				{$export->render()}
 			</div>
+			{/snippet}
 
 			<div class="btn-group mr-2" n:if="$control->hasOuterFilterRendering() && $filters && !$hasFiltersAlwaysShown">
 				<a href="#" class="btn bg-info btn-sm" data-toggle="collapse" data-target="#datagrid-{$controlName}-row-filters">
@@ -39,6 +41,21 @@
 				</div>
 			</div>
 
+			<div class="btn-group mr-2 row-group-actions" n:if="$hasGroupActions" n:inner-foreach="$filter['group_action']->getControls() as $form_control">
+				{if $form_control instanceof \Nette\Forms\Controls\SubmitButton && $form_control->getName() === 'submit'}
+					<button type="submit" n:name="$form_control" class="btn btn-primary btn-sm" disabled>{_web.button.submit}</button>
+				{elseif $form_control instanceof \Nette\Forms\Controls\SubmitButton}
+					<button type="submit" n:name="$form_control" disabled>
+						<i n:if="$icon = $form_control->getControl()->icon" n:class="$icon, fa-fw"></i>
+						{$form_control->getCaption()|translate}
+					</button>
+				{elseif $form_control->getName() == 'group_action'}
+					{input $form_control, class => 'form-control input-sm form-control-sm', disabled => TRUE}
+				{else}
+					{input $form_control}
+				{/if}
+			</div>
+
 			<div class="btn-group">
 				<a href="#" class="btn btn-tool btn-sm m-0" data-card-widget="maximize"><i class="{$iconPrefix}expand"></i></a>
 			</div>
@@ -47,7 +64,7 @@
 	</div>
 
 	<div n:class="$control->hasCollapsibleOuterFilters() ? collapse, $hasFiltersAlwaysShown || $filter_active ? show" id="datagrid-{$controlName}-row-filters" n:if="$control->hasOuterFilterRendering()">
-	<div class="card-body datagrid-filters py-0" n:block="outer-filters">
+	<div class="card-body py-0" n:block="outer-filters">
 
 		<div class="row" n:foreach="array_chunk($filters, $control->getOuterFilterColumnsCount(), true) as $items">
 			{var $items = array_pad($items, $control->getOuterFilterColumnsCount(), null)}
@@ -73,6 +90,9 @@
 
 		<thead n:block="header">
 			<tr n:block="header-column-row">
+				<th n:snippet="thead-group-action" n:if="$hasGroupActions" n:attr="'rowspan=2' => !empty($filters) && !$control->hasOuterFilterRendering()" class="col-checkbox">
+					<input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
+				</th>
 
 				<th n:foreach="$columns as $key => $column" n:attr="$column->getElementForRender('th', $key)->attrs">
 					<a n:href="sort! $control->getSortNext($column)" n:class="ajax, $column->isSortedBy() ? sort" id="datagrid-sort-{$key}" n:tag-if="$column->isSortable()">
@@ -115,6 +135,8 @@
 						{php $inlineEdit->onSetDefaults($filter['inline_edit'], $item); }
 
 						<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:attr="$row->getControl()->attrs">
+							<td n:if="$hasGroupActions" class="col-checkbox"></td>
+
 							{foreach $columns as $key => $column}
 								{var $td = $column->getElementForRender('td', $key, $row)}
 								{var $td->class[] = 'datagrid-inline-edit'}
@@ -142,6 +164,11 @@
 						</tr>
 					{else}
 						<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:attr="$row->getControl()->attrs">
+							<td n:if="$hasGroupActions" class="col-checkbox">
+								{if $row->hasGroupAction()}
+									<input type="checkbox" name="{$control->getFullName()|lower}_group_action_item[{$row->getId()}]" data-check="{$control->getFullName()}" data-check-all-{$control->getFullName()|noescape}>
+								{/if}
+							</td>
 							{foreach $columns as $key => $column}
 								{php $column = $row->applyColumnCallback($key, clone $column)}
 
@@ -233,10 +260,10 @@
 	</table>
 	</div>
 
-	<div class="card-footer" n:block="pagination" n:if="($control->isPaginated() || $filter_active) && !$control->isTreeView()">
-	<div class="d-flex flex-wrap" n:snippet="pagination">
+	<div class="card-footer py-2" n:block="pagination" n:if="($control->isPaginated() || $filter_active) && !$control->isTreeView()">
+	<div class="d-flex flex-wrap justify-content-end" n:snippet="pagination">
 
-		<div class="flex-grow-1 pb-2 pb-sm-0 px-2 col-items text-muted">
+		<div class="flex-grow-1 px-2 py-1 col-items text-muted">
 
 			<small class="align-middle" n:if="$control->isPaginated()">
 				({var $paginator = $control['paginator']->getPaginator()}
@@ -251,11 +278,11 @@
 
 		</div>
 
-		<div class="pb-2 pb-sm-0 px-2 col-pagination clearfix text-md-right">
+		<div class="px-2 py-1 col-pagination clearfix text-md-right">
 			{control paginator}
 		</div>
 
-		<div class="pb-2 pb-sm-0 px-2 col-per-page">
+		<div class="px-2 py-1 col-per-page">
 			<a n:href="resetFilter!" n:if="$filter_active" class="ajax btn btn-danger btn-sm reset-filter">{_ublaboo_datagrid.reset_filter}</a>
 			<span class="datagrid-per-page" n:if="$control->isPaginated()">
 				{input $filter['perPage'], data-autosubmit-per-page => true, class => 'form-control form-control-sm', style => 'max-width: 64px;'}
@@ -278,6 +305,8 @@
 {define inlineAddRow}
 <tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden" n:if="$inlineAdd->shouldBeRendered()">
 	{php $inlineAdd->onSetDefaults($filter['inline_add'])}
+
+	<td n:if="$hasGroupActions" class="col-checkbox"></td>
 
 	<td n:foreach="$columns as $key => $column" n:attr="$column->getElementForRender('td', $key)->attrs">
 		{if isset($filter['inline_add'][$key])}

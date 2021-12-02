@@ -15,8 +15,7 @@ use Doctrine\ORM\Query\SqlWalker;
 
 /**
  * "unaccent" "(" Column ")"
- *
- * @link    www.doctrine-project.org
+ * @link www.doctrine-project.org
  */
 final class Unaccent extends FunctionNode
 {
@@ -33,7 +32,7 @@ final class Unaccent extends FunctionNode
 		$parser->match(Lexer::T_IDENTIFIER); // (2)
 		$parser->match(Lexer::T_OPEN_PARENTHESIS); // (3)
 
-		$this->column  = $parser->StringPrimary(); // (4)
+		$this->column = $parser->StringPrimary(); // (4)
 
 		$parser->match(Lexer::T_CLOSE_PARENTHESIS); // (3)
 	}

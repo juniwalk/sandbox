@@ -34,11 +34,11 @@ final class DateTrunc extends FunctionNode
 		$parser->match(Lexer::T_IDENTIFIER); // (2)
 		$parser->match(Lexer::T_OPEN_PARENTHESIS); // (3)
 
-		$this->interval  = $parser->StringPrimary(); // (4)
+		$this->interval = $parser->StringPrimary(); // (4)
 
         $parser->match(Lexer::T_COMMA); // (5)
 
-		$this->column  = $parser->StringPrimary(); // (6)
+		$this->column = $parser->StringPrimary(); // (6)
 
 		$parser->match(Lexer::T_CLOSE_PARENTHESIS); // (7)
 	}

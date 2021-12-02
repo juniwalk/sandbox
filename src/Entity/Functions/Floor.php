@@ -15,8 +15,7 @@ use Doctrine\ORM\Query\SqlWalker;
 
 /**
  * "floor" "(" Column ")"
- *
- * @link    www.doctrine-project.org
+ * @link www.doctrine-project.org
  */
 final class Floor extends FunctionNode
 {
@@ -33,7 +32,7 @@ final class Floor extends FunctionNode
 		$parser->match(Lexer::T_IDENTIFIER); // (2)
 		$parser->match(Lexer::T_OPEN_PARENTHESIS); // (3)
 
-		$this->column  = $parser->SimpleArithmeticExpression(); // (4)
+		$this->column = $parser->SimpleArithmeticExpression(); // (4)
 
 		$parser->match(Lexer::T_CLOSE_PARENTHESIS); // (3)
 	}

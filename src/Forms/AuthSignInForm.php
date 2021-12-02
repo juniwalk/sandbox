@@ -26,8 +26,6 @@ final class AuthSignInForm extends AbstractForm
 	public function __construct(User $user)
 	{
 		$this->user = $user;
-
-		$this->setTemplateFile(__DIR__.'/templates/authSignInForm.latte');
 	}
 
 

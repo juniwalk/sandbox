@@ -49,7 +49,6 @@ final class AuthProfileForm extends AbstractForm
 		$this->userManager = $userManager;
 		$this->user = $user;
 
-		$this->setTemplateFile(__DIR__.'/templates/authProfileForm.latte');
 		$this->onBeforeRender[] = function ($form, $template) {
 			$template->add('profile', $this->user);
 			$this->setDefaults($this->user);

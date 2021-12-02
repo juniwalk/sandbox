@@ -151,6 +151,16 @@ abstract class AbstractGrid extends Control
 
 
 	/**
+	 * @param  string[]  $filter
+	 * @return void
+	 */
+	public function setFilter(iterable $filter): void
+	{
+		$this['grid']->setFilter($filter);
+	}
+
+
+	/**
 	 * @return void
 	 */
 	final public function redrawGrid(): void

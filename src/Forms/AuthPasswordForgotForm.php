@@ -33,8 +33,6 @@ final class AuthPasswordForgotForm extends AbstractForm
 	) {
 		$this->userRepository = $userRepository;
 		$this->userManager = $userManager;
-
-		$this->setTemplateFile(__DIR__.'/templates/authPasswordForgotForm.latte');
     }
 
 

@@ -8,6 +8,8 @@
 namespace App\Entity;
 
 use App\Exceptions\EntityNotFoundException;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -19,6 +21,9 @@ abstract class AbstractRepository
 	/** @var EntityManager */
 	protected $entityManager;
 
+	/** @var Connection */
+	protected $connection;
+
 	/** @var string */
 	protected $entityName;
 
@@ -29,6 +34,7 @@ abstract class AbstractRepository
 	 */
 	final public function __construct(EntityManager $entityManager)
 	{
+		$this->connection = $entityManager->getConnection();
 		$this->entityManager = $entityManager;
 
 		if (!$this->entityName) {
@@ -144,15 +150,41 @@ abstract class AbstractRepository
 	 * @param  bool  $cascade
 	 * @param  string|null  $entityName
 	 * @return void
-	 * @throws ORMException
+	 * @throws DBALException
 	 */
 	public function truncateTable(bool $cascade = false, string $entityName = null): void
 	{
+		$tableName = $this->getTableName($entityName);
+
+		$this->query('TRUNCATE TABLE '.$tableName.' RESTART IDENTITY'.($cascade == true ? ' CASCADE' : null));
+	}
+
+
+	/**
+	 * @param  string|null  $entityName
+	 * @return string
+	 */
+	public function getTableName(string $entityName = null): string
+	{
 		$entityName = $entityName ?: $this->entityName;
 		$metaData = $this->entityManager->getClassMetadata($entityName);
-		$tableName = $metaData->getSchemaName().'.'.$metaData->getTableName();
+		$tableName = $metaData->getTableName();
 
-		$connection = $this->entityManager->getConnection();
-		$connection->query('TRUNCATE TABLE '.$tableName.' RESTART IDENTITY'.($cascade == true ? ' CASCADE' : null));
+		if ($schemaName = $metaData->getSchemaName()) {
+			$tableName = $schemaName.'.'.$tableName;
+		}
+
+		return $tableName;
+	}
+
+
+	/**
+	 * @param  string  $query
+	 * @return mixed
+	 * @throws DBALException
+	 */
+	private function query(string $query)
+	{
+		return $this->connection->query($query);
 	}
 }
