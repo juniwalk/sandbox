@@ -57,6 +57,11 @@ function client_init()
 		$($(this).data("clear-input")).val('');
 	});
 
+	$('[data-dependentselectbox]').dependentSelectBox(function() {
+		// This is called on ajax success
+	});
+
+
 	$('[data-toggle="tooltip"]').tooltip();
 	$('[data-toggle="popover"]').popover({
 		content: function() {
@@ -101,10 +106,9 @@ $(function () {
 
 	client_init();
 
-    $.nette.ext('snippets').after(function () {
+	naja.initialize();
+	naja.snippetHandler.addEventListener('afterUpdate', (event) => {
 		client_init();
-    });
-
-    $.nette.init();
+	});
 
 });

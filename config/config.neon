@@ -50,6 +50,7 @@ mail:
 extensions:
 	console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
 	translation: Contributte\Translation\DI\TranslationExtension
+	dependentSelectBox: NasExt\Forms\DependentExtension
 	mailing: Ublaboo\Mailing\DI\MailingExtension
 	form: JuniWalk\Form\DI\FormExtension
 

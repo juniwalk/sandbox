@@ -75,10 +75,10 @@ final class UserPresenter extends AbstractPresenter
 		$form = $this->adminUserFormFactory->create($this->user);
 		$form->onSuccess[] = function($frm, $data) use ($form) {
 	    	if ($frm['apply']->isSubmittedBy()) {
-				$this->redirect('edit', ['id' => $form->getUser()->getId()]);
+				$this->redirectAjax('edit', ['id' => $form->getUser()->getId()]);
 	    	}
 
-			$this->redirect('default');
+			$this->redirectAjax('default');
 		};
 
 		$form->onError[] = function() use ($name) {

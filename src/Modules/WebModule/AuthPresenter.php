@@ -89,14 +89,14 @@ final class AuthPresenter extends AbstractPresenter
 		$user = $this->getUser();
 
 		if ($user->isLoggedIn() && $user->isAllowed('Admin:Home')) {
-			$this->redirect(':Admin:Home:default');
+			$this->redirectAjax(':Admin:Home:default');
 		}
 
 		if ($user->isLoggedIn()) {
-			$this->redirect(':Web:Home:default', ['userMenu' => true]);
+			$this->redirectAjax(':Web:Home:default', ['userMenu' => true]);
 		}
 
-		$this->redirect('signIn');
+		$this->redirectAjax('signIn');
 	}
 
 
@@ -107,7 +107,7 @@ final class AuthPresenter extends AbstractPresenter
 	{
 		$this->getUser()->logout(true);
 		$this->getSession()->destroy();
-		$this->redirect(':Web:Home:default');
+		$this->redirectAjax(':Web:Home:default');
 	}
 
 
@@ -118,7 +118,7 @@ final class AuthPresenter extends AbstractPresenter
 	public function actionProfile(string $hash = null): void
 	{
 		if (!$hash && !$this->getUser()->isLoggedIn()) {
-			$this->redirect('signIn');
+			$this->redirectAjax('signIn');
 		}
 
 		if ($hash) {
@@ -146,7 +146,7 @@ final class AuthPresenter extends AbstractPresenter
 
 		$this->getUser()->login($user);
 		$this->flashMessage('web.message.auth-activated', 'success');
-		$this->redirect(':Web:Auth:default');
+		$this->redirectAjax(':Web:Auth:default');
 	}
 
 
@@ -172,9 +172,9 @@ final class AuthPresenter extends AbstractPresenter
 	protected function createComponentPasswordForgotForm(string $name): AuthPasswordForgotForm
 	{
 		$form = $this->authPasswordForgotFormFactory->create();
-		$form->onSuccess[] = function ($form, $data) {
+		$form->onSuccess[] = function($form, $data) {
 			$this->flashMessage('web.message.auth-email-sent', 'success');
-			$this->redirect('signIn');
+			$this->redirectAjax('signIn');
 		};
 
 		return $form;
@@ -189,12 +189,12 @@ final class AuthPresenter extends AbstractPresenter
 	{
 		$user = $this->user ?: $this->getUser()->getIdentity();
 		$form = $this->authProfileFormFactory->create($user);
-		$form->onSuccess[] = function ($form, $data) {
+		$form->onSuccess[] = function($form, $data) {
 			if ($hash = $this->getParameter('hash')) {
 				$this->accessManager->clearToken($hash);
 			}
 
-			$this->redirect('default');
+			$this->redirectAjax('default');
 		};
 
 		return $form;
@@ -208,9 +208,9 @@ final class AuthPresenter extends AbstractPresenter
 	protected function createComponentSignInForm(string $name): AuthSignInForm
 	{
 		$form = $this->authSignInFormFactory->create($name);
-		$form->onSuccess[] = function ($form, $data) {
+		$form->onSuccess[] = function($form, $data) {
 			$this->restoreRequest($this->redirect);
-			$this->redirect('default');
+			$this->redirectAjax('default');
 		};
 
 		return $form;
@@ -224,9 +224,9 @@ final class AuthPresenter extends AbstractPresenter
 	protected function createComponentSignUpForm(string $name): AuthSignUpForm
 	{
 		$form = $this->authSignUpFormFactory->create($name);
-		$form->onSuccess[] = function ($form, $data) {
+		$form->onSuccess[] = function($form, $data) {
 			$this->getUser()->login($data->email, $data->password);
-			$this->redirect('default');
+			$this->redirectAjax('default');
 		};
 
 		return $form;

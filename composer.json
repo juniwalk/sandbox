@@ -26,7 +26,9 @@
 		"contributte/translation": "^0.9",
 		"contributte/recaptcha": "^3.0",
 		"contributte/console": "^0.9",
-		"ramsey/uuid": "^3.0"
+		"ramsey/uuid": "^3.0",
+
+		"nasext/dependent-select-box": "^5.0"
 	},
 
 	"minimum-stability": "dev",

@@ -58,16 +58,17 @@ final class AdminUserForm extends AbstractForm
 		$presenter = $this->getPresenter();
 		$user = $this->getUser();
 
-    	try {
+		try {
 			$this->userManager->passwordForgot($user);
+			$presenter->flashMessage('web.message.auth-email-unknown', 'success');
 
 		// invalid catch
 		} catch (BadRequestException $e) {
-			$presenter->flashMessage('nette.message.auth-email-unknown', 'danger');
+			$presenter->flashMessage('web.message.auth-email-unknown', 'danger');
 		}
 
-		$presenter->redrawControl('flashMessages');
 		$this->redrawControl('form');
+		$presenter->redirect('this');
 	}
 
 
@@ -115,20 +116,20 @@ final class AdminUserForm extends AbstractForm
 			->setRequired('web.user.role-required');
 		$form->addCheckbox('active');
 
-        $form->addSubmit('submit');
-        $form->addSubmit('apply');
+		$form->addSubmit('submit');
+		$form->addSubmit('apply');
 
 		return $form;
 	}
 
 
-    /**
-     * @param  Form  $form
-     * @param  ArrayHash  $data
+	/**
+	 * @param  Form  $form
+	 * @param  ArrayHash  $data
 	 * @return void
-     */
-    protected function handleSuccess(Form $form, ArrayHash $data): void
-    {
+	 */
+	protected function handleSuccess(Form $form, ArrayHash $data): void
+	{
 		$user = $this->getUser() ?: new User($data->email, $data->name);
 		$user->setName($data->name);
 		$user->setEmail($data->email);
@@ -141,10 +142,10 @@ final class AdminUserForm extends AbstractForm
 			$this->user = $user;
 
 		} catch(UniqueConstraintViolationException $e) {
-			$form['email']->addError('nette.message.auth-email-used');
+			$form['email']->addError('web.message.auth-email-used');
 
 		} catch(ORMException $e) {
-			$form->addError('nette.message.something-went-wrong');
+			$form->addError('web.message.something-went-wrong');
 		}
-    }
+	}
 }

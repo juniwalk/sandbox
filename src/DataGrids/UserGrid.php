@@ -62,10 +62,6 @@ final class UserGrid extends AbstractGrid
         try {
             $user = $this->userRepository->getById($id);
 
-			if ($image = $user->getImage()) {
-				$this->imageStorage->delete($image);
-			}
-
             $this->entityManager->remove($user);
             $this->entityManager->flush();
 

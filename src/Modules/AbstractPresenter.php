@@ -61,6 +61,17 @@ abstract class AbstractPresenter extends Presenter
         $this->translator = $translator;
 	}
 
+
+	/**
+	 * @return bool
+	 */
+	public function hasFlashMessages(): bool
+	{
+		$flashSession = $this->getPresenter()->getFlashSession();
+		$id = $this->getParameterId('flash');
+		return !empty($flashSession->$id);
+	}
+
 	
 	/**
 	 * @param  string  $lang
@@ -69,7 +80,7 @@ abstract class AbstractPresenter extends Presenter
 	public function handleLocale(string $lang): void
 	{
         $this->sessionResolver->setLocale($this->locale = $lang);
-		$this->redirect('this');
+		$this->redirectAjax('this');
 	}
 
 
@@ -80,16 +91,36 @@ abstract class AbstractPresenter extends Presenter
 	 */
 	public function openModal(string $component, iterable $params = []): void
 	{
-		$control = $this->getComponent($component, true);
+		if (!Strings::startsWith($component, '#')) {
+			$control = $this->getComponent($component, true);
+			$component = '#'.$control->getName();
+		}
 
 		$template = $this->getTemplate();
-		$template->add('openModal', '#'.$control->getName());
+		$template->add('openModal', $component);
 
 		foreach ($params as $key => $value) {
 			$template->add($key, $value);
 		}
 
 		$this->redrawControl('modals');
+		$this->redirectAjax('this');
+	}
+
+
+	/**
+	 * @param  string  $dest
+	 * @param  mixed  ... $args
+	 * @return void
+	 */
+	public function redirectAjax(string $dest, ... $args): void
+	{
+		if (!$this->isAjax()) {
+			$this->redirect($dest, ... $args);
+		}
+
+		$this->payload->postGet = true;
+		$this->payload->url = $this->link($dest, ... $args);
 	}
 
 
@@ -147,6 +178,10 @@ abstract class AbstractPresenter extends Presenter
 
 		if (!isset($locales[$locale])) {
 			$locale = $this->translator->getDefaultLocale();
+		}
+
+		if ($this->hasFlashMessages() && !$this->isControlInvalid()) {
+			$this->redrawControl('flashMessages');
 		}
 
 		$template = $this->getTemplate();
