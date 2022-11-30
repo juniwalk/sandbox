@@ -12,9 +12,5 @@ use App\DataGrids\UserParamGrid;
 
 interface UserParamGridFactory
 {
-	/**
-	 * @param  User  $user
-	 * @return UserParamGrid
-	 */
 	public function create(User $user): UserParamGrid;
 }

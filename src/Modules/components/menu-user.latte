@@ -8,16 +8,17 @@
         <a class="nav-link px-2" n:href=":Web:Auth:profile">{$profile->getDisplayName()}</a>
     </li>
 
+	<li class="nav-item rounded">
+		<a class="nav-link" n:href="darkMode!" n:if="$isDarkMode">{_web.menu.light-mode|noescape}</a>
+		<a class="nav-link" n:href="darkMode!" n:if="!$isDarkMode">{_web.menu.dark-mode|noescape}</a>
+	</li>
+
     <li class="nav-item rounded" n:if="$presenter->isModuleCurrent('Admin') && $user->isAllowed('Admin:Home')">
         <a class="nav-link" n:href=":Web:Home:default">{_web.menu.web-link|noescape}</a>
     </li>
 
     <li class="nav-item rounded" n:if="$presenter->isModuleCurrent('Web') && $user->isAllowed('Admin:Home')">
 		<a class="nav-link" href="#" data-widget="pushmenu">{_web.menu.admin-link|noescape}</a>
-    </li>
-
-    <li class="nav-item rounded" n:if="$hasHelp">
-        <a class="nav-link" href="#" data-widget="control-sidebar" data-slide="true"><i class="fas fa-fw fa-question-circle"></i></a>
     </li>
 
     <li class="nav-item rounded">

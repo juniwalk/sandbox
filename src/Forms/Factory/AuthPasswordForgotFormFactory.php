@@ -11,8 +11,5 @@ use App\Forms\AuthPasswordForgotForm;
 
 interface AuthPasswordForgotFormFactory
 {
-    /**
-     * @return AuthPasswordForgotForm
-     */
-    public function create(): AuthPasswordForgotForm;
+	public function create(): AuthPasswordForgotForm;
 }

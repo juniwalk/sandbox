@@ -9,64 +9,47 @@ namespace App\Forms;
 
 use App\Entity\UserRepository;
 use App\Managers\UserManager;
+use Doctrine\ORM\NoResultException;
 use JuniWalk\Form\AbstractForm;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Throwable;
+use Tracy\Debugger;
 
 final class AuthPasswordForgotForm extends AbstractForm
 {
-	/** @var UserRepository */
-	private $userRepository;
-
-	/** @var UserManager */
-	private $userManager;
-
-
-    /**
-	 * @param UserManager  $userManager
-     * @param UserRepository  $userRepository
-     */
-    public function __construct(
-		UserManager $userManager,
-		UserRepository $userRepository
-	) {
-		$this->userRepository = $userRepository;
-		$this->userManager = $userManager;
-    }
+	public function __construct(
+		private UserManager $userManager,
+		private UserRepository $userRepository
+	) {}
 
 
-	/**
-	 * @param  string  $name
-	 * @return Form
-	 */
 	protected function createComponentForm(string $name): Form
 	{
 		$form = parent::createComponentForm($name);
-        $form->addText('email')->setRequired('nette.user.email-required')
-            ->addRule($form::EMAIL, 'nette.user.email-invalid');
+		$form->addText('email')->setRequired('nette.user.email-required')
+			->addRule($form::EMAIL, 'nette.user.email-invalid');
 		$form->addReCaptcha('recaptcha')->setRequired('nette.user.captcha-required');
 
-        $form->addSubmit('submit');
+		$form->addSubmit('submit');
 
 		return $form;
 	}
 
 
-    /**
-     * @param  Form  $form
-     * @param  ArrayHash  $data
-	 * @return void
-     */
-    protected function handleSuccess(Form $form, ArrayHash $data): void
-    {
-    	try {
+	protected function handleSuccess(Form $form, ArrayHash $data): void
+	{
+		try {
 			$user = $this->userRepository->getByEmail($data->email);
+
 			$this->userManager->passwordForgot($user);
 
-		// also catch exception from manager
-		} catch (BadRequestException $e) {
+		} catch (NoResultException) {
 			$form['email']->addError('nette.message.auth-email-unknown');
+
+		} catch (Throwable $e) {
+			$form->addError('web.message.something-went-wrong');
+			Debugger::log($e);
 		}
-    }
+	}
 }

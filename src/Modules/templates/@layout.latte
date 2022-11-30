@@ -17,16 +17,16 @@
 	<title n:snippet="title">{ifset title}{include title|stripHtml|trim} | {/ifset}{include appName|stripHtml|trim}</title>
 
 	<!-- stylesheet -->
-	{control tessa:css default}
+	{control tessa:css 'default'}
 	{ifset stylesheet}{include stylesheet}{/ifset}
 
 	<!-- javascript -->
-	{control tessa:js default}
-	{control tessa:js recaptcha}
+	{control tessa:js 'default'}
+	{control tessa:js 'recaptcha'}
 	{ifset javascript}{include javascript}{/ifset}
 
 </head>
-<body class="hold-transition login-page" n:block="body">
+<body n:block="body" n:class="$isDarkMode ? dark-mode, hold-transition, login-page">
 
 	<a id="top" class="sr-only"><!-- top anchor --></a>
 
@@ -37,7 +37,7 @@
 		</div>
 
 		<div class="card">
-		<div class="card-body login-card-body" n:block="contentWrapper">
+		<div class="card-body" n:block="contentWrapper">
 
 			<section class="content-header p-0 pb-3" n:block="header">
 				<h1 class="p-2 pt-0 border-bottom" n:block="title">{('web.pages.'.$pageName)|translate|noescape}</h1>

@@ -31,7 +31,7 @@ di:
 
 http:
 	cookieSecure: auto
-	frames: false
+	frames: true
 
 session:
 	debugger: %site.debug%
@@ -55,10 +55,9 @@ extensions:
 	form: JuniWalk\Form\DI\FormExtension
 
 services:
-	router: App\Routing\RouterFactory::createRouter
+	router: App\RouterFactory::createRouter
 	authenticator: App\Security\Authenticator
 	authorizator: App\Security\Authorizator
-	htmlHelper: App\Tools\HtmlHelper
 
 	# Managers
 	- App\Managers\AccessManager
@@ -79,7 +78,7 @@ services:
 
 # Nette \ DI \ Decorator
 decorator:
-	App\DataGrids\AbstractGrid:
+	JuniWalk\Utils\UI\DataGrids\AbstractGrid:
 		setup: [setTranslator]
 
 # Ublaboo \ Mailing
@@ -89,12 +88,12 @@ mailing:
 
 # Contributte \ Console
 console:
-    name: %site.name%
-    version: %site.version%
-    catchExceptions: false
-    autoExit: true
-    url: %site.url%
-    lazy: true
+	name: %site.name%
+	version: %site.version%
+	catchExceptions: true
+	autoExit: true
+	url: %site.url%
+	lazy: true
 
 # Contributte \ Translation
 translation:

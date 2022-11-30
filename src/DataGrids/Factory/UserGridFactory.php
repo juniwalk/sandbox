@@ -11,8 +11,5 @@ use App\DataGrids\UserGrid;
 
 interface UserGridFactory
 {
-	/**
-	 * @return UserGrid
-	 */
 	public function create(): UserGrid;
 }

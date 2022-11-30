@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18615a693ed4884390c75662edacc7e0",
+    "content-hash": "5ca5ea7b2fc077db1d924707a2e74195",
     "packages": [
         {
             "name": "brick/math",
@@ -5408,17 +5408,11 @@
         },
         {
             "name": "ublaboo/datagrid",
-            "version": "v6.9.5",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/contributte/datagrid.git",
-                "reference": "e7b0ceb758572422c5152abd3f7a560746e9499c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/contributte/datagrid/zipball/e7b0ceb758572422c5152abd3f7a560746e9499c",
-                "reference": "e7b0ceb758572422c5152abd3f7a560746e9499c",
-                "shasum": ""
+                "url": "/opt/git/datagrid",
+                "reference": "98ba36bd78b41f30d2fe80c5fc0f1fedad8bec6d"
             },
             "require": {
                 "contributte/application": "^0.5.0",
@@ -5445,6 +5439,7 @@
                 "tharos/leanmapper": "^3.4.2 || ^4.0.0",
                 "tracy/tracy": "^2.6.3"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -5456,7 +5451,11 @@
                     "Ublaboo\\DataGrid\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Ublaboo\\DataGrid\\Tests\\": "tests"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -5479,21 +5478,7 @@
                 "nette",
                 "table"
             ],
-            "support": {
-                "issues": "https://github.com/contributte/datagrid/issues",
-                "source": "https://github.com/contributte/datagrid/tree/v6.9.5"
-            },
-            "funding": [
-                {
-                    "url": "https://contributte.org/partners.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/f3l1x",
-                    "type": "github"
-                }
-            ],
-            "time": "2022-04-29T12:05:58+00:00"
+            "time": "2022-10-24T08:09:21+00:00"
         },
         {
             "name": "ublaboo/mailing",

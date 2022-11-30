@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Martin Procházka (c) 2020
+ * @copyright Martin Procházka (c) 2021
  * @license   MIT License
  */
 
@@ -17,33 +17,18 @@ use Ramsey\Uuid\Uuid;
 
 final class AccessManager
 {
-	/** @var UserRepository */
-	private $userRepository;
-
-	/** @var Cache */
-	private $cache;
+	private Cache $cache;
 
 
-	/**
-     * @param UserRepository  $userRepository
-	 * @param IStorage  $storage
-	 */
 	public function __construct(
-		UserRepository $userRepository,
+		private UserRepository $userRepository,
 		IStorage $storage
 	) {
 		$this->cache = new Cache($storage, 'AccessManager.Tokens');
-		$this->userRepository = $userRepository;
 	}
 
 
-	/**
-	 * @param  string  $key
-	 * @param  string[]  $data
-	 * @param  string[]  $cache
-	 * @return string
-	 */
-	public function createToken(string $key, iterable $data, iterable $cache = []): string
+	public function createToken(string $key, array $data, array $cache = []): string
 	{
 		$token = (string) Uuid::uuid4();
 		$data['key'] = $key;
@@ -54,13 +39,9 @@ final class AccessManager
 
 
 	/**
-	 * @param  User  $user
-	 * @param  string|null  $slug
-	 * @param  string[]  $cache
-	 * @return string
 	 * @throws EntityNotManagedException
 	 */
-	public function createSluggedToken(User $user, ?string $slug, iterable $cache = []): string
+	public function createSluggedToken(User $user, ?string $slug, array $cache = []): string
 	{
 		if (!$userId = (string) $user->getId()) {
 			throw EntityNotManagedException::fromEntity($user);
@@ -71,12 +52,9 @@ final class AccessManager
 
 
 	/**
-	 * @param  string  $token
-	 * @param  bool  $onLoadRemove
-	 * @return string[]
 	 * @throws BadRequestException
 	 */
-	public function validateToken(string $token, bool $onLoadRemove = true): iterable
+	public function validateToken(string $token, bool $onLoadRemove = true): array
 	{
 		if (!Uuid::isValid($token) || !$data = $this->cache->load($token)) {
 			throw new BadRequestException('Access token has expired', 403);
@@ -91,10 +69,6 @@ final class AccessManager
 
 
 	/**
-	 * @param  string  $slug
-	 * @param  string  $token
-	 * @param  bool  $onLoadRemove
-	 * @return User
 	 * @throws BadRequestException
 	 */
 	public function validateSluggedToken(string $slug, string $token, bool $onLoadRemove = true): User
@@ -110,9 +84,6 @@ final class AccessManager
 	}
 
 
-	/**
-	 * @param string  $token
-	 */
 	public function clearToken(string $token): void
 	{
 		$this->cache->remove($token);

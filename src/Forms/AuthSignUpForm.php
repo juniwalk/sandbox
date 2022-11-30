@@ -7,71 +7,42 @@
 
 namespace App\Forms;
 
-use App\Entity\User;
 use App\Managers\MessageManager;
 use App\Managers\UserManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
-use Doctrine\ORM\ORMException;
+use JuniWalk\Form\AbstractForm;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use JuniWalk\Form\AbstractForm;
-use Ublaboo\Mailing\Exception\MailingException;
+use Throwable;
+use Tracy\Debugger;
 
 final class AuthSignUpForm extends AbstractForm
 {
-	/** @var MessageManager */
-	private $messageManager;
-
-	/** @var EntityManager */
-	private $entityManager;
-
-	/** @var UserManager */
-	private $userManager;
-
-
-	/**
-	 * @param UserManager  $userManager
-	 * @param EntityManager  $entityManager
-     * @param MessageManager  $messageManager
-	 */
 	public function __construct(
-		UserManager $userManager,
-		EntityManager $entityManager,
-		MessageManager $messageManager
-	) {
-		$this->messageManager = $messageManager;
-		$this->entityManager = $entityManager;
-		$this->userManager = $userManager;
-	}
+		private UserManager $userManager,
+		private EntityManager $entityManager,
+		private MessageManager $messageManager
+	) {}
 
 
-	/**
-	 * @param  string  $name
-	 * @return Form
-	 */
 	protected function createComponentForm(string $name): Form
 	{
 		$form = parent::createComponentForm($name);
-        $form->addText('email')->setRequired('web.user.email-required')
-            ->addRule($form::EMAIL, 'web.user.email-invalid');
-        $form->addPassword('password')->setRequired('web.user.password-required')
-            ->addRule($form::MIN_LENGTH, 'web.user.password-length', 6);
+		$form->addText('email')->setRequired('web.user.email-required')
+			->addRule($form::EMAIL, 'web.user.email-invalid');
+		$form->addPassword('password')->setRequired('web.user.password-required')
+			->addRule($form::MIN_LENGTH, 'web.user.password-length', 6);
 		$form->addReCaptcha('recaptcha')->setRequired('web.user.captcha-required');
 
-        $form->addSubmit('submit');
+		$form->addSubmit('submit');
 
 		return $form;
 	}
 
 
-    /**
-     * @param  Form  $form
-     * @param  ArrayHash  $data
-	 * @return void
-     */
-    protected function handleSuccess(Form $form, ArrayHash $data): void
-    {
+	protected function handleSuccess(Form $form, ArrayHash $data): void
+	{
 		try {
 			$user = $this->userManager->createUser(
 				$data->email,
@@ -84,14 +55,12 @@ final class AuthSignUpForm extends AbstractForm
 
 			$this->messageManager->sendUserSignUpMessage($user);
 
-		} catch(UniqueConstraintViolationException $e) {
+		} catch(UniqueConstraintViolationException) {
 			$form['email']->addError('web.message.auth-email-used');
 
-		} catch (MailingException $e) {
+		} catch (Throwable $e) {
 			$form->addError('web.message.something-went-wrong');
-
-		} catch (ORMException $e) {
-			$form->addError('web.message.something-went-wrong');
+			Debugger::log($e);
 		}
-    }
+	}
 }

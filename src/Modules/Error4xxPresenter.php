@@ -14,7 +14,6 @@ final class Error4xxPresenter extends AbstractPresenter
 {
 	/**
 	 * @throws BadRequestException
-	 * @return void
 	 */
 	public function startup(): void
 	{
@@ -26,10 +25,6 @@ final class Error4xxPresenter extends AbstractPresenter
 	}
 
 
-	/**
-	 * @param  BadRequestException  $exception
-	 * @return void
-	 */
 	public function renderDefault(BadRequestException $exception): void
 	{
 		$file = __DIR__.'/templates/Error/'.$exception->getCode().'.latte';

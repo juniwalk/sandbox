@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Martin Procházka (c) 2020
+ * @copyright Martin Procházka (c) 2021
  * @license   MIT License
  */
 
@@ -10,41 +10,26 @@ namespace App\Security;
 use App\Entity\User;
 use App\Entity\UserRepository;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
+use Doctrine\ORM\NoResultException;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Authenticator as IAuthenticator;
 use Nette\Security\IdentityHandler;
-use Nette\Security\IIdentity;
+use Nette\Security\IIdentity as Identity;
 use Nette\Security\SimpleIdentity;
 
 final class Authenticator implements IAuthenticator, IdentityHandler
 {
-	/** @var EntityManager */
-	private $entityManager;
-
-	/** @var UserRepository */
-	private $userRepository;
-
-
-	/**
-	 * @param EntityManager  $entityManager
-	 * @param UserRepository  $userRepository
-	 */
 	public function __construct(
-		EntityManager $entityManager,
-		UserRepository $userRepository
-	) {
-		$this->userRepository = $userRepository;
-		$this->entityManager = $entityManager;
-	}
+		private readonly EntityManager $entityManager,
+		private readonly UserRepository $userRepository,
+	) {}
 
 
 	/**
-	 * @param  string  $username
-	 * @param  string  $password
-	 * @return IIdentity
 	 * @throws AuthenticationException
+	 * @throws NoResultException
 	 */
-	public function authenticate(string $username, string $password): IIdentity
+	public function authenticate(string $username, string $password): Identity
 	{
 		$user = $this->userRepository->getByEmail($username);
 		$user->setSignIn(null);
@@ -62,27 +47,20 @@ final class Authenticator implements IAuthenticator, IdentityHandler
 		}
 
 		$this->entityManager->flush();
-
 		return $user;
 	}
 
 
-	/**
-	 * @param  IIdentity  $identity
-	 * @return IIdentity|null
-	 */
-	function wakeupIdentity(IIdentity $identity): ?IIdentity
+	function wakeupIdentity(Identity $identity): ?Identity
 	{
 		return $this->userRepository->getReference($identity->getId());
 	}
 
 
 	/**
-	 * @param  IIdentity  $identity
-	 * @return IIdentity
 	 * @throws AuthenticationException
 	 */
-	function sleepIdentity(IIdentity $identity): IIdentity
+	function sleepIdentity(Identity $identity): Identity
 	{
 		if (!$identity instanceof User) {
 			throw new AuthenticationException('web.message.auth-invalid', $this::FAILURE);

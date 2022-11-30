@@ -5,6 +5,16 @@
  */
 
 
+.small-box .inner { text-align: left; }
+.small-box .icon { display: block; }
+.small-box .icon > i.watermark {
+	transform: none !important;
+	font-size: 32px;
+	transition: none;
+	top: 27px;
+}
+
+
 /**
  * Navigations
  */
@@ -47,19 +57,28 @@
 
 .form-group.required .control-label::after,
 .custom-control.required .control-label::after {
-    top: 0;
-    left: 0;
-    position: relative;
-    display: inline;
+	top: 0;
+	left: 0;
+	position: relative;
+	display: inline;
 	color: #dd4b39;
 	content: "*";
-    padding-left: 4px;
+	padding-left: 4px;
 }
 
 .custom-file-label { color: #939ba2; }
 .form-control.is-invalid { z-index: 3; }
 
+.form-control.date.flatpickr-input { height: calc(1.8125rem + 4px); }
+.form-control.btn-group { height: calc(2.25rem + 3px); }
+
 .select2-container { flex: 1 1 auto; }
+
+#frm-preceptInvoiceForm-form-item + .select2-container { max-width: 420px; }
+#frm-preceptInvoiceForm-form-item + .select2-container .select2-selection { height: 68px; }
+
+#frm-preceptServiceForm-form-service + .select2-container { max-width: 721px; }
+#frm-preceptServiceForm-form-service + .select2-container .select2-selection { height: 68px; }
 
 
 /* Login page */
@@ -67,31 +86,31 @@
 
 .login-box .login-card-body .input-group .input-group-text,
 .register-box .register-card-body .input-group .input-group-text {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-left: 1px solid #ced4da;
-    background-color: #e9ecef;
-    overflow: hidden;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	border-left: 1px solid #ced4da;
+	background-color: #e9ecef;
+	overflow: hidden;
 }
 
 .login-box .login-card-body .input-group .form-control,
 .register-box .register-card-body .input-group .form-control {
-    border-right: 1px solid #ced4da;
+	border-right: 1px solid #ced4da;
 }
 
 .login-box .login-card-body .input-group .form-control:focus,
 .register-box .register-card-body .input-group .form-control:focus {
-    border-right-color: #80bdff;
+	border-right-color: #80bdff;
 }
 
 .login-box .login-card-body .input-group .form-control.is-invalid,
 .register-box .register-card-body .input-group .form-control.is-invalid {
-    border-right-color: #dc3545;
+	border-right-color: #dc3545;
 }
 
 .login-box .login-card-body .input-group .form-control.is-valid,
 .register-box .register-card-body .input-group .form-control.is-valid {
-    border-right-color: #28a745;
+	border-right-color: #28a745;
 }
 
 
@@ -130,4 +149,106 @@
 .datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-toggle::after,
 .datagrid .datagrid-tree .datagrid-tree-item.has-children > .datagrid-tree-item-children {
 	display: none
+}
+
+
+/**
+ * Dark Mode
+ */
+.dark-mode hr { border-color: rgba(255,255,255, .1); }
+
+/* Table primary */
+.dark-mode .table-primary,
+.dark-mode .table-primary > td,
+.dark-mode .table-primary > th {
+	background-color: rgba(63, 103, 145, .6);
+}
+
+.table-hover .table-primary:hover > td,
+.table-hover .table-primary:hover > th {
+	background-color: rgba(63, 103, 145, .4);
+}
+
+/* Table secondary */
+.dark-mode .table-secondary,
+.dark-mode .table-secondary > td,
+.dark-mode .table-secondary > th {
+	background-color: rgba(90, 98, 104, .6);
+}
+
+.table-hover .table-secondary:hover > td,
+.table-hover .table-secondary:hover > th {
+	background-color: rgba(90, 98, 104, .4);
+}
+
+/* Table success */
+.dark-mode .table-success,
+.dark-mode .table-success > td,
+.dark-mode .table-success > th {
+	background-color: rgba(0, 188, 140, .6);
+}
+
+.table-hover .table-success:hover > td,
+.table-hover .table-success:hover > th {
+	background-color: rgba(0, 188, 140, .4);
+}
+
+/* Table info */
+.dark-mode .table-info,
+.dark-mode .table-info > td,
+.dark-mode .table-info > th {
+	background-color: rgba(36, 133, 199, .6);
+}
+
+.table-hover .table-info:hover > td,
+.table-hover .table-info:hover > th {
+	background-color: rgba(36, 133, 199, .4);
+}
+
+/* Table danger */
+.dark-mode .table-danger,
+.dark-mode .table-danger > td,
+.dark-mode .table-danger > th {
+	background-color: rgba(225, 46, 28, .6);
+}
+
+.table-hover .table-danger:hover > td,
+.table-hover .table-danger:hover > th {
+	background-color: rgba(225, 46, 28, .4);
+}
+
+/* Table warning */
+.dark-mode .table-warning,
+.dark-mode .table-warning > td,
+.dark-mode .table-warning > th {
+	background-color: rgba(212, 134, 11, .6);
+}
+
+.table-hover .table-warning:hover > td,
+.table-hover .table-warning:hover > th {
+	background-color: rgba(212, 134, 11, .4);
+}
+
+/* Table light */
+.dark-mode .table-light,
+.dark-mode .table-light > td,
+.dark-mode .table-light > th {
+	background-color: rgba(228, 231, 235, .6);
+}
+
+.table-hover .table-light:hover > td,
+.table-hover .table-light:hover > th {
+	background-color: rgba(228, 231, 235, .4);
+}
+
+/* Table dark */
+.dark-mode .table-dark,
+.dark-mode .table-dark > td,
+.dark-mode .table-dark > th {
+	background-color: rgba(23, 26, 29, .6);
+}
+
+.table-hover .table-dark:hover > td,
+.table-hover .table-dark:hover > th {
+	background-color: rgba(23, 26, 29, .4);
 }

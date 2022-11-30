@@ -3,14 +3,13 @@
 # https://nette.org/security-warning
 #
 extensions:
-	annotations: Nettrine\Annotations\DI\AnnotationsExtension
 	migrations: Nettrine\Migrations\DI\MigrationsExtension
 
 	dbal: Nettrine\DBAL\DI\DbalExtension
 	orm: Nettrine\ORM\DI\OrmExtension
 	orm.cache: Nettrine\Cache\DI\CacheExtension
 	orm.console: Nettrine\ORM\DI\OrmConsoleExtension
-	orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
+	orm.attributes: Nettrine\ORM\DI\OrmAttributesExtension
 
 services:
 	- App\Entity\ParameterRepository
@@ -32,13 +31,13 @@ dbal:
 orm:
 	configuration:
 		customStringFunctions:
-			date_trunc: App\Entity\Functions\DateTrunc
-			date_part: App\Entity\Functions\DatePart
-			unaccent: App\Entity\Functions\Unaccent
-			floor: App\Entity\Functions\Floor
+			date_part: JuniWalk\Utils\ORM\Functions\DatePart
+			date_trunc: JuniWalk\Utils\ORM\Functions\DateTrunc
+			floor: JuniWalk\Utils\ORM\Functions\Floor
+			unaccent: JuniWalk\Utils\ORM\Functions\Unaccent
 
-# Nettrine \ ORM
-orm.annotations:
+# Nettrine \ Attributes
+orm.attributes:
 	mapping:
 		App\Entity: %appDir%/Entity
 

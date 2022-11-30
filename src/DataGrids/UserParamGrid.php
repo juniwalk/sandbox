@@ -10,40 +10,21 @@ namespace App\DataGrids;
 use App\Entity\Parameter;
 use App\Entity\ParameterRepository;
 use App\Entity\User;
-use Nette\Utils\DateTime;
-use Nette\Utils\Html;
-use Nette\Utils\Strings;
 use Ublaboo\DataGrid\DataGrid;
+use JuniWalk\Utils\Strings;
+use JuniWalk\Utils\UI\DataGrids\AbstractGrid;
 
 final class UserParamGrid extends AbstractGrid
 {
-	/** @var ParameterRepository */
-	private $parameterRepository;
-
-	/** @var User */
-	private $user;
-
-
-	/**
-	 * @param User  $user
-	 * @param ParameterRepository  $parameterRepository
-	 */
 	public function __construct(
-		User $user,
-		ParameterRepository $parameterRepository
+		private readonly User $user,
+		private readonly ParameterRepository $parameterRepository,
 	) {
-		$this->parameterRepository = $parameterRepository;
-		$this->user = $user;
-
 		$this->setTitle('web.control.userparam-grid');
-		$this->setFiltersAlwaysShown(true);
 	}
 
 
-	/**
-	 * @return iterable
-	 */
-	protected function createModel()//: iterable
+	protected function createModel(): mixed
 	{
 		return $this->parameterRepository->createQueryBuilder('e')
 			->where('e.user = :user')
@@ -51,18 +32,14 @@ final class UserParamGrid extends AbstractGrid
 	}
 
 
-	/**
-	 * @param  string  $name
-	 * @return DataGrid
-	 */
-	protected function createComponentGrid(string $name): DataGrid
+	protected function createComponentGrid(): DataGrid
 	{
-		$grid = $this->createGrid($name, true, 'key');
+		$grid = $this->createDataGrid(primaryKey: 'key');
 		$grid->setDefaultSort(['key' => 'ASC']);
 		$grid->setPagination(false);
 
-		$grid->addColumnText('key', 'web.param.key')->setRenderer([$this, 'columnKey']);
-		$grid->addColumnText('value', 'web.param.value')->setRenderer([$this, 'columnValue']);
+		$grid->addColumnText('key', 'web.param.key')->setRenderer($this->columnKey(...));
+		$grid->addColumnText('value', 'web.param.value')->setRenderer($this->columnValue(...));
 		$grid->addColumnDateTime('created', 'web.general.created')->setFormat('j. n. Y G:i');
 		$grid->addColumnDateTime('modified', 'web.general.modified')->setFormat('j. n. Y G:i');
 
@@ -70,26 +47,14 @@ final class UserParamGrid extends AbstractGrid
 	}
 
 
-	/**
-	 * @param  Parameter  $param
-	 * @return string
-	 */
-	public function columnKey(Parameter $param): string
+	protected function columnKey(Parameter $param): string
 	{
-		$translator = $this->getTranslator();
-
-		$key = 'web.enum.param.'.$param->getKey();
-		$key = $translator->translate($key);
-
-		return $key;
+		$key = 'web.enum.param.'.Strings::webalize($param->getKey());
+		return $this->getTranslator()->translate($key);
 	}
 
 
-	/**
-	 * @param  Parameter  $param
-	 * @return mixed
-	 */
-	public function columnValue(Parameter $param)
+	protected function columnValue(Parameter $param): mixed
 	{
 		$translator = $this->getTranslator();
 		$value = $param->getValue();

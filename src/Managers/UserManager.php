@@ -12,41 +12,16 @@ use Doctrine\ORM\EntityManagerInterface as EntityManager;
 
 final class UserManager
 {
-	/** @var MessageManager */
-	private $messageManager;
-
-	/** @var AccessManager */
-	private $accessManager;
-
-	/** @var EntityManager */
-	private $entityManager;
-
-
-	/**
-	 * @param EntityManager  $entityManager
-     * @param AccessManager  $accessManager
-     * @param MessageManager  $messageManager
-	 */
 	public function __construct(
-		EntityManager $entityManager,
-		AccessManager $accessManager,
-		MessageManager $messageManager
-	) {
-		$this->messageManager = $messageManager;
-		$this->accessManager = $accessManager;
-		$this->entityManager = $entityManager;
-	}
+		private AccessManager $accessManager,
+		private EntityManager $entityManager,
+		private MessageManager $messageManager,
+	) {}
 
 
-	/**
-     * @param  string  $email
-     * @param  string  $password
-	 * @param  bool  $activationRequired
-	 * @return User
-	 */
 	public function createUser(string $email, string $password, bool $activationRequired = false): User
 	{
-    	$user = new User($email);
+		$user = new User($email);
 		$user->setPassword($password);
 
 		if ($activationRequired == true) {
@@ -58,8 +33,6 @@ final class UserManager
 
 
 	/**
-	 * @param  User  $user
-	 * @return void
 	 * @throws ORMException
 	 */
 	public function deactivateUser(User $user): void
@@ -76,9 +49,7 @@ final class UserManager
 
 
 	/**
-	 * @param  User  $user
-	 * @param  string  $hash
-	 * @return void
+	 * @throws ForbiddenRequestException
 	 * @throws ORMException
 	 */
 	public function activateUser(User $user, string $hash): void
@@ -92,13 +63,9 @@ final class UserManager
 	}
 
 
-	/**
-	 * @param  User  $user
-	 * @return void
-	 */
 	public function passwordForgot(User $user): void
 	{
-		$hash = $this->accessManager->createSluggedToken($user, 'Web:Auth:profile', [
+		$hash = $this->accessManager->createSluggedToken($user, 'Auth:profile', [
 			'expire' => '15 minutes',
 		]);
 

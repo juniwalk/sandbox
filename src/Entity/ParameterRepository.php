@@ -7,32 +7,25 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\NoResultException;
-use Nette\Application\BadRequestException;
+use JuniWalk\Utils\ORM\AbstractRepository;
 
 final class ParameterRepository extends AbstractRepository
 {
-	/** @var string */
-	protected $entityName = Parameter::class;
+	protected string $entityName = Parameter::class;
 
 
-	/**
-	 * @param  User  $user
-	 * @return Parameter[]
-	 */
-	public function findByUser(User $user): iterable
+	public function findByUser(User $user, callable $where = null, ?int $maxResults = null): array
 	{
-		$query = $this->createQueryBuilder('e')
-			->where('e.user = :user');
+		$where = function($qb) use ($user, $where) {
+			if (is_callable($where)) {
+				$qb = $where($qb) ?: $qb;
+			}
 
-		try {
-			return $query->getQuery()
-				->setParameter('user', $user)
-				->getSingleResult();
+			$qb->andWhere('e.user = :user')
+				->setParameter(':user', $user)
+				->orderBy('e.name', 'ASC');
+		};
 
-		} catch (NoResultException $e) {
-		}
-
-		return null;
+		return $this->findBy($where, $maxResults);
 	}
 }

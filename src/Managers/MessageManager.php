@@ -18,29 +18,19 @@ use Ublaboo\Mailing\MailFactory as MessageFactory;
 
 final class MessageManager
 {
-	/** @var MessageFactory */
-	private $messageFactory;
-
-	/** @var User */
-	private $profile;
+	private ?User $profile;
 
 
-	/**
-	 * @param LoggedInUser  $user
-     * @param MessageFactory  $messageFactory
-	 */
 	public function __construct(
-		LoggedInUser $user,
-		MessageFactory $messageFactory
+		LoggedInUser $loggedInUser,
+		private MessageFactory $messageFactory
 	) {
-		$this->profile = $user->getIdentity();
+		$this->profile = $loggedInUser->getIdentity();
 		$this->messageFactory = $messageFactory;
 	}
 
 
 	/**
-	 * @param  User  $user
-	 * @return void
 	 * @throws MailingException
 	 */
 	public function sendUserSignUpMessage(User $user): void
@@ -55,30 +45,23 @@ final class MessageManager
 
 
 	/**
-	 * @param  string  $hash
-	 * @param  User|null  $user
-	 * @return void
 	 * @throws MailingException
 	 */
 	public function sendPasswordForgotMessage(string $hash, ?User $user): void
 	{
 		$message = $this->createByType(PasswordForgotMessage::class, [
-			'hash' => $hash,
 			'profile' => $user,
+			'hash' => $hash,
 		]);
 
 		$message->send();
 	}
 
 
-	/**
-	 * @param  string  $class
-	 * @param  mixed[]  $params
-	 * @return Message
-	 */
-	private function createByType(string $class, iterable $params = []): Message
+	private function createByType(string $class, array $params = []): Message
 	{
 		$params = $params + [
+			'company' => $this->company,
 			'profile' => $this->profile,
 		];
 

@@ -16,12 +16,6 @@ use Ublaboo\Mailing\IMessageData;
 
 final class UserSignUpMessage extends AbstractMail implements IComposableMail
 {
-	/**
-	 * @param  Message  $message
-	 * @param  IMessageData  $params
-	 * @throws UserNotFoundException
-	 * @return void
-	 */
 	public function compose(Message $message, ?IMessageData $params): void
 	{
 		$user = $params->profile;

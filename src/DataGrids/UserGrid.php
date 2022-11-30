@@ -9,176 +9,145 @@ namespace App\DataGrids;
 
 use App\Entity\User;
 use App\Entity\UserRepository;
-use App\Entity\Enums\Role;
-use App\Tools\HtmlHelper;
+use App\Enums\Active;
+use App\Exceptions\PermissionDeniedException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
-use Doctrine\ORM\ORMException;
-use Nette\Utils\ArrayHash;
-use Nette\Utils\Html;
+use JuniWalk\Utils\Enums\Role;
+use JuniWalk\Utils\Html;
+use JuniWalk\Utils\UI\DataGrids\AbstractGrid;
 use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
+use Throwable;
+use Tracy\Debugger;
 
 final class UserGrid extends AbstractGrid
 {
-	/** @var UserRepository */
-	private $userRepository;
-
-	/** @var EntityManager */
-	private $entityManager;
-
-
-	/**
-	 * @param EntityManager  $entityManager
-	 * @param UserRepository  $userRepository
-	 */
 	public function __construct(
-		EntityManager $entityManager,
-		UserRepository $userRepository
+		private EntityManager $entityManager,
+		private UserRepository $userRepository
 	) {
-		$this->userRepository = $userRepository;
-		$this->entityManager = $entityManager;
-
 		$this->setTitle('web.control.user-grid');
 	}
 
 
-	/**
-	 * @return void
-	 * @secured
-	 */
 	public function handleCreate(): void
 	{
 		$this->getPresenter()->openModal('adminUserForm');
 	}
 
 
-	/**
-	 * @param  int  $id
-	 * @return void
-	 * @secured
-	 */
 	public function handleRemove(int $id): void
 	{
-        try {
-            $user = $this->userRepository->getById($id);
+		$presenter = $this->getPresenter();
+
+		try {
+			$user = $this->userRepository->getById($id);
+
+			$presenter->isAllowed('Admin:User', 'remove', $user->getRole());
 
             $this->entityManager->remove($user);
-            $this->entityManager->flush();
+			$this->entityManager->flush();
 
-        } catch (ORMException $e) {
-        }
+		} catch (PermissionDeniedException) {
+			$presenter->flashMessage('web.message.permission-denied', 'warning');
 
+		} catch (Throwable $e) {
+			$presenter->flashMessage('web.message.something-went-wrong', 'danger');
+			Debugger::log($e);
+		}
+
+		$presenter->redirectAjax('this');
 		$this->redrawGrid();
 	}
 
 
-	/**
-	 * @param  int  $id
-	 * @param  string  $role
-	 * @return void
-	 * @secured
-	 */
-	public function handleRole(int $id, string $role): void
+	public function handleRole(int $id, Role $role): void
 	{
-        try {
-            $user = $this->userRepository->getById($id);
+		$presenter = $this->getPresenter();
+
+		try {
+			$user = $this->userRepository->getReference($id);
 			$user->setRole($role);
 
-            $this->entityManager->flush();
+			$presenter->isAllowed('Admin:User', 'edit.role', $user->getRole());
 
-        } catch (ORMException $e) {
-        }
+			$this->entityManager->flush();
 
-		$this->redrawGrid();
+		} catch (PermissionDeniedException) {
+			$presenter->flashMessage('web.message.permission-denied', 'warning');
+
+		} catch (Throwable $e) {
+			$presenter->flashMessage('web.message.something-went-wrong', 'danger');
+			Debugger::log($e);
+		}
+
+		$presenter->redirectAjax('this');
+		$this->redrawItem($id);
 	}
 
 
-	/**
-	 * @param  int  $id
-	 * @param  bool  $value
-	 * @return void
-	 * @secured
-	 */
-	public function handleActive(int $id, bool $value): void
+	public function handleActive(int $id): void
 	{
-        try {
-            $user = $this->userRepository->getById($id);
-			$user->setActive($value);
+		$presenter = $this->getPresenter();
 
-            $this->entityManager->flush();
+		try {
+			$user = $this->userRepository->getById($id);
+			$user->setActive(!$user->isActive());
 
-        } catch (ORMException $e) {
-        }
+			$presenter->isAllowed('Admin:User', 'edit.active', $user->getRole());
 
-		$this->redrawGrid();
+			$this->entityManager->flush();
+
+		} catch (PermissionDeniedException) {
+			$presenter->flashMessage('web.message.permission-denied', 'warning');
+
+		} catch (Throwable $e) {
+			$presenter->flashMessage('web.message.something-went-wrong', 'danger');
+			Debugger::log($e);
+		}
+
+		$presenter->redirectAjax('this');
+		$this->redrawItem($id);
 	}
 
 
-	/**
-	 * @return iterable
-	 */
-	protected function createModel()//: iterable
+	protected function createModel(): mixed
 	{
 		return $this->userRepository->createQueryBuilder('e', 'e.id');
 	}
 
 
-	/**
-	 * @param  string  $name
-	 * @return DataGrid
-	 */
-	protected function createComponentGrid(string $name): DataGrid
+	protected function createComponentGrid(): DataGrid
 	{
-		$grid = $this->createGrid($name);
-		$grid->setDefaultSort(['name' => 'ASC']);
+		$grid = $this->createDataGrid();
+		$grid->setDefaultSort([
+			'name' => 'ASC',
+		]);
 
-		$grid->addColumnText('name', 'web.user.name')->setSortable()
-			->setRenderer([$this, 'columnName']);
-		$roleStatus = $grid->addColumnStatus('role', 'web.user.role')->setSortable();
-		$roleStatus->onChange[] = function($id, $value) { $this->handleRole((int) $id, $value); };
-
-		foreach ((new Role)->getItems() as $key => $role) {
-			$color = (new Role)->getColor($key);
-			$roleStatus->addOption($key, $role)
-				->setClass('btn-'.$color)
-				->endOption();
-		}
-
+		$grid->addColumnText('name', 'web.user.name')->setSortable()->setRenderer($this->columnName(...));
+		$this->addColumnEnum('role', 'web.user.role', Role::class)->setSortable('e.role');
 		$grid->addColumnText('email', 'web.user.email')->setSortable();
-		$activeStatus = $grid->addColumnStatus('isActive', 'web.user.active')->setSortable()->setAlign('right');
-		$activeStatus->onChange[] = function($id, $value) { $this->handleActive((int) $id, (bool) $value); };
-		$activeStatus->addOption(true, 'web.general.yes')
-				->setIconSecondary('fas fa-check fa-fw')
-				->setIcon('fas fa-check fa-fw')
-				->setClass('btn-success')
-				->endOption()
-			->addOption(false, 'web.general.no')
-				->setIconSecondary('fas fa-times fa-fw')
-				->setIcon('fas fa-times fa-fw')
-				->setClass('btn-danger')
-				->endOption();
-
-		$grid->addColumnDateTime('signUp', 'web.user.signUp')->setSortable()->setFormat('j. n. Y G:i');
-		$grid->addColumnDateTime('signIn', 'web.user.signIn')->setSortable()->setFormat('j. n. Y G:i');
-		$grid->addColumnNumber('id', 'web.general.id')->setSortable()->setFormat(0, ',', '');
+		$grid->addColumnDateTime('signUp', 'web.user.signUp')->setSortable();
+		$grid->addColumnDateTime('signIn', 'web.user.signIn')->setSortable();
+		$grid->addColumnText('isActive', 'web.general.active')->setSortable()->setAlign('right')->setRenderer($this->columnActive(...));
 
 
-		$grid->addFilterText('name', 'web.user.name')->setCondition(function ($qb, $value) {
+		$grid->addFilterText('name', 'web.user.name')->setCondition(function($qb, $value) {
 			$qb->andWhere('LOWER(e.name) LIKE LOWER(:name)')->setParameter('name', '%'.$value.'%');
 		});
-		$grid->addFilterText('email', 'web.user.email')->setCondition(function ($qb, $value) {
+		$grid->addFilterText('email', 'web.user.email')->setCondition(function($qb, $value) {
 			$qb->andWhere('LOWER(e.email) LIKE LOWER(:email)')->setParameter('email', '%'.$value.'%');
 		});
-		$grid->addFilterMultiSelect('role', 'web.user.role', [null => 'web.general.all'] + (new Role)->getItems())
+		$grid->addFilterMultiSelect('role', 'web.user.role', Role::getLabels())
 			->setTranslateOptions(true);
-		$grid->addFilterSelect('isActive', 'web.user.active', $this->createActiveOptions())
+		$grid->addFilterSelect('isActive', 'web.general.active', Active::getLabels())
 			->setTranslateOptions(true);
 
 
-		$grid->addToolbarButton('create!', 'web.general.create')
-            ->setClass('btn btn-success btn-sm ajax')->setIcon('plus');
+		$grid->addToolbarButton('create!', 'web.general.create')->setIcon('plus')
+			->setClass('btn btn-sm btn-success ajax');
 
-		$grid->addAction('User:edit', 'web.general.edit')->setIcon('pencil-alt')
+		$grid->addAction('edit', '', ':Admin:User:edit')->setIcon('pencil-alt')
 			->setClass('btn btn-primary btn-xs')
 			->setTitle('web.general.edit');
 
@@ -191,21 +160,15 @@ final class UserGrid extends AbstractGrid
 	}
 
 
-	/**
-	 * @param  User  $user
-	 * @return Html
-	 */
-	public function columnName(User $user): Html
+	private function columnName(User $user): Html
 	{
 		$presenter = $this->getPresenter();
-		$basePath = $presenter->getHttpRequest()->getUrl()->getBasePath();
-
 		$link = $presenter->lazyLink('User:edit', $user->getId());
 		$name = Html::el('a', $user->getDisplayName())->setHref($link);
 
 		if (!$user->isActive()) {
-			$icon = Html::el('i class="fas fa-ban pull-right"');
-			$name->addClass('text-700 text-danger');
+			$icon = Html::icon('fa-ban float-right mt-1');
+			$name->addClass('font-weight-bolder text-danger');
 			$name->addText(' ')->addHtml($icon);
 		}
 
@@ -213,18 +176,10 @@ final class UserGrid extends AbstractGrid
 	}
 
 
-	/**
-	 * @param  User  $user
-	 * @return Html|null
-	 */
-	public function columnRole(User $user): ?Html
+	private function columnActive(User $user): ?Html
 	{
-        if (!$role = $user->getRole()) {
-            return null;
-        }
-
-        $role = (new Role)->getItem($role);
-
-		return HtmlHelper::createLabel($role);
+		$link = $this->lazyLink('active!', $user->getId());
+		return Html::el('a class="ajax"')->setHref($link)
+			->addHtml(Html::status($user->isActive()));
 	}
 }

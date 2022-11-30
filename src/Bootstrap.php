@@ -1,14 +1,16 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Martin Procházka (c) 2020
+ * @copyright Martin Procházka (c) 2022
  * @license   MIT License
  */
 
 namespace App;
 
-use Nette\Configurator;
+use JuniWalk\Utils\Html;
+use Nette\Bootstrap\Configurator;
 use Nette\DI\Container;
+use Nette\Localization\Translator;
 
 final class Bootstrap
 {
@@ -16,20 +18,11 @@ final class Bootstrap
 	const FILE_ACCESS = __DIR__.'/../config/config-access.php';
 	const FILE_LOCK = 'lock.phtml';
 
-	/** @var string */
-	private static $remoteAddr;
-
-	/** @var bool */
-	private static $debugMode;
-
-	/** @var string[] */
-	private static $trustedProxies = [
-	];
+	private static ?bool $debugMode = null;
+	private static ?string $remoteAddr = null;
+	private static array $trustedProxies = [];
 
 
-	/**
-	 * @return Container
-	 */
 	public static function boot(): Container
 	{;
 		$configurator = new Configurator;
@@ -37,26 +30,28 @@ final class Bootstrap
 		$configurator->enableTracy(__DIR__.'/../log');
 		$configurator->setTempDirectory(__DIR__.'/../temp');
 		$configurator->addConfig(__DIR__.'/../config/config.neon');
+		$configurator->addStaticParameters([
+			'appDir' => __DIR__.'/../src',
+			'wwwDir' => __DIR__.'/../www',
+			'vendorDir' => __DIR__.'/../vendor',
+		]);
 
 		$container = $configurator->createContainer();
-		$container->getService('htmlHelper');
+
+		if ($translator = $container->getByType(Translator::class)) {
+			Html::setTranslator($translator);
+		}
 
 		return $container;
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public static function isLocked(): bool
 	{
 		return file_exists(getcwd().'/'.static::FILE_LOCK);
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public static function getRemoteAddr(): ?string
 	{
 		if (is_null(static::$remoteAddr)) {
@@ -67,18 +62,12 @@ final class Bootstrap
 	}
 
 
-	/**
-	 * @return string[]
-	 */
-	public static function getAllowedList(): iterable
+	public static function getAllowedList(): array
 	{
 		return array_filter((array) @include static::FILE_ACCESS);
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public static function isDebugMode(): bool
 	{
 		if (is_null(static::$debugMode)) {
@@ -89,9 +78,6 @@ final class Bootstrap
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	private static function detectDebugMode(): bool
 	{
 		if (php_sapi_name() == 'cli') {
@@ -109,9 +95,6 @@ final class Bootstrap
 	}
 
 
-	/**
-	 * @return string
-	 */
 	private static function detectRemoteAddr(): string
 	{
 		$remoteAddr = $_SERVER['REMOTE_ADDR'] ?? '';

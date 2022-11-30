@@ -20,70 +20,29 @@ use App\Forms\AuthSignUpForm;
 use App\Managers\UserManager;
 use App\Managers\AccessManager;
 use App\Modules\AbstractPresenter;
+use Nette\Application\Attributes\Persistent;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
 final class AuthPresenter extends AbstractPresenter
 {
-	/** @var AuthPasswordForgotFormFactory */
-	private $authPasswordForgotFormFactory;
+	private ?User $user = null;
 
-	/** @var AuthProfileFormFactory */
-	private $authProfileFormFactory;
-
-	/** @var AuthSignInFormFactory */
-	private $authSignInFormFactory;
-
-	/** @var AuthSignUpFormFactory */
-	private $authSignUpFormFactory;
-
-	/** @var UserRepository */
-	private $userRepository;
-
-	/** @var AccessManager */
-	private $accessManager;
-
-	/** @var UserManager */
-	private $userManager;
-
-	/** @var User */
-	private $user;
-
-	/** @var string @persistent */
-	public $redirect = '';
+	#[Persistent]
+	public string $redirect = '';
 
 
-	/**
-	 * @param UserManager  $userManager
-	 * @param AccessManager  $accessManager
-	 * @param UserRepository  $userRepository
-	 * @param AuthSignInFormFactory  $authSignInFormFactory
-	 * @param AuthSignUpFormFactory  $authSignUpFormFactory
-	 * @param AuthProfileFormFactory  $authProfileFormFactory
-	 * @param AuthPasswordForgotFormFactory  $authPasswordForgotFormFactory
-	 */
 	public function __construct(
-		UserManager $userManager,
-		AccessManager $accessManager,
-		UserRepository $userRepository,
-		AuthSignInFormFactory $authSignInFormFactory,
-		AuthSignUpFormFactory $authSignUpFormFactory,
-		AuthProfileFormFactory $authProfileFormFactory,
-		AuthPasswordForgotFormFactory $authPasswordForgotFormFactory
-	) {
-		$this->authPasswordForgotFormFactory = $authPasswordForgotFormFactory;
-		$this->authProfileFormFactory = $authProfileFormFactory;
-		$this->authSignInFormFactory = $authSignInFormFactory;
-		$this->authSignUpFormFactory = $authSignUpFormFactory;
-		$this->userRepository = $userRepository;
-		$this->accessManager = $accessManager;
-		$this->userManager = $userManager;
-	}
+		private UserManager $userManager,
+		private AccessManager $accessManager,
+		private UserRepository $userRepository,
+		private AuthSignInFormFactory $authSignInFormFactory,
+		private AuthSignUpFormFactory $authSignUpFormFactory,
+		private AuthProfileFormFactory $authProfileFormFactory,
+		private AuthPasswordForgotFormFactory $authPasswordForgotFormFactory
+	) {}
 
 
-	/**
-	 * @return void
-	 */
 	public function actionDefault(): void
 	{
 		$user = $this->getUser();
@@ -100,21 +59,14 @@ final class AuthPresenter extends AbstractPresenter
 	}
 
 
-	/**
-	 * @return void
-	 */
 	public function actionSignOut(): void
 	{
 		$this->getUser()->logout(true);
 		$this->getSession()->destroy();
-		$this->redirectAjax(':Web:Home:default');
+		$this->redirectAjax('default');
 	}
 
 
-	/**
-	 * @param  string|null  $hash
-	 * @return void
-	 */
 	public function actionProfile(string $hash = null): void
 	{
 		if (!$hash && !$this->getUser()->isLoggedIn()) {
@@ -128,8 +80,6 @@ final class AuthPresenter extends AbstractPresenter
 
 
 	/**
-	 * @param  string  $hash
-	 * @return void
 	 * @throws ForbiddenRequestException
 	 * @throws BadRequestException
 	 */
@@ -165,14 +115,10 @@ final class AuthPresenter extends AbstractPresenter
 	}
 
 
-	/**
-	 * @param  string  $name
-	 * @return AuthPasswordForgotForm
-	 */
-	protected function createComponentPasswordForgotForm(string $name): AuthPasswordForgotForm
+	protected function createComponentPasswordForgotForm(): AuthPasswordForgotForm
 	{
 		$form = $this->authPasswordForgotFormFactory->create();
-		$form->onSuccess[] = function($form, $data) {
+		$form->onSuccess[] = function() {
 			$this->flashMessage('web.message.auth-email-sent', 'success');
 			$this->redirectAjax('signIn');
 		};
@@ -181,15 +127,11 @@ final class AuthPresenter extends AbstractPresenter
 	}
 
 
-	/**
-	 * @param  string  $name
-	 * @return AuthProfileForm
-	 */
-	protected function createComponentProfileForm(string $name): AuthProfileForm
+	protected function createComponentProfileForm(): AuthProfileForm
 	{
 		$user = $this->user ?: $this->getUser()->getIdentity();
 		$form = $this->authProfileFormFactory->create($user);
-		$form->onSuccess[] = function($form, $data) {
+		$form->onSuccess[] = function() {
 			if ($hash = $this->getParameter('hash')) {
 				$this->accessManager->clearToken($hash);
 			}
@@ -201,14 +143,10 @@ final class AuthPresenter extends AbstractPresenter
 	}
 
 
-	/**
-	 * @param  string  $name
-	 * @return AuthSignInForm
-	 */
 	protected function createComponentSignInForm(string $name): AuthSignInForm
 	{
 		$form = $this->authSignInFormFactory->create($name);
-		$form->onSuccess[] = function($form, $data) {
+		$form->onSuccess[] = function() {
 			$this->restoreRequest($this->redirect);
 			$this->redirectAjax('default');
 		};
@@ -217,10 +155,6 @@ final class AuthPresenter extends AbstractPresenter
 	}
 
 
-	/**
-	 * @param  string  $name
-	 * @return AuthSignUpForm
-	 */
 	protected function createComponentSignUpForm(string $name): AuthSignUpForm
 	{
 		$form = $this->authSignUpFormFactory->create($name);

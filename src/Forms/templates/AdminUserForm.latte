@@ -1,5 +1,6 @@
 {layout $control->getLayoutPath()}
 {var $color = $headColor = 'success'}
+{var $contentPos = 'top'}
 
 <span n:block="title">{_web.control.user-form|noescape}</span>
 
@@ -42,8 +43,8 @@
 	</div>
 
 	<div class="custom-control custom-switch">
-		<input n:name="active" type="checkbox" class="custom-control-input">
-		<label n:name="active" class="custom-control-label">
+		<input n:name="isActive" type="checkbox" class="custom-control-input">
+		<label n:name="isActive" class="custom-control-label">
 			<span class="control-label">{_web.user.active-help}</span>
 		</label>
 	</div>

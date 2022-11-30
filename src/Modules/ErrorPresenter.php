@@ -21,23 +21,12 @@ final class ErrorPresenter implements IPresenter
 {
 	use SmartObject;
 
-	/** @var ILogger */
-	private $logger;
+
+	public function __construct(
+		private ILogger $logger)
+	{}
 
 
-	/**
-	 * @param ILogger  $logger
-	 */
-	public function __construct(ILogger $logger)
-	{
-		$this->logger = $logger;
-	}
-
-
-	/**
-	 * @param  Request  $request
-	 * @return IResponse
-	 */
 	public function run(Request $request): IResponse
 	{
 		$error = $request->getParameter('exception');

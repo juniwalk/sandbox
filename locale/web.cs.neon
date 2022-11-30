@@ -26,6 +26,9 @@ menu:
 	admin: '<i class="fas fa-fw fa-cog"></i> Administrace'
 	admin-link: '<i class="fas fa-fw fa-cog"></i> <span class="sr-only">Backend</a>'
 
+	light-mode: '<i class="fas fa-fw fa-sun"></i> <span class="sr-only">Switch to DarkMode</a>'
+	dark-mode: '<i class="fas fa-fw fa-moon"></i> <span class="sr-only">Switch to LightMode</a>'
+
 
 #
 # Page titles

@@ -7,7 +7,9 @@
 function client_init()
 {
     'use strict'
- 
+
+	$.applyDataMask();
+
 	$('input.datetime').flatpickr({
 		dateFormat: "Y-m-d H:i",
 		enableTime: true,
@@ -20,7 +22,7 @@ function client_init()
 		locale: "cs"
 	});
 
-	$('select').each(function() {
+	$('select,input.select2').each(function() {
 		var $dropdownParent = $(document.body);
 		var $minimumResultsForSearch = 20;
 
@@ -44,6 +46,19 @@ function client_init()
 			templateResult: select2Format,
 			dropdownParent: $dropdownParent
 		});
+
+		$(this).on('select2:open', function() {
+			document.querySelector('.select2-container--open .select2-search__field').focus();
+		});
+
+		if ($(this).data('target') && $(this).data('source')) {
+			$(this).on('select2:select', function(e) {
+				var target = $(this).data('target');
+				var source = $(this).data('source');
+				var opt = $(e.params.data.element);
+				$('#'+target).val(opt.data(source));
+			});
+		}
 	});
 
 	$("a[data-pwd-toggle]").click(function() {
@@ -54,13 +69,12 @@ function client_init()
 	});
 
 	$("a[data-clear-input]").click(function() {
-		$($(this).data("clear-input")).val('');
+		$($(this).data("clear-input")).val('').trigger('change');
 	});
 
 	$('[data-dependentselectbox]').dependentSelectBox(function() {
 		// This is called on ajax success
 	});
-
 
 	$('[data-toggle="tooltip"]').tooltip();
 	$('[data-toggle="popover"]').popover({
@@ -69,6 +83,10 @@ function client_init()
         },
 		trigger: 'focus',
 		html: true
+	});
+
+	$('[data-toggle="dropdown"]').each(function() {
+		$(this).data("boundary", "viewport");
 	});
 
 	$(document).on('click', '[data-confirm]', function(e) {
@@ -89,11 +107,11 @@ function select2Format(state)
 	var $option = $(state.element);
 	var $value = null;
 
-	if ($value = $option.data('content')) {
+	if (($value = $option.data('content')) || ($value = state.content)) {
 		return $('<span>').html($value);
 	}
 
-	if ($value = $option.data('icon')) {
+	if (($value = $option.data('icon')) || ($value = state.icon)) {
 		return $('<span><i class="fa '+ $value +'"></i> '+ state.text +'</span>');
 	}
 

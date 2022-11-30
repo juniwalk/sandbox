@@ -8,20 +8,7 @@
 		<h1 class="font-weight-light" n:block="title">{_web.site.icon|noescape} {_web.site.name|noescape}</h1>
 		<p class="lead">{_web.site.description|noescape}</p>
 
-		<a href="#" class="btn btn-secondary" data-widget="control-sidebar" data-slide="true">
-			{strip_tags(('web.pages.web-auth-help'|translate), "<i>")|noescape}
-		</a>
-
 	</div>
 
 </div>
 </section>
-
-<div class="control-sidebar-content p-3" n:block="helpBlock">
-
-	<h5 class="font-weight-light">{_web.site.icon|noescape} {_web.site.name|noescape}</h5>
-	<hr class="mb-2">
-
-	<p>{_web.site.description|noescape}</p>
-
-</div>

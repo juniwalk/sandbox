@@ -8,63 +8,46 @@
 namespace App\Modules;
 
 use App\Bootstrap;
+use App\Exceptions\PermissionDeniedException;
 use App\Modules\WebModule\AuthPresenter;
 use Contributte\Translation\LocalesResolvers\Session as SessionResolver;
 use JuniWalk\Tessa\BundleManager;
 use JuniWalk\Tessa\TessaControl;
+use JuniWalk\Utils\Strings;
+use Nette\Application\Attributes\Persistent;
 use Nette\Application\UI\Presenter;
-use Nette\Localization\ITranslator as Translator;
+use Nette\Localization\Translator;
 use Nette\Security\UserStorage;
-use Nette\Utils\Strings;
+use Nette\Security\Role;
 
 abstract class AbstractPresenter extends Presenter
 {
-    /** @var SessionResolver */
-	private $sessionResolver;
+	private BundleManager $bundleManager;
+	private SessionResolver $sessionResolver;
+	private Translator $translator;
 
-    /** @var BundleManager */
-    private $bundleManager;
-
-    /** @var Translator */
-    private $translator;
-
-    /** @var string @persistent */
-    public $locale;
+	#[Persistent]
+	public string $locale;
 
 
-	/**
-	 * @param  BundleManager  $bundleManager
-	 * @return void
-	 */
 	public function injectBundleManager(BundleManager $bundleManager): void
 	{
-        $this->bundleManager = $bundleManager;
+		$this->bundleManager = $bundleManager;
 	}
 
 
-	/**
-	 * @param  SessionResolver  $sessionResolver
-	 * @return void
-	 */
 	public function injectSessionResolver(SessionResolver $sessionResolver): void
 	{
-        $this->sessionResolver = $sessionResolver;
+		$this->sessionResolver = $sessionResolver;
 	}
 
 
-	/**
-	 * @param  Translator  $translator
-	 * @return void
-	 */
 	public function injectTranslator(Translator $translator): void
 	{
-        $this->translator = $translator;
+		$this->translator = $translator;
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function hasFlashMessages(): bool
 	{
 		$flashSession = $this->getPresenter()->getFlashSession();
@@ -72,24 +55,23 @@ abstract class AbstractPresenter extends Presenter
 		return !empty($flashSession->$id);
 	}
 
-	
-	/**
-	 * @param  string  $lang
-	 * @return void
-	 */
+
 	public function handleLocale(string $lang): void
 	{
-        $this->sessionResolver->setLocale($this->locale = $lang);
+		$this->sessionResolver->setLocale($this->locale = $lang);
 		$this->redirectAjax('this');
 	}
 
 
-	/**
-	 * @param  string  $component
-	 * @param  mixed[]  $params
-	 * @return void
-	 */
-	public function openModal(string $component, iterable $params = []): void
+	public function handleDarkMode(): void
+	{
+		$darkMode = (int) $this->getHttpRequest()->getCookie('darkMode');
+		$this->getHttpResponse()->setCookie('darkMode', (string) !$darkMode, '+1 year');
+		$this->redirectAjax('this');
+	}
+
+
+	public function openModal(string $component, array $params = []): void
 	{
 		if (!Strings::startsWith($component, '#')) {
 			$control = $this->getComponent($component, true);
@@ -109,11 +91,25 @@ abstract class AbstractPresenter extends Presenter
 
 
 	/**
-	 * @param  string  $dest
-	 * @param  mixed  ... $args
-	 * @return void
+	 * @throws PermissionDeniedException
 	 */
-	public function redirectAjax(string $dest, ... $args): void
+	public function isAllowed(string $resource, string $task, ?Role $role = null): void
+	{
+		$user = $this->getUser();
+
+		if ($user->isAllowed($resource, $task)) {
+			return;
+		}
+
+		if ($role && $user->getRoles()[0]->hasPowerOver($role)) {
+			return;
+		}
+
+		throw PermissionDeniedException::fromTask($resource, $task);
+	}
+
+
+	public function redirectAjax(string $dest, mixed ... $args): void
 	{
 		if (!$this->isAjax()) {
 			$this->redirect($dest, ... $args);
@@ -137,23 +133,23 @@ abstract class AbstractPresenter extends Presenter
 				$this->flashMessage('web.message.auth-signout', 'warning');
 			}
 
-			$this->redirect(':Web:Auth:signIn', ['redirect' => $this->storeRequest()]);
+			$this->redirectAjax(':Web:Auth:signIn', ['redirect' => $this->storeRequest()]);
 		}
 
 		if (!$user->isAllowed($this->getName(), $this->getAction())) {
 			throw new ForbiddenRequestException('You don\'t have access to '.$this->getAction(true).'!', 403);
 		}
 
-        $profile = $user->getIdentity();
+		$profile = $user->getIdentity();
 
 		if ($profile && !$profile->isEmailActivated() && !$this instanceof AuthPresenter) {
 			$this->flashMessage('web.message.auth-not-activated', 'warning');
-			$this->redirect(':Web:Auth:profile');
+			$this->redirectAjax(':Web:Auth:profile');
 		}
 
 		if ($profile && !$profile->isActive() && !$this instanceof AuthPresenter) {
 			$this->flashMessage('web.message.auth-banned', 'warning');
-			$this->redirect(':Web:Auth:signOut');
+			$this->redirectAjax(':Web:Auth:signOut');
 		}
 
 		if ($this->isModuleCurrent('Admin') && !Bootstrap::isDebugMode()) {
@@ -180,27 +176,25 @@ abstract class AbstractPresenter extends Presenter
 			$locale = $this->translator->getDefaultLocale();
 		}
 
-		if ($this->hasFlashMessages() && !$this->isControlInvalid()) {
+		if ($this->hasFlashMessages()) {
 			$this->redrawControl('flashMessages');
 		}
 
 		$template = $this->getTemplate();
+		$template->add('isDarkMode', (bool) $this->getHttpRequest()->getCookie('darkMode'));
 		$template->add('pageName', Strings::webalize($this->getAction(true)));
 		$template->add('profile', $this->getUser()->getIdentity());
 		$template->add('isLocked', Bootstrap::isLocked());
 		$template->add('locales', $locales);
 		$template->add('locale', $locale);
+		$template->add('cwd', getcwd());
 
 		return parent::beforeRender();
 	}
 
 
-    /**
-     * @param  string  $name
-     * @return TessaControl
-     */
-    protected function createComponentTessa(string $name): TessaControl
-    {
-        return new TessaControl($this->bundleManager);
-    }
+	protected function createComponentTessa(): TessaControl
+	{
+		return new TessaControl($this->bundleManager);
+	}
 }

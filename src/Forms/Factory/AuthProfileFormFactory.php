@@ -12,9 +12,5 @@ use App\Forms\AuthProfileForm;
 
 interface AuthProfileFormFactory
 {
-    /**
-     * @param  User  $user
-     * @return AuthProfileForm
-     */
-    public function create(User $user): AuthProfileForm;
+	public function create(User $user): AuthProfileForm;
 }

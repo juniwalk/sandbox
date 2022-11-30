@@ -1,10 +1,10 @@
 {extends '../../templates/@layout.latte'}
-<body n:block="body" class="hold-transition sidebar-collapse layout-top-nav">
+<body n:block="body" n:class="$isDarkMode ? dark-mode, hold-transition, sidebar-collapse, layout-top-nav">
 <div class="wrapper">
 
 	<a id="top" class="sr-only"><!-- top anchor --></a>
 
-	<nav n:class="main-header, navbar, navbar-expand-md, sticky-top, navbar-dark, border-0, $isLocked ? bg-gray-dark : bg-danger">
+	<nav n:class="main-header, navbar, navbar-expand-md, sticky-top, navbar-dark, border-0, $isLocked ? bg-gray-dark : bg-primary">
 	<div class="container">
 
 		<a n:href="Home:default" class="navbar-brand">
@@ -27,7 +27,6 @@
 		</div>
 
 		{include '../../components/menu-user.latte'
-			hasHelp => $this->hasBlock('helpBlock'),
 			isRight => true,
 		}
 
@@ -61,11 +60,11 @@
 		<div class="alerts no-print no-margin" n:snippet="flashMessages">
 
 			<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} no-margin rounded-0">
-		<div class="container">
-				{$flash->message|translate:$flash->params ?? []|noescape}
+				<div class="container">
+					{$flash->message|translate:$flash->params ?? []|noescape}
+				</div>
 			</div>
 
-		</div>
 		</div>
 
 		<div class="content-header" n:block="header">
@@ -93,23 +92,16 @@
 	</div>
 	</footer>
 
-	<aside class="control-sidebar control-sidebar-dark" n:ifset="#helpBlock">
-
-		<a href="#" class="btn btn-link float-right sidebar-toggle" data-widget="control-sidebar" data-slide="true">
-			<i class="fas fa-fw fa-times"></i>
-		</a>
-
-		{include #helpBlock|indent:2|trim}
-
-	</aside>
-
 	<div class="modals" n:snippet="modals">
 
 		{ifset #modal}{include #modal}{/ifset}
 
-		<script n:ifset="$openModal" type="text/javascript" defer>
+		<script type="text/javascript" defer="defer">
 		$('.modal.in').modal('hide');
 		$('.modal-backdrop').remove();
+		</script>
+
+		<script n:ifset="$openModal" type="text/javascript" defer="defer">
 		$({$openModal}).modal({
 			backdrop: 'static',
 			keyboard: false,

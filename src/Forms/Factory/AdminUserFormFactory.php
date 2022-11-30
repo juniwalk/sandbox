@@ -12,9 +12,5 @@ use App\Forms\AdminUserForm;
 
 interface AdminUserFormFactory
 {
-    /**
-     * @param  User|null  $user
-     * @return AdminUserForm
-     */
-    public function create(?User $user): AdminUserForm;
+	public function create(?User $user): AdminUserForm;
 }

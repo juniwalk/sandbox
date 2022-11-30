@@ -11,46 +11,32 @@ use App\Exception\InvalidValueException;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
-use Nette\Utils\Strings;
+use JuniWalk\Utils\ORM\Traits as TraitsUtils;
+use JuniWalk\Utils\Strings;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_param", uniqueConstraints={@ORM\UniqueConstraint(name="user_unique", columns={"user_id", "key"})})
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'user_param')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\UniqueConstraint(name: 'param_unique', columns: ['user_id', 'key'])]
 class Parameter
 {
-	use Attributes\Ownership;
-	use Attributes\Timestamp;
+	use Traits\Ownership;
+	use TraitsUtils\Timestamp;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="User")
-	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
-	 * @ORM\Id
-	 * @var User
-	 */
-	private $user;
+	#[ORM\ManyToOne(targetEntity: User::class)]
+	#[ORM\JoinColumn(nullable: false)]
+	#[ORM\Id]
+	private User $user;
 
-    /**
-     * @ORM\Column(type="string", length=64)
-	 * @ORM\Id
-     * @var string|null
-     */
-    private $key;
+	#[ORM\Column(type: 'string', length: 64)]
+	#[ORM\Id]
+	private ?string $key;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     * @var string
-     */
-	private $value;
+	#[ORM\Column(type: 'json', nullable: true)]
+	private mixed $value;
 
 
-	/**
-	 * @param  string  $key
-	 * @param  mixed  $value
-	 * @param  User  $user
-	 */
-	public function __construct(string $key, $value, User $user)
+	public function __construct(string $key, mixed $value, User $user)
 	{
 		$this->created = new DateTime;
 		$this->key = Strings::lower($key);
@@ -59,18 +45,12 @@ class Parameter
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getId(): string
 	{
 		return $this->user->getId().'-'.$this->key;
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getKey(): string
 	{
 		return $this->key;
@@ -78,11 +58,9 @@ class Parameter
 
 
 	/**
-	 * @param  mixed  $value
-	 * @return void
 	 * @throws InvalidValueException
 	 */
-	public function setValue($value): void
+	public function setValue(mixed $value): void
 	{
 		if (is_object($value) && !$value instanceof JsonSerializable) {
 			throw new InvalidValueException('Object instances have to implement JsonSerializable');
@@ -92,10 +70,7 @@ class Parameter
 	}
 
 
-	/**
-	 * @return mixed
-	 */
-	public function getValue()
+	public function getValue(): mixed
 	{
 		return $this->value;
 	}

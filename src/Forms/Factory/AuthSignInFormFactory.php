@@ -11,8 +11,5 @@ use App\Forms\AuthSignInForm;
 
 interface AuthSignInFormFactory
 {
-    /**
-     * @return AuthSignInForm
-     */
-    public function create(): AuthSignInForm;
+	public function create(): AuthSignInForm;
 }

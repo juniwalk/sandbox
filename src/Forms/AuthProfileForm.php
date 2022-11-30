@@ -15,60 +15,22 @@ use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use JuniWalk\Form\AbstractForm;
-use JuniWalk\Form\Renderer;
 
 final class AuthProfileForm extends AbstractForm
 {
-	/** @var MessageManager */
-	private $messageManager;
-
-	/** @var EntityManager */
-	private $entityManager;
-
-	/** @var UserManager */
-	private $userManager;
-
-	/** @var User */
-	private $user;
-
-
-	/**
-	 * @param User  $user
-	 * @param UserManager  $userManager
-	 * @param EntityManager  $entityManager
-	 * @param MessageManager  $messageManager
-	 */
 	public function __construct(
-		User $user,
-		UserManager $userManager,
-		EntityManager $entityManager,
-		MessageManager $messageManager
+		private User $user,
+		private UserManager $userManager,
+		private EntityManager $entityManager,
+		private MessageManager $messageManager
 	) {
-		$this->messageManager = $messageManager;
-		$this->entityManager = $entityManager;
-		$this->userManager = $userManager;
-		$this->user = $user;
-
-		$this->onBeforeRender[] = function ($form, $template) {
+		$this->onBeforeRender[] = function($form, $template) {
 			$template->add('profile', $this->user);
 			$this->setDefaults($this->user);
 		};
 	}
 
 
-	/**
-	 * @return User
-	 */
-	public function getUser(): User
-	{
-		return $this->user;
-	}
-
-
-	/**
-	 * @param  User  $user
-	 * @return void
-	 */
 	public function setDefaults(User $user): void
 	{
 		$form = $this->getForm();
@@ -79,33 +41,43 @@ final class AuthProfileForm extends AbstractForm
 	}
 
 
-	/**
-	 * @return void
-	 * @secured
-	 */
+	public function getUser(): User
+	{
+		return $this->user;
+	}
+
+
 	public function handleResendActivationEmail(): void
 	{
 		$presenter = $this->getPresenter();
 		$user = $this->getUser();
 
 		if ($user->isEmailActivated()) {
-			$this->redirect('this');
+			$this->redirectAjax('this');
 		}
 
-		$this->userManager->deactivateUser($user);
-		$this->entityManager->flush();
+		try {
+			// $presenter->isAllowed('Admin:User', 'edit.password', $user->getRole());
 
-		$this->messageManager->sendUserSignUpMessage($user);
+			$this->userManager->deactivateUser($user);
+			$this->entityManager->flush();
 
-		$presenter->flashMessage('web.message.auth-email-sent', 'success');
-		$presenter->redrawControl('flashMessages');
+			$this->messageManager->sendUserSignUpMessage($user);
+			$presenter->flashMessage('web.message.auth-email-sent', 'success');
+
+		} catch (PermissionDeniedException) {
+			$presenter->flashMessage('web.message.permission-denied', 'warning');
+
+		} catch (Throwable $e) {
+			$presenter->flashMessage('web.message.something-went-wrong', 'danger');
+			Debugger::log($e);
+		}
+
+		$presenter->redirectAjax('this');
+		$this->redrawControl('form');
 	}
 
 
-	/**
-	 * @param  string  $name
-	 * @return Form
-	 */
 	protected function createComponentForm(string $name): Form
 	{
 		$form = parent::createComponentForm($name);
@@ -114,20 +86,15 @@ final class AuthProfileForm extends AbstractForm
 		$form->addPassword('password')->addCondition($form::FILLED)
 			->addRule($form::MIN_LENGTH, 'nette.user.password-length', 6);
 
-        $form->addSubmit('submit');
+		$form->addSubmit('submit');
 
 		return $form;
 	}
 
 
-    /**
-     * @param  Form  $form
-     * @param  ArrayHash  $data
-	 * @return void
-     */
-    protected function handleSuccess(Form $form, ArrayHash $data): void
-    {
-    	$user = $this->getUser();
+	protected function handleSuccess(Form $form, ArrayHash $data): void
+	{
+		$user = $this->getUser();
 		$user->setName($data->name);
 		$user->setEmail($data->email);
 
@@ -138,8 +105,12 @@ final class AuthProfileForm extends AbstractForm
 		try {
 			$this->entityManager->flush();
 
-		} catch(UniqueConstraintViolationException $e) {
-			$form['email']->addError('nette.message.auth-email-used');
+		} catch(UniqueConstraintViolationException) {
+			$form['email']->addError('web.message.auth-email-used');
+
+		} catch (Throwable $e) {
+			$form->addError('web.message.something-went-wrong');
+			Debugger::log($e);
 		}
-    }
+	}
 }

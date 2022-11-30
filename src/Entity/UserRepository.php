@@ -8,96 +8,49 @@
 namespace App\Entity;
 
 use Doctrine\ORM\NoResultException;
-use Nette\Application\BadRequestException;
+use JuniWalk\Utils\ORM\AbstractRepository;
 
 final class UserRepository extends AbstractRepository
 {
-	/** @var string */
-	protected $entityName = User::class;
+	protected string $entityName = User::class;
 
 
-	/**
-	 * @param  string  $email
-	 * @return User
-	 */
-	public function getByEmail(string $email): User
+	public function findByName(string $name, callable $where = null, ?int $maxResults = null): array
 	{
-		$builder = $this->createQueryBuilder('e')
-			->where('LOWER(e.email) = LOWER(:email)');
+		$name = Strings::toAscii($name);
+		$where = function($qb) use ($name, $where) {
+			if (is_callable($where)) {
+				$qb = $where($qb) ?: $qb;
+			}
 
-		try {
-			return $builder->getQuery()
-				->setParameter('email', $email)
-				->getSingleResult();
+			$qb->andWhere('LOWER(unaccent(e.name)) LIKE LOWER(:name)')
+				->setParameter(':name', '%'.$name.'%')
+				->orderBy('e.name', 'ASC');
+		};
 
-		} catch (NoResultException $e) {
-			throw new BadRequestException;
-		}
+		return $this->findBy($where, $maxResults);
 	}
 
 
 	/**
-	 * @param  string  $email
-	 * @return User|null
+	 * @throws NoResultException
 	 */
+	public function getByEmail(string $email): User
+	{
+		return $this->getOneBy(function($qb) use ($email) {
+			$qb->where('LOWER(e.email) = LOWER(:email)')
+				->setParameter(':email', $email);
+		});
+	}
+
+
 	public function findByEmail(string $email): ?User
 	{
 		try {
 			return $this->getByEmail($email);
 
-		} catch (BadRequestException $e) {
+		} catch (NoResultException) {
 			return null;
-		}
-	}
-
-
-	/**
-	 * @param  callable|null  $where
-	 * @param  int|null  $maxResults
-	 * @return User[]
-	 */
-	public function findBy(?callable $where, ?int $maxResults = 5): iterable
-	{
-		$builder = $this->createQueryBuilder('e', 'e.id');
-
-		if (is_callable($where)) {
-			$builder = $where($builder) ?: $builder;
-		}
-
-		try {
-			return $builder->getQuery()
-				->setMaxResults($maxResults)
-				->getResult();
-
-		} catch (NoResultException $e) {
-			return [];
-		}
-	}
-
-
-	/**
-	 * @param  string  $query
-	 * @param  callable|null $where
-	 * @param  int|null  $maxResults
-	 * @return User[]
-	 */
-	public function findByName(string $query, callable $where = null, ?int $maxResults = 5): iterable
-	{
-		$builder = $this->createQueryBuilder('e', 'e.id')
-			->where('LOWER(e.name) LIKE LOWER(:query)');
-
-		if (is_callable($where)) {
-			$builder = $where($builder) ?: $builder;
-		}
-
-		try {
-			return $builder->getQuery()
-				->setParameter('query', '%'.$query.'%')
-				->setMaxResults($maxResults)
-				->getResult();
-
-		} catch (NoResultException $e) {
-			return [];
 		}
 	}
 }

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright Martin Procházka (c) 2020
+ * @copyright Martin Procházka (c) 2021
  * @license   MIT License
  */
 
@@ -17,10 +17,7 @@ use Ublaboo\Mailing\IMessageData;
 final class PasswordForgotMessage extends AbstractMail implements IComposableMail
 {
 	/**
-	 * @param  Message  $message
-	 * @param  IMessageData  $params
 	 * @throws UserNotFoundException
-	 * @return void
 	 */
 	public function compose(Message $message, ?IMessageData $params): void
 	{

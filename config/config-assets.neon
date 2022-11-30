@@ -26,8 +26,7 @@ tessa:
 	default:
 		joinFiles: false
 		assets:
-			- %wwwDir%/../vendor/nasext/dependent-select-box/client-side/dependentSelectBox.js
-			- %wwwDir%/vendor/source-sans-pro/source-sans-pro.css
+			- %wwwDir%/vendor/source-sans/source-sans-3.css
 			- %wwwDir%/vendor/@fortawesome/fontawesome-free/css/all.min.css
 			- %wwwDir%/vendor/nette-forms/src/assets/netteForms.min.js
 			- %wwwDir%/vendor/jquery/dist/jquery.min.js
@@ -38,17 +37,21 @@ tessa:
 			- %wwwDir%/vendor/select2/dist/css/select2.min.css
 			- %wwwDir%/vendor/admin-lte/dist/css/adminlte.min.css
 			- %wwwDir%/vendor/admin-lte/dist/js/adminlte.min.js
+			- %wwwDir%/../vendor/nasext/dependent-select-box/client-side/dependentSelectBox.js
 			- %wwwDir%/vendor/moment/min/moment.min.js
 			- %wwwDir%/vendor/flatpickr/dist/flatpickr.min.css
 			- %wwwDir%/vendor/flatpickr/dist/themes/material_blue.css
 			- %wwwDir%/vendor/flatpickr/dist/flatpickr.min.js
 			- %wwwDir%/vendor/flatpickr/dist/l10n/cs.js
 			- %wwwDir%/vendor/ublaboo-datagrid/assets/datagrid.js
+			- %wwwDir%/vendor/ublaboo-datagrid/assets/datagrid-instant-url-refresh.js
+			- %wwwDir%/vendor/jquery-mask-plugin/dist/jquery.mask.min.js
 			- %wwwDir%/assets/style.css
-			- %wwwDir%/assets/index.js
+			- %wwwDir%/assets/script.js
 
-	frontpage:
+	frontend:
 		extend: default
+		defer: true
 		assets: []
 
 	recaptcha:

@@ -26,9 +26,16 @@
 		"contributte/recaptcha": "^3.0",
 		"contributte/console": "^0.9",
 		"ramsey/uuid": "^4.0",
-
 		"nasext/dependent-select-box": "^5.0"
 	},
+
+	"repositories": [
+		{
+			"name": "ublaboo/datagrid",
+			"type": "git",
+			"url": "/opt/git/datagrid"
+		}
+	],
 
 	"minimum-stability": "dev",
 	"prefer-stable": true

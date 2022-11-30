@@ -19,95 +19,50 @@ use App\Modules\AbstractPresenter;
 
 final class UserPresenter extends AbstractPresenter
 {
-	/** @var AdminUserFormFactory */
-	private $adminUserFormFactory;
-
-	/** @var UserParamGridFactory */
-	private $userParamGridFactory;
-
-	/** @var UserGridFactory */
-	private $userGridFactory;
-
-	/** @var UserRepository */
-	private $userRepository;
-
-	/** @var User */
-	private $user;
+	private ?User $user = null;
 
 
-	/**
-	 * @param UserRepository  $userRepository
-	 * @param UserGridFactory  $userGridFactory
-	 * @param UserParamGridFactory  $userParamGridFactory
-	 * @param AdminUserFormFactory  $adminUserFormFactory
-	 */
 	public function __construct(
-		UserRepository $userRepository,
-		UserGridFactory $userGridFactory,
-		UserParamGridFactory $userParamGridFactory,
-		AdminUserFormFactory $adminUserFormFactory
-	) {
-		parent::__construct();
-
-		$this->adminUserFormFactory = $adminUserFormFactory;
-		$this->userParamGridFactory = $userParamGridFactory;
-		$this->userGridFactory = $userGridFactory;
-		$this->userRepository = $userRepository;
-	}
+		private UserRepository $userRepository,
+		private UserGridFactory $userGridFactory,
+		private UserParamGridFactory $userParamGridFactory,
+		private AdminUserFormFactory $adminUserFormFactory
+	) {}
 
 
-	/**
-	 * @param  int  $id
-	 * @return void
-	 */
 	public function actionEdit(int $id): void
 	{
 		$this->user = $this->userRepository->getById($id);
 	}
 
 
-	/**
-	 * @param  string  $name
-	 * @return AdminUserForm
-	 */
 	protected function createComponentAdminUserForm(string $name): AdminUserForm
 	{
 		$form = $this->adminUserFormFactory->create($this->user);
-		$form->onSuccess[] = function($frm, $data) use ($form) {
-	    	if ($frm['apply']->isSubmittedBy()) {
-				$this->redirectAjax('edit', ['id' => $form->getUser()->getId()]);
-	    	}
+		$form->onSuccess[] = function() use ($form) {
+			$this->redirectAjax($form->findRedirectPage(['apply' => 'edit']), [
+				'id' => $form->getUser()?->getId(),
+			]);
 
-			$this->redirectAjax('default');
+			$this['userGrid']->redrawGrid();
+			$this->redrawControl('modals');
 		};
 
 		$form->onError[] = function() use ($name) {
-			if ($this->getAction() == 'default') {
-				return;
-			}
-
-			$this->openModal($name);
+			$this->isAjax() && $this->openModal($name);
 		};
 
 		return $form;
 	}
 
 
-	/**
-	 * @param  string  $name
-	 * @return UserGrid
-	 */
-	protected function createComponentUserGrid(string $name): UserGrid
+	protected function createComponentUserGrid(): UserGrid
 	{
 		return $this->userGridFactory->create();
 	}
 
 
-	/**
-	 * @param  string  $name
-	 * @return UserParamGrid
-	 */
-	protected function createComponentUserParamGrid(string $name): UserParamGrid
+	protected function createComponentUserParamGrid(): UserParamGrid
 	{
 		return $this->userParamGridFactory->create($this->user);
 	}
