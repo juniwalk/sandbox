@@ -1,7 +1,9 @@
+config/.ssh/
 config/config-access.php
 config/config-params.neon
+log/
 vendor/
 www/static/
 www/vendor/
-www/lock.phtml
-www/lock.off
+www/lock.*
+.yarnrc

@@ -11,8 +11,8 @@ use Contributte\Console\Application as CliApplication;
 
 require __DIR__.'/../vendor/autoload.php';
 $class = php_sapi_name() == 'cli'
-    ? CliApplication::class
-    : HttpApplication::class;
+	? CliApplication::class
+	: HttpApplication::class;
 
 Bootstrap::boot()
 	->getByType($class)
