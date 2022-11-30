@@ -9,10 +9,15 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@fortawesome/fontawesome-free@^5.0", "@fortawesome/fontawesome-free@^5.15.3":
+"@fortawesome/fontawesome-free@^5.15.3":
   version "5.15.4"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.15.4.tgz#ecda5712b61ac852c760d8b3c79c96adca5554e5"
   integrity sha512-eYm8vijH/hpzr/6/1CJ/V/Eb1xQFW2nnUKArb3z+yUWv7HTwj6M7SP957oMjfZjAHU6qpoNc2wQvIxBLWYa/Jg==
+
+"@fortawesome/fontawesome-free@^6.0":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-6.2.1.tgz#344baf6ff9eaad7a73cff067d8c56bfc11ae5304"
+  integrity sha512-viouXhegu/TjkvYQoiRZK3aax69dGXxgEjpvZW81wIJdxm5Fnvp3VVIP4VHKqX4SvFw6qpmkILkD4RJWAdrt7A==
 
 "@lgaitan/pace-progress@^1.0.7":
   version "1.0.7"
@@ -1347,10 +1352,10 @@ source-map@~0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
-source-sans-pro@^2.0:
-  version "2.45.0"
-  resolved "https://registry.yarnpkg.com/source-sans-pro/-/source-sans-pro-2.45.0.tgz#1c013c404dfa48ed18ceaf3e904be21b5a0a124e"
-  integrity sha512-MBbmgyzlD0yCKAvJ4Q86s9BB8yXYld26joJh0DMD53j9aFJZYnFo/B7f4RKXDUfX9I4FyEfdr51lOaVioAOBHw==
+source-sans@^3.0:
+  version "3.46.0"
+  resolved "https://registry.yarnpkg.com/source-sans/-/source-sans-3.46.0.tgz#6af0a47ead682fa8971f0c83e9692e75ef3cbb86"
+  integrity sha512-bVC2YX4VNiv5vMcy77dL0XKsNp794ThfynNsr+FqSAwk8TGG0pZsg7eUQi6yHwaRBMVmZ3Aaf4FY46dxIIGgsg==
 
 sourcemap-codec@^1.4.1:
   version "1.4.8"
